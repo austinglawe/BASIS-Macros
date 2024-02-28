@@ -1,0 +1,581 @@
+Sub CyberGrants_Converter_Step2()
+    Dim folderPath As String
+    Dim newFolderPath As String
+    Dim fileName As String
+    Dim rowIndex As Integer
+    Dim newName As String
+    Dim SummaryEndRow As Long
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    Dim wsSFImport As Worksheet
+    Dim ConsolidatedEndRow As Long
+    Dim DisbursementsEndRow As Long
+    
+  ''''''''''''''''''''''''''''
+    Dim ws As Worksheet
+    Dim wsToKeep As Variant
+    Dim wsName As Variant
+    Dim found As Boolean
+    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+   ''''''''''''''''''''''''''''
+    Dim wsDisbursements As Worksheet
+    Dim Headers As Variant
+    Dim i As Integer
+    Dim HeaderCheck As Boolean
+
+    ' Specify the worksheet to work with
+        Set wsDisbursements = ThisWorkbook.Sheets("Disbursement File")
+
+    ' Define the expected headers
+        Headers = Array("Company Name", "Company ID", "Organization ID", "Access Code", "Organization Name")
+
+    ' Check if the headers match the expected values
+        HeaderCheck = True
+        For i = LBound(Headers) To UBound(Headers)
+            If wsDisbursements.Cells(1, i + 2).Value <> Headers(i) Then
+                HeaderCheck = False
+                Exit For
+            End If
+        Next i
+
+    ' If headers don't match, clear contents and display message
+        If Not HeaderCheck Then
+            wsDisbursements.Range("B:ZZ").ClearContents
+            wsDisbursements.Range("B1").Select
+            MsgBox "I'm sorry, this appears to either be missing information or the incorrect report. Please check to make sure you have the correct report and all the column headings in your pasted information. Then try again!", vbExclamation
+            Exit Sub
+        End If
+    
+    
+    ' If the headers match, start the rest of the Cyber Grants Converter Process.
+    
+        ' Unprotect the sheet
+            wsDisbursements.Unprotect
+    
+        ' Delete Column A contents (Macro Button, formatting, and other text)
+            wsDisbursements.Columns("A").Delete
+    
+        ' Add a column in front of the new column A and set header
+            wsDisbursements.Columns("A").Insert Shift:=xlToRight
+            wsDisbursements.Range("A1").Value = "New File Name Lookup"
+        
+        ' Add "New File Name Lookup" Formula to Column A and Fill Down
+            ' =TEXT(O2,"YYYY.MM.DD")&"_"&B2&" ("&P2&") [$"&TEXT(R2,"#,##0.00")&"] - "&T2&".csv"
+                wsDisbursements.Range("A2").Value = "=TEXT(O2,""YYYY.MM.DD"")&""_""&B2&"" (""&P2&"") [$""&TEXT(R2,""#,##0.00"")&""] - ""&T2&"".csv"""
+            ' Set DisbursementsEndRow Variable and Fill Down
+                DisbursementsEndRow = wsDisbursements.Cells(Rows.Count, 2).End(xlUp).Row
+                wsDisbursements.Range("A2:A" & DisbursementsEndRow).FillDown
+            ' Format Disbursements File Worksheet Headers
+                With wsDisbursements.Range("A1:AD1")
+                    .EntireRow.Font.Underline = xlUnderlineStyleSingle
+                    .EntireRow.Font.Bold = True
+                    .AutoFilter
+                End With
+                wsDisbursements.Columns("A:AD").Columns.AutoFit
+                wsDisbursements.Range("A1").Select
+
+    
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    
+        ' Insert a Worksheet Called "Summary" and create a variable to refer to the worksheet.
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Summary"
+            Set wsSummary = ThisWorkbook.Sheets("Summary")
+                
+        ' Format the Headers of the "Summary" Worksheet
+            wsSummary.Range("A1").Value = "Original File Name"
+            wsSummary.Range("B1").Value = "New File Name"
+            wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+            wsSummary.Range("D1").Value = "Completed"
+            wsSummary.Range("E1").Value = "Disbursement Date"
+            wsSummary.Range("F1").Value = "Company Name"
+            wsSummary.Range("G1").Value = "Abbreviated Company Name"
+            wsSummary.Range("H1").Value = "Payment Number"
+            wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+            wsSummary.Range("J1").Value = "Gross Total"
+            wsSummary.Range("K1").Value = "Net Total"
+            wsSummary.Range("L1").Value = "Total Fees"
+            wsSummary.Range("M1").Value = "# of Transactions"
+            wsSummary.Range("N1").Value = "Disbursement ID"
+            wsSummary.Range("O1").Value = "Lookup Value"
+            
+        ' Create a Worksheet called "Consolidated Reports"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Consolidated Reports"
+            Set wsConsolidated = ThisWorkbook.Sheets("Consolidated Reports")
+        
+        ' Format the Headers of the "Consolidated Reports" Worksheet
+            wsConsolidated.Range("A1").Value = "Company Name"
+            wsConsolidated.Range("B1").Value = "Pass-through Agent"
+            wsConsolidated.Range("C1").Value = "CyberGrants Donation ID"
+            wsConsolidated.Range("D1").Value = "Program Name"
+            wsConsolidated.Range("E1").Value = "Donation Start Date"
+            wsConsolidated.Range("F1").Value = "Donation End Date"
+            wsConsolidated.Range("G1").Value = "Donation Designation"
+            wsConsolidated.Range("H1").Value = "Donation Frequency"
+            wsConsolidated.Range("I1").Value = "Donation Amount"
+            wsConsolidated.Range("J1").Value = "Donation Amount (Currency Code)"
+            wsConsolidated.Range("K1").Value = "Match Amount"
+            wsConsolidated.Range("L1").Value = "Match Amount (Currency Code)"
+            wsConsolidated.Range("M1").Value = "Payment Funding Source"
+            wsConsolidated.Range("N1").Value = "Payment Gross Amount"
+            wsConsolidated.Range("O1").Value = "Payment Gross Amount (Currency Code)"
+            wsConsolidated.Range("P1").Value = "Merchant Fee"
+            wsConsolidated.Range("Q1").Value = "Merchant Fee (Currency Code)"
+            wsConsolidated.Range("R1").Value = "Processing Fee"
+            wsConsolidated.Range("S1").Value = "Processing Fee (Currency Code)"
+            wsConsolidated.Range("T1").Value = "Payment Net Amount"
+            wsConsolidated.Range("U1").Value = "Payment Net Amount (Currency Code)"
+            wsConsolidated.Range("V1").Value = "Payment Number"
+            wsConsolidated.Range("W1").Value = "Payment Date"
+            wsConsolidated.Range("X1").Value = "Payment Method"
+            wsConsolidated.Range("Y1").Value = "Donor First Name"
+            wsConsolidated.Range("Z1").Value = "Donor Last Name"
+            wsConsolidated.Range("AA1").Value = "Donor Address"
+            wsConsolidated.Range("AB1").Value = "Donor City"
+            wsConsolidated.Range("AC1").Value = "Donor State"
+            wsConsolidated.Range("AD1").Value = "Donor Province"
+            wsConsolidated.Range("AE1").Value = "Donor ZIP/Postal Code"
+            wsConsolidated.Range("AF1").Value = "Donor Country"
+            wsConsolidated.Range("AG1").Value = "Donor Email Address"
+            wsConsolidated.Range("AH1").Value = "Donor Telephone"
+            wsConsolidated.Range("AI1").Value = "Original File Name"
+            wsConsolidated.Range("AJ1").Value = "New File Name"
+
+        ' Create a Worksheet called "Salesforce Import File" and create a variable to refer to the worksheet.
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Salesforce Import File"
+            Set wsSFImport = ThisWorkbook.Sheets("Salesforce Import File")
+        
+        ' Format the Headers of the "Salesforce Import File" Workhsheet
+            wsSFImport.Range("A1").Value = "C&P Account Name Correction"
+            wsSFImport.Range("B1").Value = "Company"
+            wsSFImport.Range("C1").Value = "Disbursement"
+            wsSFImport.Range("D1").Value = "Check Number/Reference Number"
+            wsSFImport.Range("E1").Value = "Donation Date"
+            wsSFImport.Range("F1").Value = "Deposit Date"
+            wsSFImport.Range("G1").Value = "Donation Amount"
+            wsSFImport.Range("H1").Value = "Contact1 First Name"
+            wsSFImport.Range("I1").Value = "Contact1 Last Name"
+            wsSFImport.Range("J1").Value = "Contact1 Personal Email"
+            wsSFImport.Range("K1").Value = "Donation Type"
+            wsSFImport.Range("L1").Value = "Stage"
+            wsSFImport.Range("M1").Value = "Payment Method"
+            wsSFImport.Range("N1").Value = "Campaign Name"
+            wsSFImport.Range("O1").Value = "Donation Name"
+            wsSFImport.Range("P1").Value = "Description"
+            wsSFImport.Range("Q1").Value = "C&P Payment Type"
+            wsSFImport.Range("R1").Value = "Check Number"
+            
+        ' Create the School Mapping - by running the "a0_School_Map" Subroutine
+            a0_School_Map
+                
+        ' Create the Cyber Grants Company Mapping - by running the "a0_CyberGrants_Companies" Subroutine
+            a0_CyberGrants_Companies
+    
+        ' Prompt the user to select a folder
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    folderPath = .SelectedItems(1)
+                Else
+                    wsSummary.Activate
+                    wsSummary.Range("A2").Select
+                    MsgBox "No folder selected. Operation cancelled."
+                    ' Add a button for a Complete Reset on account of the macro will not work unless it's restarted.
+                    ' (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                        Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 600, 400)
+                        ButtonText = "You will now need to reset this macro back to its starting place. Press here when you are ready."             ' Value of the text within the button
+                        With ButtonShape
+                            .OnAction = "CyberGrants_Converter_Step1"                                                                               ' Embedding the Specific Converter Macro to the button
+                            .TextFrame.Characters.Text = ButtonText
+                            .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                            .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                            .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                            .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                            .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                            .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+                        End With
+                    Exit Sub
+                End If
+            End With
+    
+    
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''
+        ' Check if the file path exists
+
+        ' Initialize the array to hold file names
+            ReDim FileList(1 To 1) ' Start with a single element
+            
+            
+        ' Loop through files in the specified folder
+            fileName = Dir(folderPath & "\*.csv")
+            Do While fileName <> ""
+                FileCount = FileCount + 1
+                ReDim Preserve FileList(1 To FileCount)
+                FileList(FileCount) = fileName
+                fileName = Dir
+            Loop
+    
+        ' Open and copy the contents of the CSV files
+            For i = 1 To FileCount
+                ' Open the CSV file as an Excel workbook
+                Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
+        
+                ' Copy the data to a new worksheet
+                Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+                ' Use the file name (without CSV extension) as the worksheet name
+                NewSheet.Name = Left(FileList(i), Len(FileList(i)) - 4)
+                ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
+        
+        
+                ' Add a hyperlink in cell AJ1 to the "Summary" worksheet's cell A1
+                NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range("AJ1"), Address:="", SubAddress:="Summary!A1", TextToDisplay:="Return to Summary Page"
+        
+                ' Auto-adjust column widths in the new worksheet
+                NewSheet.Cells.EntireColumn.AutoFit
+        
+                ' Close the opened workbook without saving changes
+                Workbooks(FileList(i)).Close SaveChanges:=False
+            Next i
+      
+        ' Get the file count in the specified directory
+            file_path_count = 0
+            Dim file As String
+            file = Dir(folderPath & "\*.*")
+            Do While file <> ""
+                file_path_count = file_path_count + 1
+                file = Dir
+            Loop
+    
+        ' Check if the file_path_count is less than 1
+            If file_path_count < 1 Then
+                Exit Sub
+            End If
+    
+        ' Loop through each file in the directory
+            file = Dir(folderPath & "\*.*")
+            
+            Do While file <> ""
+                ' Set current_file_name to the file name
+                current_file_name = file
+        
+                ' Find the last row in column A of the Summary sheet
+                home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+        
+                ' Add the file name to column A of the Home worksheet
+                wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
+                
+                ' Redefine the last row in column A of the Home sheet
+                home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+                
+                ' Find the last row in column A of the the All Reports Combined worksheet
+                reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+        
+                ' Open the file and copy rows 13 to the end of the data
+                Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
+                wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
+        
+                ' Put current_file_name in column X for all the copied rows
+                wsConsolidated.Range("AI" & reports_column_a_max + 1 & ":AI" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
+        
+                
+                ' Close the opened file
+                wsTemp.Parent.Close
+        
+                ' Mark the file as "x" in column B of the Home worksheet if the current row is greater than 1 and doesn't have "Completed" in column B
+                If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
+                    wsSummary.Cells(home_column_a_max, "D").Value = "x"
+                End If
+        
+                ' Move to the next file
+                file = Dir
+            Loop
+    
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     '''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+        ' Populate the Formulas in the Summary Page
+            ' New File Name
+                ' B2
+                ' Year.Month.Day_CompanyName (DisbursementID) [$NetAmount] - Company/Employee {Disbursement ID}.csv
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&F2&" ("&IF(ISNUMBER(SEARCH("ACH",H2)),H2,"Check "&H2)&") [$"&TEXT(K2,"#,##0.00")&"] - "&I2&" {"&N2&"}.csv"
+                    wsSummary.Range("B2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&F2&"" (""&IF(ISNUMBER(SEARCH(""ACH"",H2)),H2,""Check ""&H2)&"") [$""&TEXT(K2,""#,##0.00"")&""] - ""&I2&"" {""&N2&""}.csv"""
+                
+            ' CSV Naming (Worksheet Name)
+                ' C2
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&G2&"_"&N2
+                    wsSummary.Range("C2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&G2&""_""&N2"
+            
+            ' Disbursement Date
+                ' E2
+                ' =TEXT(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!W:W), "MM/DD/YYYY")
+                    wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!W:W), ""MM/DD/YYYY"")"
+            
+            ' Company Name
+                ' F2
+                ' =XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!A:A)
+                    wsSummary.Range("F2").Formula = "=XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!A:A)"
+            
+            ' Abbreviated Company Name
+                ' G2
+                ' =IFERROR(XLOOKUP(Summary!F2,CyberGrantsCompany!A:A,CyberGrantsCompany!B:B),LEFT(Summary!F2,10))
+                    wsSummary.Range("G2").Formula = "=IFERROR(XLOOKUP(Summary!F2,CyberGrantsCompany!A:A,CyberGrantsCompany!B:B),LEFT(Summary!F2,10))"
+            
+            ' Payment Number
+                ' H2
+                ' =XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!V:V)
+                    wsSummary.Range("H2").Formula = "=XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!V:V)"
+            
+            ' Company Match/Employee Giving
+                ' I2
+                ' =PROPER(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!M:M))
+                    wsSummary.Range("I2").Formula = "=PROPER(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!M:M))"
+            
+            ' Gross Total
+                ' J2
+                ' =SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!N:N)
+                    wsSummary.Range("J2").Formula = "=SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!N:N)"
+            
+            ' Net Total
+                ' K2
+                ' =SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!T:T)
+                    wsSummary.Range("K2").Formula = "=SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!T:T)"
+            
+            ' Total Fees
+                ' L2
+                ' =J2 - K2
+                    wsSummary.Range("L2").Formula = "=J2 - K2"
+            
+            ' # of Transactions
+                ' M2
+                ' =COUNTIF('Consolidated Reports'!AI:AI,Summary!A2)
+                    wsSummary.Range("M2").Formula = "=COUNTIF('Consolidated Reports'!AI:AI,Summary!A2)"
+            
+            ' Disbursement ID
+                ' N2
+                ' =XLOOKUP(O2,'Disbursement File'!A:A,'Disbursement File'!L:L)
+                    wsSummary.Range("N2").Formula = "=XLOOKUP(O2,'Disbursement File'!A:A,'Disbursement File'!L:L)"
+    
+            ' Lookup Value
+                ' O2
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&F2&" ("&H2&") [$"&TEXT(K2,"#,##0.00")&"] - "&I2&".csv"
+                    wsSummary.Range("O2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&F2&"" (""&H2&"") [$""&TEXT(K2,""#,##0.00"")&""] - ""&I2&"".csv"""
+    
+    
+    
+    
+    
+            ' Variable for the Last Row of the Summary Page
+                SummaryEndRow = wsSummary.Cells(Rows.Count, 1).End(xlUp).Row
+             
+            ' Fill Down Summary Page (B2:O...)
+                wsSummary.Range("B2:O" & SummaryEndRow).FillDown
+                
+                
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''Step '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+            ' =IFERROR(XLOOKUP(A2,Summary!O:O,Summary!B:B),"")
+            wsDisbursements.Range("AC2").Value = "=IFERROR(XLOOKUP(A2,Summary!O:O,Summary!B:B),"""")"
+            ' =IF(AC2<>"","x","")
+            wsDisbursements.Range("AD2").Value = "=IF(AC2<>"""",""x"","""")"
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''Step '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+            
+        ' Add New File Name to Consolidated Reports Worksheet
+            ' Create a Variable for the end row of the "Consolidated Reports" Worksheet
+                ConsolidatedEndRow = wsConsolidated.Cells(Rows.Count, 1).End(xlUp).Row
+            ' Add New File Name to column AJ of the "Consolidated Reports" Workhseet
+                ' =XLOOKUP(AI2,Summary!A:A,Summary!B:B)
+                wsConsolidated.Range("AJ2").Formula = "=XLOOKUP(AI2,Summary!A:A,Summary!B:B)"
+            ' Fill Down in Column AJ
+                wsConsolidated.Range("AJ2:AJ" & ConsolidatedEndRow).FillDown
+            
+            
+            
+            
+        ' Fill in SF Import Information
+            'C&P Account Name Correction
+            '
+                wsSFImport.Range("A2").Formula = ""
+                
+            'Company
+            ' ='Consolidated Reports'!A2
+                wsSFImport.Range("B2").Formula = "='Consolidated Reports'!A2"
+
+            'Disbursement [ID]
+            ' =XLOOKUP('Consolidated Reports'!AI2,Summary!A:A,Summary!N:N)
+                wsSFImport.Range("C2").Formula = "=XLOOKUP('Consolidated Reports'!AI2,Summary!A:A,Summary!N:N)"
+
+            'Check Number/Reference Number
+            ' ='Consolidated Reports'!C2
+                wsSFImport.Range("D2").Formula = "='Consolidated Reports'!C2"
+
+            'Donation Date
+            ' =TEXT(IF('Consolidated Reports'!F2="",'Consolidated Reports'!E2,'Consolidated Reports'!F2),"MM/DD/YYYY")
+                wsSFImport.Range("E2").Formula = "=TEXT(IF('Consolidated Reports'!F2="""",'Consolidated Reports'!E2,'Consolidated Reports'!F2),""MM/DD/YYYY"")"
+
+            'Deposit Date
+            ' =TEXT('Consolidated Reports'!W2,"MM/DD/YYYY")
+                wsSFImport.Range("F2").Formula = "=TEXT('Consolidated Reports'!W2,""MM/DD/YYYY"")"
+
+            'Donation Amount
+            ' ='Consolidated Reports'!N2
+                wsSFImport.Range("G2").Formula = "='Consolidated Reports'!N2"
+
+            'Contact1 First Name
+            ' =PROPER(TRIM('Consolidated Reports'!Y2))
+                wsSFImport.Range("H2").Formula = "=PROPER(TRIM('Consolidated Reports'!Y2))"
+
+            ' Contact1 Last Name
+            ' =PROPER(TRIM('Consolidated Reports'!Z2))
+                wsSFImport.Range("I2").Formula = "=PROPER(TRIM('Consolidated Reports'!Z2))"
+
+            ' Contact1 Personal Email
+            ' =IF('Consolidated Reports'!AG2="","",'Consolidated Reports'!AG2)
+            wsSFImport.Range("J2").Formula = "=IF('Consolidated Reports'!AG2="""","""",'Consolidated Reports'!AG2)"
+
+            ' Donation Type
+            ' =IF('Consolidated Reports'!X2="Paper","Check",IF('Consolidated Reports'!X2="ACH","ACH","…"))
+            wsSFImport.Range("K2").Formula = "=IF('Consolidated Reports'!X2=""Paper"",""Check"",IF('Consolidated Reports'!X2=""ACH"",""ACH"",""…""))"
+
+            ' Stage
+            wsSFImport.Range("L2").Value = "Authorized"
+
+            ' Payment Method
+            '
+            wsSFImport.Range("M2").Formula = ""
+ 
+            ' Campaign Name
+            '
+            wsSFImport.Range("N2").Formula = ""
+ 
+            ' Donation Name
+            '
+            wsSFImport.Range("O2").Formula = ""
+ 
+            ' Description (Site Name)
+            '
+            wsSFImport.Range("P2").Formula = "Cyber Grants"
+
+            ' C&P Payment Type
+            '
+            wsSFImport.Range("Q2").Formula = ""
+
+            ' Check Number
+            ' =IF('Consolidated Reports'!X2="ACH","",'Consolidated Reports'!V2)
+            wsSFImport.Range("R2").Formula = "=IF('Consolidated Reports'!X2=""ACH"","""",'Consolidated Reports'!V2)"
+            
+        
+        
+        
+        
+        ' Fill Formulas Down
+            wsSFImport.Range("A2:R" & ConsolidatedEndRow).FillDown
+            
+            
+            
+            
+        ' Extensively Descriptive Naming Convention
+            ' Create a new folder for renamed files
+                newFolderPath = folderPath & "\Extensively Descriptive Naming Convention"
+                MkDir newFolderPath
+                
+            ' Move files to the new folder with new names
+                For i = 2 To SummaryEndRow
+                    ' Get original file name from column A
+                    fileName = wsSummary.Cells(i, 1).Value
+                    ' Get new file name from column B
+                    newName = wsSummary.Cells(i, 2).Value
+                    ' If column B is empty, use the same name
+                    If newName = "" Then
+                        newName = fileName
+                    End If
+                    ' Move the file to the new folder
+                    FileCopy folderPath & "\" & fileName, newFolderPath & "\" & newName
+                Next i
+            
+          ' CSV Naming Convention
+            ' Create a new folder for renamed files
+                newFolderPath = folderPath & "\CSV Naming Convention"
+                MkDir newFolderPath
+                
+            ' Move files to the new folder with new names
+                For i = 2 To SummaryEndRow
+                    ' Get original file name from column A
+                    fileName = wsSummary.Cells(i, 1).Value
+                    ' Get new file name from column C
+                    newName = wsSummary.Cells(i, 3).Value & ".csv"
+                    ' If column C is empty, use the same name
+                    If newName = "" Then
+                        newName = fileName
+                    End If
+                    ' Move the file to the new folder
+                    FileCopy folderPath & "\" & fileName, newFolderPath & "\" & newName
+                Next i
+        
+        
+        
+        
+        ' Format Cells on the Summary Sheet, Consolidated Report Sheet, and Saleforce Import File Sheet
+            With wsSummary.Range("A1").EntireRow.Font
+                .Underline = xlUnderlineStyleSingle
+                .Bold = True
+            End With
+            wsConsolidated.Range("A1").EntireRow.Font.Underline = xlUnderlineStyleSingle
+            wsConsolidated.Range("A1").EntireRow.Font.Bold = True
+            wsSFImport.Range("A1").EntireRow.Font.Underline = xlUnderlineStyleSingle
+            wsSFImport.Range("A1").EntireRow.Font.Bold = True
+        
+        ' AutoFit Columns on "Summary" Sheet and "Consolidated Reports" Sheet, and "Salesforce Import File" Sheet
+            wsSummary.Columns("A:O").AutoFit
+            wsConsolidated.Columns("A:AJ").AutoFit
+            wsSFImport.Columns("A:R").AutoFit
+        
+        
+        
+        UpdateWorksheetNames
+        SortWorksheetsAlphabeticallyDescending
+        
+        ' Define worksheets to keep visible
+            wsToKeep = Array("Summary", "Consolidated Reports", "Salesforce Import File", "Disbursement File")
+
+        ' Loop through all worksheets in the workbook
+            For Each ws In ThisWorkbook.Worksheets
+                found = False ' Reset flag
+                ' Check if the current worksheet is in the list of worksheets to keep
+                For Each wsName In wsToKeep
+                    If ws.Name = wsName Then
+                        found = True
+                        Exit For
+                    End If
+                Next wsName
+                ' Hide the worksheet if it's not in the list
+                If Not found Then
+                    ws.Visible = xlSheetHidden
+                End If
+            Next ws
+            
+        ' Activate Summary Sheet (for scrolling the worksheets all the way over) and then Salesforce Sheet
+            wsSummary.Activate
+            wsSFImport.Activate
+            wsSFImport.Range("A1").Select
+            
+        ' Select the Salesforce Information and then copy it, and paste values. Then I want to sort it by date and by disbursement ID.
+            'wsSFImport.Range("A:R").Select
+            'Selection.Copy
+            'Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                ':=False, Transpose:=False
+            'Application.CutCopyMode = False
+            'wsSFImport.Range("A1:R1").AutoFilter
+            'wsSFImport.Columns("A:R").AutoFit
+  
+End Sub
