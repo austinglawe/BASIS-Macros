@@ -1,0 +1,1176 @@
+Sub a0_CyberGrants_Companies()
+    
+    Dim wsCGCompany As Worksheet
+    
+    ' Create a New worksheet called "CyberGrantsCompany"
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "CyberGrantsCompany"
+    ' Set the variable of wsCGCompany to "CyberGrantsCompany" Worksheet
+        Set wsCGCompany = ThisWorkbook.Sheets("CyberGrantsCompany")
+    
+    ' Fill the Data in "CyberGrantsCompany" Worksheet
+        wsCGCompany.Range("A1").Value = "Company Name"
+        wsCGCompany.Range("B1").Value = "Abbreviated"
+        wsCGCompany.Range("A1").Value = "3M"
+        wsCGCompany.Range("B1").Value = "3M"
+        wsCGCompany.Range("A2").Value = "Aetna"
+        wsCGCompany.Range("B2").Value = "Aetna"
+        wsCGCompany.Range("A3").Value = "Air Products"
+        wsCGCompany.Range("B3").Value = "AirProduct"
+        wsCGCompany.Range("A4").Value = "AIR LIQUIDE"
+        wsCGCompany.Range("B4").Value = "AirLiquide"
+        wsCGCompany.Range("A5").Value = "Alexion Pharmaceuticals"
+        wsCGCompany.Range("B5").Value = "Alexion"
+        wsCGCompany.Range("A6").Value = "AMEX"
+        wsCGCompany.Range("B6").Value = "AMEX"
+        wsCGCompany.Range("A7").Value = "Amgen Foundation"
+        wsCGCompany.Range("B7").Value = "Amgen"
+        wsCGCompany.Range("A8").Value = "Analog Devices Foundation"
+        wsCGCompany.Range("B8").Value = "AnalogDev"
+        wsCGCompany.Range("A9").Value = "Bank of America"
+        wsCGCompany.Range("B9").Value = "BofAmerica"
+        wsCGCompany.Range("A10").Value = "Bank of the West"
+        wsCGCompany.Range("B10").Value = "BofWest"
+        wsCGCompany.Range("A11").Value = "Bristol Myers Squibb"
+        wsCGCompany.Range("B11").Value = "BristolMSq"
+        wsCGCompany.Range("A12").Value = "Broadcom"
+        wsCGCompany.Range("B12").Value = "Broadcom"
+        wsCGCompany.Range("A13").Value = "Caterpillar & Caterpillar Foundation"
+        wsCGCompany.Range("B13").Value = "Caterpilar"
+        wsCGCompany.Range("A14").Value = "CITIZENS"
+        wsCGCompany.Range("B14").Value = "Citizens"
+        wsCGCompany.Range("A15").Value = "CVS Health"
+        wsCGCompany.Range("B15").Value = "CVS"
+        wsCGCompany.Range("A16").Value = "Delta Air Lines"
+        wsCGCompany.Range("B16").Value = "DeltaAir"
+        wsCGCompany.Range("A17").Value = "Disney"
+        wsCGCompany.Range("B17").Value = "Disney"
+        wsCGCompany.Range("A18").Value = "Eli Lilly and Company"
+        wsCGCompany.Range("B18").Value = "Eli Lily"
+        wsCGCompany.Range("A19").Value = "Exelon"
+        wsCGCompany.Range("B19").Value = "Exelon"
+        wsCGCompany.Range("A20").Value = "Freeport-McMoRan Foundation"
+        wsCGCompany.Range("B20").Value = "FP-McMoRan"
+        wsCGCompany.Range("A21").Value = "Graham Holdings Company"
+        wsCGCompany.Range("B21").Value = "GrahamHold"
+        wsCGCompany.Range("A22").Value = "HSBC"
+        wsCGCompany.Range("B22").Value = "HSBC"
+        wsCGCompany.Range("A23").Value = "Incyte"
+        wsCGCompany.Range("B23").Value = "Incyte"
+        wsCGCompany.Range("A24").Value = "JPMorgan Chase"
+        wsCGCompany.Range("B24").Value = "JPMorgan"
+        wsCGCompany.Range("A25").Value = "LPL Financial"
+        wsCGCompany.Range("B25").Value = "LPL Fin"
+        wsCGCompany.Range("A26").Value = "Mallinckrodt Pharmaceuticals"
+        wsCGCompany.Range("B26").Value = "Mallinckro"
+        wsCGCompany.Range("A27").Value = "Merck"
+        wsCGCompany.Range("B27").Value = "Merck"
+        wsCGCompany.Range("A28").Value = "Northrop Grumman"
+        wsCGCompany.Range("B28").Value = "NorthropGr"
+        wsCGCompany.Range("A29").Value = "Novartis US"
+        wsCGCompany.Range("B29").Value = "NovartisUS"
+        wsCGCompany.Range("A30").Value = "PNC Matching Gifts"
+        wsCGCompany.Range("B30").Value = "PNCMatch"
+        wsCGCompany.Range("A31").Value = "PROGRESSIVE INSURANCE FOUNDATION"
+        wsCGCompany.Range("B31").Value = "Progessive"
+        wsCGCompany.Range("A32").Value = "PulteGroup"
+        wsCGCompany.Range("B32").Value = "PulteGroup"
+        wsCGCompany.Range("A33").Value = "Qualcomm"
+        wsCGCompany.Range("B33").Value = "Qualcomm"
+        wsCGCompany.Range("A34").Value = "Shell USA Company Foundation"
+        wsCGCompany.Range("B34").Value = "ShellUSA"
+        wsCGCompany.Range("A35").Value = "State Farm"
+        wsCGCompany.Range("B35").Value = "StateFarm"
+        wsCGCompany.Range("A36").Value = "Texas Instruments"
+        wsCGCompany.Range("B36").Value = "TexasInstr"
+        wsCGCompany.Range("A37").Value = "Textron"
+        wsCGCompany.Range("B37").Value = "Textron"
+        wsCGCompany.Range("A38").Value = "The Pew Charitable Trusts"
+        wsCGCompany.Range("B38").Value = "PewCharit"
+        wsCGCompany.Range("A39").Value = "U.S. Bank Foundation"
+        wsCGCompany.Range("B39").Value = "USBank"
+        wsCGCompany.Range("A40").Value = "Verizon"
+        wsCGCompany.Range("B40").Value = "Verizon"
+
+    
+    ' Format the Headers
+        wsCGCompany.Range("A1").Font.Underline = xlUnderlineStyleSingle
+        wsCGCompany.Range("A1").EntireRow.Font.Bold = True
+    
+    ' AutoFit and AutoFilter
+        With wsCGCompany.Columns("A:B")
+            .AutoFilter
+            .AutoFit
+        End With
+        
+End Sub
+
+Sub a0_School_Map()
+    Dim Mappingws As Worksheet
+    Dim lastRow As Long
+    Dim UpdateDate As String
+    
+    ' Make sure the Update Date Format is Year.Month.Day (YYYY.MM.DD)
+    UpdateDate = "2024.02.15"
+    
+        ' New worksheet called "School Mapping..." so that the mapping can be correct from donation sites to Intacct or Salesforce
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "School Mapping as of " & UpdateDate
+            ' Variable for the worksheet called "School Mapping"
+                Set Mappingws = ThisWorkbook.Sheets("School Mapping as of " & UpdateDate)
+                
+            ' Headers for "School Mapping" Worksheet
+                Mappingws.Range("A1").Value = "BASIS School Name"
+                Mappingws.Range("B1").Value = "Intacct - School Name"
+                Mappingws.Range("C1").Value = "School Abbreviation"
+                Mappingws.Range("D1").Value = "Intacct - School ID"
+                Mappingws.Range("E1").Value = "School Umbrella"
+                Mappingws.Range("F1").Value = "Salesforce - School Name"
+                Mappingws.Range("G1").Value = "Salesforce - Campaign School Name"
+                Mappingws.Range("H1").Value = "Intacct - Bank Account ID"
+                Mappingws.Range("I1").Value = "Intacct - Bank Account Name"
+                Mappingws.Range("J1").Value = "Benevity - 'Project' Name"
+                Mappingws.Range("K1").Value = "Benevity - Charity ID"
+                Mappingws.Range("L1").Value = "Click and Pledge - School ID"
+                Mappingws.Range("M1").Value = "Click and Pledge - School Name"
+                Mappingws.Range("N1").Value = "Front Stream - Charity Name"
+                Mappingws.Range("O1").Value = "Your Cause - "
+                Mappingws.Range("P1").Value = "Your Cause - "
+                Mappingws.Range("Q1").Value = "Blackbaud School Number"
+                Mappingws.Range("R1").Value = "Blackbaud School Name"
+                ' Mappingws.Range("1").Value = "Date of Inception"
+                ' Mappingws.Range("1").Value = "Grade Range"
+                ' Mappingws.Range("1").Value = "School Address"
+                ' Mappingws.Range("1").Value = "Website Address"
+                ' Mappingws.Range("1").Value = "Head of Operations"
+                ' Mappingws.Range("1").Value = "HOPS Email"
+                ' Mappingws.Range("1").Value = "Head of School"
+                ' Mappingws.Range("1").Value = "HOS Email"
+                ' Mappingws.Range("1").Value = "Director of Acadameic Programs"
+                ' Mappingws.Range("1").Value = "DAP Email"
+                ' Mappingws.Range("1").Value = "Director of Student Affairs"
+                ' Mappingws.Range("1").Value = "DSA Email"
+                
+                
+            ' Format the Headers (Making them Bold, Underlined, and with a filter)
+                With Mappingws.Range("A1:AF1")
+                    .Font.Bold = True
+                    .Font.Underline = xlUnderlineStyleSingle
+                    .AutoFilter
+                End With
+                
+                
+                ' Start populating the Schools in the "School Mapping" Worksheet
+                    
+                    ' BASIS Ahwatukee (AHW) [401--Ahwatukee] -
+                        Mappingws.Range("A2").Value = "BASIS Ahwatukee"                                         ' BASIS School Name
+                        Mappingws.Range("B2").Value = "Ahwatukee"                                               ' Intacct - School Name
+                        Mappingws.Range("C2").Value = "AHW"                                                     ' School Abbreviation
+                        Mappingws.Range("D2").Value = "401"                                                     ' Intacct - School ID
+                        Mappingws.Range("E2").Value = "BCSI"                                                    ' School Umbrella (Abbreviation)
+                        'Mappingws.Range("F").Value = ""                                                        ' Salesforce - School Name
+                        'Mappingws.Range("G").Value = ""                                                        ' Salesforce - Campaign School Name
+                        'Mappingws.Range("H").Value = ""                                                        ' Intacct - Bank Account ID
+                        'Mappingws.Range("I").Value = ""                                                        ' Intacct - Bank Account Name
+                        'Mappingws.Range("J").Value = ""                                                        ' Benevity - 'Project' Name
+                        'Mappingws.Range("K").Value = ""                                                        ' Benevity - Charity ID
+                        'Mappingws.Range("L").Value = ""                                                        ' Click and Pledge - School ID
+                        'Mappingws.Range("M").Value = ""                                                        ' Click and Pledge - School Name
+                        'Mappingws.Range("N").Value = ""                                                        ' Front Stream - Charity Name
+                        'Mappingws.Range("O").Value = ""                                                        ' Your Cause -
+                        'Mappingws.Range("P").Value = ""                                                        ' Your Cause -
+                        'Mappingws.Range("Q").Value = ""                                                        ' Blackbaud School Number
+                        'Mappingws.Range("R").Value = ""                                                        ' Blackbaud School Name
+         
+                    ' BASIS Austin (AUS) [107--BASIS Austin] - Austin
+                        Mappingws.Range("A3").Value = "BASIS Austin"                                            ' BASIS School Name
+                        Mappingws.Range("B3").Value = "BASIS Austin"                                            ' Intacct - School Name
+                        Mappingws.Range("C3").Value = "AUS"                                                     ' School Abbreviation
+                        Mappingws.Range("D3").Value = "107"                                                     ' Intacct - School ID
+                        Mappingws.Range("E3").Value = "BTCS"                                                    ' School Umbrella (Abbreviation)
+                                      
+                    ' BASIS Austin Primary (AUSP) [105--Austin Primary] - Austin Primary
+                        Mappingws.Range("A4").Value = "BASIS Austin Primary"                                    ' BASIS School Name
+                        Mappingws.Range("B4").Value = "Austin Primary"                                          ' Intacct - School Name
+                        Mappingws.Range("C4").Value = "AUSP"                                                    ' School Abbreviation
+                        Mappingws.Range("D4").Value = "105"                                                     ' Intacct - School ID
+                        Mappingws.Range("E4").Value = "BTCS"                                                    ' School Umbrella (Abbreviation)
+
+                    ' BASIS Baton Rouge - Materra (BBRM) [701--Baton Rouge - Materra] - Baton Rouge - Materra Campus
+                        Mappingws.Range("A5").Value = "BASIS Baton Rouge - Materra"                             ' BASIS School Name
+                        Mappingws.Range("B5").Value = "Baton Rouge - Materra"                                   ' Intacct - School Name
+                        Mappingws.Range("C5").Value = "BBRM"                                                    ' School Abbreviation
+                        Mappingws.Range("D5").Value = "701"                                                     ' Intacct - School ID
+                        Mappingws.Range("E5").Value = "BBR"                                                     ' School Umbrella (Abbreviation)
+                    
+                    ' BASIS Baton Rouge - Mid City (BRMC) [702--Baton Rouge - Mid City] - Baton Rouge Mid City
+                        Mappingws.Range("A6").Value = "BASIS Baton Rouge - Mid City"                            ' BASIS School Name
+                        Mappingws.Range("B6").Value = "Baton Rouge - Mid City"                                  ' Intacct - School Name
+                        Mappingws.Range("C6").Value = "BRMC"                                                    ' School Abbreviation
+                        Mappingws.Range("D6").Value = "702"                                                     ' Intacct - School ID
+                        Mappingws.Range("E6").Value = "BBR"                                                     ' School Umbrella (Abbreviation)
+
+                    ' BASIS Benbrook (BEN) [110--Benbrook] - Benbrook
+                        Mappingws.Range("A7").Value = "BASIS Benbrook"                                          ' BASIS School Name
+                        Mappingws.Range("B7").Value = "Benbrook"                                                ' Intacct - School Name
+                        Mappingws.Range("C7").Value = "BEN"                                                     ' School Abbreviation
+                        Mappingws.Range("D7").Value = "110"                                                     ' Intacct - School ID
+                        Mappingws.Range("E7").Value = "BTCS"                                                    ' School Umbrella (Abbreviation)
+
+                    ' BASIS Cedar Park (CPK) [114--Cedar Park] - Cedar Park
+                        Mappingws.Range("A8").Value = "BASIS Cedar Park"                                        ' BASIS School Name
+                        Mappingws.Range("B8").Value = "Cedar Park"                                              ' Intacct - School Name
+                        Mappingws.Range("C8").Value = "CPK"                                                     ' School Abbreviation
+                        Mappingws.Range("D8").Value = "114"                                                     ' Intacct - School ID
+                        Mappingws.Range("E8").Value = "BTCS"                                                    ' School Umbrella (Abbreviation)
+
+                    ' BASIS Cedar Park Primary (CPKP) [113--Cedar Park Primary] -
+                        Mappingws.Range("A9").Value = "BASIS Cedar Park Primary"                                ' BASIS School Name
+                        Mappingws.Range("B9").Value = "Cedar Park Primary"                                      ' Intacct - School Name
+                        Mappingws.Range("C9").Value = "CPKP"                                                    ' School Abbreviation
+                        Mappingws.Range("D9").Value = "113"                                                     ' Intacct - School ID
+                        Mappingws.Range("E9").Value = "BTCS"                                                    ' School Umbrella (Abbreviation)
+
+                    ' BASIS Chandler (CHD) [402--Chandler] - Chandler
+                        Mappingws.Range("A10").Value = "BASIS Chandler"                                         ' BASIS School Name
+                        Mappingws.Range("B10").Value = "Chandler"                                               ' Intacct - School Name
+                        Mappingws.Range("C10").Value = "CHD"                                                    ' School Abbreviation
+                        Mappingws.Range("D10").Value = "402"                                                    ' Intacct - School ID
+                        Mappingws.Range("E10").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Chandler Primary - North (CHPN) [404--Chandler Primary North] - Chandler Primary North
+                        Mappingws.Range("A11").Value = "BASIS Chandler Primary - North"                         ' BASIS School Name
+                        Mappingws.Range("B11").Value = "Chandler Primary North"                                 ' Intacct - School Name
+                        Mappingws.Range("C11").Value = "CHPN"                                                   ' School Abbreviation
+                        Mappingws.Range("D11").Value = "404"                                                    ' Intacct - School ID
+                        Mappingws.Range("E11").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Chandler Primary - South (CHPS) [403--Chandler Primary South] - Chandler Primary South
+                        Mappingws.Range("A12").Value = "BASIS Chandler Primary - South"                         ' BASIS School Name
+                        Mappingws.Range("B12").Value = "Chandler Primary South"                                 ' Intacct - School Name
+                        Mappingws.Range("C12").Value = "CHPS"                                                   ' School Abbreviation
+                        Mappingws.Range("D12").Value = "403"                                                    ' Intacct - School ID
+                        Mappingws.Range("E12").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+ 
+                    ' BASIS Flagstaff (FLG) [405--Flagstaff] - Flagstaff
+                        Mappingws.Range("A13").Value = "BASIS Flagstaff"                                        ' BASIS School Name
+                        Mappingws.Range("B13").Value = "Flagstaff"                                              ' Intacct - School Name
+                        Mappingws.Range("C13").Value = "FLG"                                                    ' School Abbreviation
+                        Mappingws.Range("D13").Value = "405"                                                    ' Intacct - School ID
+                        Mappingws.Range("E13").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Goodyear (GDY) [406--Goodyear] - Goodyear
+                        Mappingws.Range("A14").Value = "BASIS Goodyear"                                         ' BASIS School Name
+                        Mappingws.Range("B14").Value = "Goodyear"                                               ' Intacct - School Name
+                        Mappingws.Range("C14").Value = "GDY"                                                    ' School Abbreviation
+                        Mappingws.Range("D14").Value = "406"                                                    ' Intacct - School ID
+                        Mappingws.Range("E14").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Goodyear Primary (GDYP) [417--Goodyear Primary] - Goodyear Primary
+                        Mappingws.Range("A15").Value = "BASIS Goodyear Primary"                                 ' BASIS School Name
+                        Mappingws.Range("B15").Value = "Goodyear Primary"                                       ' Intacct - School Name
+                        Mappingws.Range("C15").Value = "GDYP"                                                   ' School Abbreviation
+                        Mappingws.Range("D15").Value = "417"                                                    ' Intacct - School ID
+                        Mappingws.Range("E15").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Mesa(MES) [407--Mesa] - Mesa
+                        Mappingws.Range("A16").Value = "BASIS Mesa"                                             ' BASIS School Name
+                        Mappingws.Range("B16").Value = "Mesa"                                                   ' Intacct - School Name
+                        Mappingws.Range("C16").Value = "MES"                                                    ' School Abbreviation
+                        Mappingws.Range("D16").Value = "407"                                                    ' Intacct - School ID
+                        Mappingws.Range("E16").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+ 
+                    ' BASIS Oro Valley (OV) [408--Oro Valley] - Oro Valley
+                        Mappingws.Range("A17").Value = "BASIS Oro Valley"                                       ' BASIS School Name
+                        Mappingws.Range("B17").Value = "Oro Valley"                                             ' Intacct - School Name
+                        Mappingws.Range("C17").Value = "OV"                                                     ' School Abbreviation
+                        Mappingws.Range("D17").Value = "408"                                                    ' Intacct - School ID
+                        Mappingws.Range("E17").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Oro Valley Primary (OVP) [418--Oro Valley Primary] - Oro Valley Primary
+                        Mappingws.Range("A18").Value = "BASIS Oro Valley Primary"                               ' BASIS School Name
+                        Mappingws.Range("B18").Value = "Oro Valley Primary"                                     ' Intacct - School Name
+                        Mappingws.Range("C18").Value = "OVP"                                                    ' School Abbreviation
+                        Mappingws.Range("D18").Value = "418"                                                    ' Intacct - School ID
+                        Mappingws.Range("E18").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Peoria (PEO) [409--Peoria] - Peoria
+                        Mappingws.Range("A19").Value = "BASIS Peoria"                                           ' BASIS School Name
+                        Mappingws.Range("B19").Value = "Peoria"                                                 ' Intacct - School Name
+                        Mappingws.Range("C19").Value = "PEO"                                                    ' School Abbreviation
+                        Mappingws.Range("D19").Value = "409"                                                    ' Intacct - School ID
+                        Mappingws.Range("E19").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Peoria Primary (PEOP) [419--Peoria Primary] - Peoria Primary
+                        Mappingws.Range("A20").Value = "BASIS Peoria Primary"                                   ' BASIS School Name
+                        Mappingws.Range("B20").Value = "Peoria Primary"                                         ' Intacct - School Name
+                        Mappingws.Range("C20").Value = "PEOP"                                                   ' School Abbreviation
+                        Mappingws.Range("D20").Value = "419"                                                    ' Intacct - School ID
+                        Mappingws.Range("E20").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+
+                    ' BASIS Phoenix (PHX) [410--Phoenix] - Phoenix
+                        Mappingws.Range("A21").Value = "BASIS Phoenix"                                          ' BASIS School Name
+                        Mappingws.Range("B21").Value = "Phoenix"                                                ' Intacct - School Name
+                        Mappingws.Range("C21").Value = "PHX"                                                    ' School Abbreviation
+                        Mappingws.Range("D21").Value = "410"                                                    ' Intacct - School ID
+                        Mappingws.Range("E21").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+              
+                    ' BASIS Phoenix - Central (PHXC) [411--Phoenix Central] - Phoenix Central
+                        Mappingws.Range("A22").Value = "BASIS Phoenix - Central"                                ' BASIS School Name
+                        Mappingws.Range("B22").Value = "Phoenix Central"                                        ' Intacct - School Name
+                        Mappingws.Range("C22").Value = "PHXC"                                                   ' School Abbreviation
+                        Mappingws.Range("D22").Value = "411"                                                    ' Intacct - School ID
+                        Mappingws.Range("E22").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+             
+                    ' ****************BASIS Phoenix - North (PHXN) [423--Phoenix North] -
+                        Mappingws.Range("A23").Value = "BASIS Phoenix - North"                                  ' BASIS School Name
+                        Mappingws.Range("B23").Value = "Phoenix North"                                          ' Intacct - School Name
+                        Mappingws.Range("C23").Value = "PHXN"                                                   ' School Abbreviation
+                        Mappingws.Range("D23").Value = "423"                                                    ' Intacct - School ID
+                        Mappingws.Range("E23").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+        
+                    ' BASIS Phoenix Primary (PHXP) [421--Phoenix Primary] - Phoenix Primary
+                        Mappingws.Range("A24").Value = "BASIS Phoenix Primary"                                  ' BASIS School Name
+                        Mappingws.Range("B24").Value = "Phoenix Primary"                                        ' Intacct - School Name
+                        Mappingws.Range("C24").Value = "PHXP"                                                   ' School Abbreviation
+                        Mappingws.Range("D24").Value = "421"                                                    ' Intacct - School ID
+                        Mappingws.Range("E24").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+         
+                    ' BASIS Phoenix - South (PHXS) [420--Phoenix South] ----------- Phoenix South .... Phoenix South Primary
+                        Mappingws.Range("A25").Value = "BASIS Phoenix - South"                                  ' BASIS School Name
+                        Mappingws.Range("B25").Value = "Phoenix South"                                          ' Intacct - School Name
+                        Mappingws.Range("C25").Value = "PHXS"                                                   ' School Abbreviation
+                        Mappingws.Range("D25").Value = "420"                                                    ' Intacct - School ID
+                        Mappingws.Range("E25").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+              
+                    ' BASIS Pflugerville (PFL) [111--Pflugerville] - Pflugerville
+                        Mappingws.Range("A26").Value = "BASIS Pflugerville"                                     ' BASIS School Name
+                        Mappingws.Range("B26").Value = "Pflugerville"                                           ' Intacct - School Name
+                        Mappingws.Range("C26").Value = "PFL"                                                    ' School Abbreviation
+                        Mappingws.Range("D26").Value = "111"                                                    ' Intacct - School ID
+                        Mappingws.Range("E26").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                  
+                    ' BASIS Pflugerville Primary (PFLP) [108--Pflugerville Primary] -
+                        Mappingws.Range("A27").Value = "BASIS Pflugerville Primary"                             ' BASIS School Name
+                        Mappingws.Range("B27").Value = "Pflugerville Primary"                                   ' Intacct - School Name
+                        Mappingws.Range("C27").Value = "PFLP"                                                   ' School Abbreviation
+                        Mappingws.Range("D27").Value = "108"                                                    ' Intacct - School ID
+                        Mappingws.Range("E27").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                  
+                    ' BASIS Prescott (PRE) [412--Prescott] - Prescott
+                        Mappingws.Range("A28").Value = "BASIS Prescott"                                         ' BASIS School Name
+                        Mappingws.Range("B28").Value = "Prescott"                                               ' Intacct - School Name
+                        Mappingws.Range("C28").Value = "PRE"                                                    ' School Abbreviation
+                        Mappingws.Range("D28").Value = "412"                                                    ' Intacct - School ID
+                        Mappingws.Range("E28").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+                  
+                    ' BASIS San Antonio - Jack Lewis, Jr. (JLJ) [112--Jack Lewis, Jr.] - San Antonio Jack Lewis Jr.
+                        Mappingws.Range("A29").Value = "BASIS San Antonio - Jack Lewis, Jr."                    ' BASIS School Name
+                        Mappingws.Range("B29").Value = "Jack Lewis, Jr."                                        ' Intacct - School Name
+                        Mappingws.Range("C29").Value = "JLJ"                                                    ' School Abbreviation
+                        Mappingws.Range("D29").Value = "112"                                                    ' Intacct - School ID
+                        Mappingws.Range("E29").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                 
+                    ' BASIS San Antonio Primary - Jack Lewis, Jr. (JLJP) [109--Jack Lewis, Jr. Primary] -
+                        Mappingws.Range("A30").Value = "BASIS San Antonio Primary - Jack Lewis, Jr."            ' BASIS School Name
+                        Mappingws.Range("B30").Value = "Jack Lewis, Jr. Primary"                                ' Intacct - School Name
+                        Mappingws.Range("C30").Value = "JLJP"                                                   ' School Abbreviation
+                        Mappingws.Range("D30").Value = "109"                                                    ' Intacct - School ID
+                        Mappingws.Range("E30").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                  
+                    ' BASIS San Antonio Primary - Medical Center (SAMC) [101--San Antonio Primary Medical Center] -------- San Antonio Primary Medical Center.... San Antonio Medical Center
+                        Mappingws.Range("A31").Value = "BASIS San Antonio Primary - Medical Center"             ' BASIS School Name
+                        Mappingws.Range("B31").Value = "San Antonio Primary Medical Center"                     ' Intacct - School Name
+                        Mappingws.Range("C31").Value = "SAMC"                                                   ' School Abbreviation
+                        Mappingws.Range("D31").Value = "101"                                                    ' Intacct - School ID
+                        Mappingws.Range("E31").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+               
+                    ' BASIS San Antonio Primary - North Central (SANC) [102--San Antonio Primary North Central] ---------- San Antonio Primary North Central... SA North Central
+                        Mappingws.Range("A32").Value = "BASIS San Antonio Primary - North Central"              ' BASIS School Name
+                        Mappingws.Range("B32").Value = "San Antonio Primary North Central"                      ' Intacct - School Name
+                        Mappingws.Range("C32").Value = "SANC"                                                   ' School Abbreviation
+                        Mappingws.Range("D32").Value = "102"                                                    ' Intacct - School ID
+                        Mappingws.Range("E32").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                 
+                    ' BASIS San Antonio - Shavano (SAS) [103--San Antonio Shavano Campus] - San Antonio Shavano
+                        Mappingws.Range("A33").Value = "BASIS San Antonio - Shavano"                            ' BASIS School Name
+                        Mappingws.Range("B33").Value = "San Antonio Shavano Campus"                             ' Intacct - School Name
+                        Mappingws.Range("C33").Value = "SAS"                                                    ' School Abbreviation
+                        Mappingws.Range("D33").Value = "103"                                                    ' Intacct - School ID
+                        Mappingws.Range("E33").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+               
+                    ' BASIS San Antonio Primary - Northeast (SPNE) [104--San Antonio Primary Northeast] - San Antonio Primary Northeast
+                        Mappingws.Range("A34").Value = "BASIS San Antonio Primary - Northeast"                  ' BASIS School Name
+                        Mappingws.Range("B34").Value = "San Antonio Primary Northeast"                          ' Intacct - School Name
+                        Mappingws.Range("C34").Value = "SPNE"                                                   ' School Abbreviation
+                        Mappingws.Range("D34").Value = "104"                                                    ' Intacct - School ID
+                        Mappingws.Range("E34").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+                 
+                    ' BASIS San Antonio - Northeast (SANE) [106--San Antonio Northeast] - San Antonio Northeast
+                        Mappingws.Range("A35").Value = "BASIS San Antonio - Northeast"                          ' BASIS School Name
+                        Mappingws.Range("B35").Value = "San Antonio Northeast"                                  ' Intacct - School Name
+                        Mappingws.Range("C35").Value = "SANE"                                                   ' School Abbreviation
+                        Mappingws.Range("D35").Value = "106"                                                    ' Intacct - School ID
+                        Mappingws.Range("E35").Value = "BTCS"                                                   ' School Umbrella (Abbreviation)
+             
+                    ' BASIS Scottsdale (SCD) [413--Scottsdale] - Scottsdale
+                        Mappingws.Range("A36").Value = "BASIS Scottsdale"                                       ' BASIS School Name
+                        Mappingws.Range("B36").Value = "Scottsdale"                                             ' Intacct - School Name
+                        Mappingws.Range("C36").Value = "SCD"                                                    ' School Abbreviation
+                        Mappingws.Range("D36").Value = "413"                                                    ' Intacct - School ID
+                        Mappingws.Range("E36").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+   
+                    ' BASIS Scottsdale Primary - East (SCPE) [414--Scottsdale Primary East] -------- Scottsdale Primary East... Scottsdale Primary
+                        Mappingws.Range("A37").Value = "BASIS Scottsdale Primary - East"                        ' BASIS School Name
+                        Mappingws.Range("B37").Value = "Scottsdale Primary East"                                ' Intacct - School Name
+                        Mappingws.Range("C37").Value = "SCPE"                                                   ' School Abbreviation
+                        Mappingws.Range("D37").Value = "414"                                                    ' Intacct - School ID
+                        Mappingws.Range("E37").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+    
+                    ' BASIS Scottsdale Primary - West (SCPW) [422--Scottsdale Primary West] - Scottdale Primary West
+                        Mappingws.Range("A38").Value = "BASIS Scottsdale Primary - West"                        ' BASIS School Name
+                        Mappingws.Range("B38").Value = "Scottsdale Primary West"                                ' Intacct - School Name
+                        Mappingws.Range("C38").Value = "SCPW"                                                   ' School Abbreviation
+                        Mappingws.Range("D38").Value = "422"                                                    ' Intacct - School ID
+                        Mappingws.Range("E38").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+  
+                    ' BASIS Tucson - North (TUCN) [415--Tucson North] - Tucson North
+                        Mappingws.Range("A39").Value = "BASIS Tucson - North"                                   ' BASIS School Name
+                        Mappingws.Range("B39").Value = "Tucson North"                                           ' Intacct - School Name
+                        Mappingws.Range("C39").Value = "TUCN"                                                   ' School Abbreviation
+                        Mappingws.Range("D39").Value = "415"                                                    ' Intacct - School ID
+                        Mappingws.Range("E39").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+              
+                    ' BASIS Tucson Primary (TUCP) [416--Tucson Primary] - Tucson Primary
+                        Mappingws.Range("A40").Value = "BASIS Tucson Primary"                                   ' BASIS School Name
+                        Mappingws.Range("B40").Value = "Tucson Primary"                                         ' Intacct - School Name
+                        Mappingws.Range("C40").Value = "TUCP"                                                   ' School Abbreviation
+                        Mappingws.Range("D40").Value = "416"                                                    ' Intacct - School ID
+                        Mappingws.Range("E40").Value = "BCSI"                                                   ' School Umbrella (Abbreviation)
+              
+                    ' BASIS Washington DC (DC) [201--Washington DC (School)] ------- Washington DC... DC
+                        Mappingws.Range("A41").Value = "BASIS Washington DC"                                    ' BASIS School Name
+                        Mappingws.Range("B41").Value = "Washington DC (School)"                                 ' Intacct - School Name
+                        Mappingws.Range("C41").Value = "DC"                                                     ' School Abbreviation
+                        Mappingws.Range("D41").Value = "201"                                                    ' Intacct - School ID
+                        Mappingws.Range("E41").Value = "BDC"                                                    ' School Umbrella (Abbreviation)
+                        
+                    ' BASIS Baton Rouge {Umbrella} (BBR)
+                    
+                    ' BASIS Charter Schools, Inc. {Umbrella} (BCSI)
+                    
+                    ' BASIS Washington, DC {Umbrella} (BDC)
+                        
+                    ' BASIS Texas Charter Schools, Inc. {BTCS} (BTCS)
+                    
+                    ''''' This is all schools that come after Fiscal Year 2024 (excluding BASIS Phoenix North) - Use the following Template '''''
+                    
+                        ' BASIS School (School Abbreviation) [Intacct Exact |School Number--School Name|] - Salesforce School Name
+                    
+                  
+                  
+                  
+                  
+                ' Resize Columns in the "School Mapping" Worksheet - Auto Fit
+                    Mappingws.Range("A:ZZ").Columns.AutoFit
+
+                ' Find the last used row in column A
+                    lastRow = Mappingws.Cells(Mappingws.Rows.Count, "A").End(xlUp).Row
+                
+                ' Sort column A (BASIS School Name) in Ascending order (A-Z)
+                    With Mappingws.Sort
+                        .SortFields.Clear
+                        .SortFields.Add2 Key:=Mappingws.Range("A1:A" & lastRow), _
+                                        SortOn:=xlSortOnValues, _
+                                        Order:=xlAscending, _
+                                        DataOption:=xlSortNormal
+                        .SetRange Mappingws.Range("A1:R" & lastRow)
+                        .Header = xlYes
+                        .MatchCase = False
+                        .Orientation = xlTopToBottom
+                        .SortMethod = xlPinYin
+                        .Apply
+                    End With
+                    
+End Sub
+Sub CyberGrants_Converter_Step1()
+    
+    Dim CurrentDate As String
+    Dim wsDisbursements As Worksheet
+    Dim unlockRange As Range
+    
+    ' Assign Value to CurrentDate Variable = ZYXWVUT(Year.Month.Day - Hour.Minute.Second)
+        CurrentDate = "ZYXWVUT" & Format(Now(), "yyyy.mm.dd - hh.mm.ss")
+
+    ' Prompt the user for confirmation of Reset
+        UserResponse = MsgBox("Are you sure you want to start the Cyber Grants Macro. Doing so will erase all other worksheets in this workbook.", _
+                              vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+
+    ' Check user's response
+        If UserResponse = vbYes Then
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = CurrentDate ' Add a new worksheet with the CurrentDate variable Value
+
+            ' Delete all existing worksheets except for CurrentDate
+                Application.DisplayAlerts = False
+                For Each ws In ThisWorkbook.Worksheets
+                    If ws.Name <> CurrentDate Then
+                        ws.Delete
+                    End If
+                Next ws
+                Application.DisplayAlerts = True
+                
+            ' Rename CurrentDate worksheet to "Disbursement File"
+                ThisWorkbook.Sheets(CurrentDate).Name = "Disbursement File"
+            
+            ' Create a variable called wsDisbursements to represent "Disbursement File" Worksheet
+                Set wsDisbursements = ThisWorkbook.Sheets("Disbursement File")
+                
+            ' Start setting up the environment to make it easy for the user to know what steps to take next
+                wsDisbursements.Range("A:A").ColumnWidth = 38
+                With wsDisbursements.Range("A1")
+                    .Value = ",------------------------------------------------------->"
+                    .Interior.Color = vbRed
+                    .Font.ColorIndex = 6
+                End With
+                
+                With wsDisbursements.Range("A2:A3")
+                    .Merge
+                    .WrapText = True
+                    .HorizontalAlignment = xlLeft
+                    .VerticalAlignment = xlTop
+                    .Value = "''---Please place the disbursement information from Cyber Grants starting in Column B"
+                    .Interior.Color = RGB(255, 0, 0)
+                    .Font.Color = vbYellow
+                End With
+                
+                With wsDisbursements.Range("A4:A6")
+                    .Merge
+                    .WrapText = True
+                    .HorizontalAlignment = xlLeft
+                    .VerticalAlignment = xlTop
+                    .Value = "DO NOT mistaken this information for the individual reports... Those will be asked for later."
+                    .Interior.Color = RGB(0, 0, 200)
+                    .Font.Color = RGB(255, 255, 255)
+                End With
+                ' Add a button of the converter macro to provide an easy click to the next step.(Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                    Set ButtonShape = wsDisbursements.Shapes.AddShape(msoShapeRectangle, 0, 87, 209, 301)
+                    ButtonText = "CLICK HERE to go to the next step of Cyber Grants Converter."                 ' Value of the text within the button
+                    With ButtonShape
+                        .OnAction = "CyberGrants_Converter_Step2"                                               ' Embedding the Specific Converter Macro to the button
+                        .TextFrame.Characters.Text = ButtonText                                                 ' Start to manipulating the font in the button
+                        .TextFrame.Characters.Font.Name = "Calibri"                                             ' Button Font Style
+                        .TextFrame.Characters.Font.FontStyle = "Bold"                                           ' Make Button Font Bold
+                        .TextFrame.Characters.Font.Size = 35                                                    ' Button Font Size
+                        .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                     ' Black Font Color (For all Salesforce Report Site Converters)
+                        .TextFrame.HorizontalAlignment = xlCenter                                               ' Center the font within the button (left to right)
+                        .TextFrame.VerticalAlignment = xlCenter                                                 ' Center the font within the button (up and down)
+                    End With
+                    
+            ' Set up the "Disbursement File" Worksheet to be a protected worksheet
+                ' Define the range to Unlock (all cells except column A)
+                    Set unlockRange = wsDisbursements.Range("B1:XFD1048576")
+                ' Unlock all the cells in this range
+                    If Not unlockRange Is Nothing Then
+                        unlockRange.Locked = False
+                    End If
+                ' Protect the worksheet now, without limitations
+                    wsDisbursements.Protect UserInterfaceOnly:=True, AllowFormattingCells:=True, AllowFormattingColumns:=True, _
+                    AllowFormattingRows:=True, AllowInsertingColumns:=True, AllowInsertingRows:=True, _
+                    AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, AllowDeletingRows:=True, _
+                    AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+            ' Select Cell B2
+                wsDisbursements.Range("B1").Select
+        End If
+
+End Sub
+
+Sub CyberGrants_Converter_Step2()
+    Dim folderPath As String
+    Dim newFolderPath As String
+    Dim fileName As String
+    Dim rowIndex As Integer
+    Dim newName As String
+    Dim SummaryEndRow As Long
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    Dim wsSFImport As Worksheet
+    Dim ConsolidatedEndRow As Long
+    Dim DisbursementsEndRow As Long
+    
+  ''''''''''''''''''''''''''''
+    Dim ws As Worksheet
+    Dim wsToKeep As Variant
+    Dim wsName As Variant
+    Dim found As Boolean
+    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+   ''''''''''''''''''''''''''''
+    Dim wsDisbursements As Worksheet
+    Dim Headers As Variant
+    Dim i As Integer
+    Dim HeaderCheck As Boolean
+
+    ' Specify the worksheet to work with
+        Set wsDisbursements = ThisWorkbook.Sheets("Disbursement File")
+
+    ' Define the expected headers
+        Headers = Array("Company Name", "Company ID", "Organization ID", "Access Code", "Organization Name")
+
+    ' Check if the headers match the expected values
+        HeaderCheck = True
+        For i = LBound(Headers) To UBound(Headers)
+            If wsDisbursements.Cells(1, i + 2).Value <> Headers(i) Then
+                HeaderCheck = False
+                Exit For
+            End If
+        Next i
+
+    ' If headers don't match, clear contents and display message
+        If Not HeaderCheck Then
+            wsDisbursements.Range("B:ZZ").ClearContents
+            wsDisbursements.Range("B1").Select
+            MsgBox "I'm sorry, this appears to either be missing information or the incorrect report. Please check to make sure you have the correct report and all the column headings in your pasted information. Then try again!", vbExclamation
+            Exit Sub
+        End If
+    
+    
+    ' If the headers match, start the rest of the Cyber Grants Converter Process.
+    
+        ' Unprotect the sheet
+            wsDisbursements.Unprotect
+    
+        ' Delete Column A contents (Macro Button, formatting, and other text)
+            wsDisbursements.Columns("A").Delete
+    
+        ' Add a column in front of the new column A and set header
+            wsDisbursements.Columns("A").Insert Shift:=xlToRight
+            wsDisbursements.Range("A1").Value = "New File Name Lookup"
+        
+        ' Add "New File Name Lookup" Formula to Column A and Fill Down
+            ' =TEXT(O2,"YYYY.MM.DD")&"_"&B2&" ("&P2&") [$"&TEXT(R2,"#,##0.00")&"] - "&T2&".csv"
+                wsDisbursements.Range("A2").Value = "=TEXT(O2,""YYYY.MM.DD"")&""_""&B2&"" (""&P2&"") [$""&TEXT(R2,""#,##0.00"")&""] - ""&T2&"".csv"""
+            ' Set DisbursementsEndRow Variable and Fill Down
+                DisbursementsEndRow = wsDisbursements.Cells(Rows.Count, 2).End(xlUp).Row
+                wsDisbursements.Range("A2:A" & DisbursementsEndRow).FillDown
+            ' Format Disbursements File Worksheet Headers
+                With wsDisbursements.Range("A1:AB1")
+                    .EntireRow.Font.Underline = xlUnderlineStyleSingle
+                    .EntireRow.Font.Bold = True
+                    .AutoFilter
+                End With
+                wsDisbursements.Columns("A:AB").Columns.AutoFit
+                wsDisbursements.Range("A1").Select
+
+    
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    
+        ' Insert a Worksheet Called "Summary" and create a variable to refer to the worksheet.
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Summary"
+            Set wsSummary = ThisWorkbook.Sheets("Summary")
+                
+        ' Format the Headers of the "Summary" Worksheet
+            wsSummary.Range("A1").Value = "Original File Name"
+            wsSummary.Range("B1").Value = "New File Name"
+            wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+            wsSummary.Range("D1").Value = "Completed"
+            wsSummary.Range("E1").Value = "Disbursement Date"
+            wsSummary.Range("F1").Value = "Company Name"
+            wsSummary.Range("G1").Value = "Abbreviated Company Name"
+            wsSummary.Range("H1").Value = "Payment Number"
+            wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+            wsSummary.Range("J1").Value = "Gross Total"
+            wsSummary.Range("K1").Value = "Net Total"
+            wsSummary.Range("L1").Value = "Total Fees"
+            wsSummary.Range("M1").Value = "# of Transactions"
+            wsSummary.Range("N1").Value = "Disbursement ID"
+            wsSummary.Range("O1").Value = "Lookup Value"
+            
+        ' Create a Worksheet called "Consolidated Reports"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Consolidated Reports"
+            Set wsConsolidated = ThisWorkbook.Sheets("Consolidated Reports")
+        
+        ' Format the Headers of the "Consolidated Reports" Worksheet
+            wsConsolidated.Range("A1").Value = "Company Name"
+            wsConsolidated.Range("B1").Value = "Pass-through Agent"
+            wsConsolidated.Range("C1").Value = "CyberGrants Donation ID"
+            wsConsolidated.Range("D1").Value = "Program Name"
+            wsConsolidated.Range("E1").Value = "Donation Start Date"
+            wsConsolidated.Range("F1").Value = "Donation End Date"
+            wsConsolidated.Range("G1").Value = "Donation Designation"
+            wsConsolidated.Range("H1").Value = "Donation Frequency"
+            wsConsolidated.Range("I1").Value = "Donation Amount"
+            wsConsolidated.Range("J1").Value = "Donation Amount (Currency Code)"
+            wsConsolidated.Range("K1").Value = "Match Amount"
+            wsConsolidated.Range("L1").Value = "Match Amount (Currency Code)"
+            wsConsolidated.Range("M1").Value = "Payment Funding Source"
+            wsConsolidated.Range("N1").Value = "Payment Gross Amount"
+            wsConsolidated.Range("O1").Value = "Payment Gross Amount (Currency Code)"
+            wsConsolidated.Range("P1").Value = "Merchant Fee"
+            wsConsolidated.Range("Q1").Value = "Merchant Fee (Currency Code)"
+            wsConsolidated.Range("R1").Value = "Processing Fee"
+            wsConsolidated.Range("S1").Value = "Processing Fee (Currency Code)"
+            wsConsolidated.Range("T1").Value = "Payment Net Amount"
+            wsConsolidated.Range("U1").Value = "Payment Net Amount (Currency Code)"
+            wsConsolidated.Range("V1").Value = "Payment Number"
+            wsConsolidated.Range("W1").Value = "Payment Date"
+            wsConsolidated.Range("X1").Value = "Payment Method"
+            wsConsolidated.Range("Y1").Value = "Donor First Name"
+            wsConsolidated.Range("Z1").Value = "Donor Last Name"
+            wsConsolidated.Range("AA1").Value = "Donor Address"
+            wsConsolidated.Range("AB1").Value = "Donor City"
+            wsConsolidated.Range("AC1").Value = "Donor State"
+            wsConsolidated.Range("AD1").Value = "Donor Province"
+            wsConsolidated.Range("AE1").Value = "Donor ZIP/Postal Code"
+            wsConsolidated.Range("AF1").Value = "Donor Country"
+            wsConsolidated.Range("AG1").Value = "Donor Email Address"
+            wsConsolidated.Range("AH1").Value = "Donor Telephone"
+            wsConsolidated.Range("AI1").Value = "Original File Name"
+            wsConsolidated.Range("AJ1").Value = "New File Name"
+
+        ' Create a Worksheet called "Salesforce Import File" and create a variable to refer to the worksheet.
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Salesforce Import File"
+            Set wsSFImport = ThisWorkbook.Sheets("Salesforce Import File")
+        
+        ' Format the Headers of the "Salesforce Import File" Workhsheet
+            wsSFImport.Range("A1").Value = "C&P Account Name Correction"
+            wsSFImport.Range("B1").Value = "Company"
+            wsSFImport.Range("C1").Value = "Disbursement"
+            wsSFImport.Range("D1").Value = "Check Number/Reference Number"
+            wsSFImport.Range("E1").Value = "Donation Date"
+            wsSFImport.Range("F1").Value = "Deposit Date"
+            wsSFImport.Range("G1").Value = "Donation Amount"
+            wsSFImport.Range("H1").Value = "Contact1 First Name"
+            wsSFImport.Range("I1").Value = "Contact1 Last Name"
+            wsSFImport.Range("J1").Value = "Contact1 Personal Email"
+            wsSFImport.Range("K1").Value = "Donation Type"
+            wsSFImport.Range("L1").Value = "Stage"
+            wsSFImport.Range("M1").Value = "Payment Method"
+            wsSFImport.Range("N1").Value = "Campaign Name"
+            wsSFImport.Range("O1").Value = "Donation Name"
+            wsSFImport.Range("P1").Value = "Description"
+            wsSFImport.Range("Q1").Value = "C&P Payment Type"
+            wsSFImport.Range("R1").Value = "Check Number"
+            
+        ' Create the School Mapping - by running the "a0_School_Map" Subroutine
+            a0_School_Map
+                
+        ' Create the Cyber Grants Company Mapping - by running the "a0_CyberGrants_Companies" Subroutine
+            a0_CyberGrants_Companies
+    
+        ' Prompt the user to select a folder
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    folderPath = .SelectedItems(1)
+                Else
+                    wsSummary.Activate
+                    wsSummary.Range("A2").Select
+                    MsgBox "No folder selected. Operation cancelled."
+                    ' Add a button for a Complete Reset on account of the macro will not work unless it's restarted.
+                    ' (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                        Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 600, 400)
+                        ButtonText = "You will now need to reset this macro back to its starting place. Press here when you are ready."             ' Value of the text within the button
+                        With ButtonShape
+                            .OnAction = "CyberGrants_Converter_Step1"                                                                               ' Embedding the Specific Converter Macro to the button
+                            .TextFrame.Characters.Text = ButtonText
+                            .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                            .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                            .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                            .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                            .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                            .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+                        End With
+                    Exit Sub
+                End If
+            End With
+    
+    
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''
+        ' Check if the file path exists
+
+        ' Initialize the array to hold file names
+            ReDim FileList(1 To 1) ' Start with a single element
+            
+            
+        ' Loop through files in the specified folder
+            fileName = Dir(folderPath & "\*.csv")
+            Do While fileName <> ""
+                FileCount = FileCount + 1
+                ReDim Preserve FileList(1 To FileCount)
+                FileList(FileCount) = fileName
+                fileName = Dir
+            Loop
+    
+        ' Open and copy the contents of the CSV files
+            For i = 1 To FileCount
+                ' Open the CSV file as an Excel workbook
+                Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
+        
+                ' Copy the data to a new worksheet
+                Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+                ' Use the file name (without CSV extension) as the worksheet name
+                NewSheet.Name = Left(FileList(i), Len(FileList(i)) - 4)
+                ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
+        
+        
+                ' Add a hyperlink in cell AJ1 to the "Summary" worksheet's cell A1
+                NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range("AJ1"), Address:="", SubAddress:="Summary!A1", TextToDisplay:="Return to Summary Page"
+        
+                ' Auto-adjust column widths in the new worksheet
+                NewSheet.Cells.EntireColumn.AutoFit
+        
+                ' Close the opened workbook without saving changes
+                Workbooks(FileList(i)).Close SaveChanges:=False
+            Next i
+      
+        ' Get the file count in the specified directory
+            file_path_count = 0
+            Dim file As String
+            file = Dir(folderPath & "\*.*")
+            Do While file <> ""
+                file_path_count = file_path_count + 1
+                file = Dir
+            Loop
+    
+        ' Check if the file_path_count is less than 1
+            If file_path_count < 1 Then
+                Exit Sub
+            End If
+    
+        ' Loop through each file in the directory
+            file = Dir(folderPath & "\*.*")
+            
+            Do While file <> ""
+                ' Set current_file_name to the file name
+                current_file_name = file
+        
+                ' Find the last row in column A of the Summary sheet
+                home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+        
+                ' Add the file name to column A of the Home worksheet
+                wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
+                
+                ' Redefine the last row in column A of the Home sheet
+                home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+                
+                ' Find the last row in column A of the the All Reports Combined worksheet
+                reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+        
+                ' Open the file and copy rows 13 to the end of the data
+                Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
+                wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
+        
+                ' Put current_file_name in column X for all the copied rows
+                wsConsolidated.Range("AI" & reports_column_a_max + 1 & ":AI" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
+        
+                
+                ' Close the opened file
+                wsTemp.Parent.Close
+        
+                ' Mark the file as "x" in column B of the Home worksheet if the current row is greater than 1 and doesn't have "Completed" in column B
+                If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
+                    wsSummary.Cells(home_column_a_max, "D").Value = "x"
+                End If
+        
+                ' Move to the next file
+                file = Dir
+            Loop
+    
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     '''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+        ' Populate the Formulas in the Summary Page
+            ' New File Name
+                ' B2
+                ' Year.Month.Day_CompanyName (DisbursementID) [$NetAmount] - Company/Employee {Disbursement ID}.csv
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&F2&" ("&IF(ISNUMBER(SEARCH("ACH",H2)),H2,"Check "&H2)&") [$"&TEXT(K2,"#,##0.00")&"] - "&I2&" {"&N2&"}.csv"
+                    wsSummary.Range("B2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&F2&"" (""&IF(ISNUMBER(SEARCH(""ACH"",H2)),H2,""Check ""&H2)&"") [$""&TEXT(K2,""#,##0.00"")&""] - ""&I2&"" {""&N2&""}.csv"""
+                
+            ' CSV Naming (Worksheet Name)
+                ' C2
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&G2&"("&N2&")"
+                    wsSummary.Range("C2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&G2&""(""&N2&"")"""
+            
+            ' Disbursement Date
+                ' E2
+                ' =TEXT(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!W:W), "MM/DD/YYYY")
+                    wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!W:W), ""MM/DD/YYYY"")"
+            
+            ' Company Name
+                ' F2
+                ' =XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!A:A)
+                    wsSummary.Range("F2").Formula = "=XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!A:A)"
+            
+            ' Abbreviated Company Name
+                ' G2
+                ' =IFERROR(XLOOKUP(Summary!F2,CyberGrantsCompany!A:A,CyberGrantsCompany!B:B),LEFT(Summary!F2,10))
+                    wsSummary.Range("G2").Formula = "=IFERROR(XLOOKUP(Summary!F2,CyberGrantsCompany!A:A,CyberGrantsCompany!B:B),LEFT(Summary!F2,10))"
+            
+            ' Payment Number
+                ' H2
+                ' =XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!V:V)
+                    wsSummary.Range("H2").Formula = "=XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!V:V)"
+            
+            ' Company Match/Employee Giving
+                ' I2
+                ' =PROPER(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!M:M))
+                    wsSummary.Range("I2").Formula = "=PROPER(XLOOKUP(Summary!A2,'Consolidated Reports'!AI:AI,'Consolidated Reports'!M:M))"
+            
+            ' Gross Total
+                ' J2
+                ' =SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!N:N)
+                    wsSummary.Range("J2").Formula = "=SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!N:N)"
+            
+            ' Net Total
+                ' K2
+                ' =SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!T:T)
+                    wsSummary.Range("K2").Formula = "=SUMIF('Consolidated Reports'!AI:AI,Summary!A2,'Consolidated Reports'!T:T)"
+            
+            ' Total Fees
+                ' L2
+                ' =J2 - K2
+                    wsSummary.Range("L2").Formula = "=J2 - K2"
+            
+            ' # of Transactions
+                ' M2
+                ' =COUNTIF('Consolidated Reports'!AI:AI,Summary!A2)
+                    wsSummary.Range("M2").Formula = "=COUNTIF('Consolidated Reports'!AI:AI,Summary!A2)"
+            
+            ' Disbursement ID
+                ' N2
+                ' =XLOOKUP(O2,'Disbursement File'!A:A,'Disbursement File'!L:L)
+                    wsSummary.Range("N2").Formula = "=XLOOKUP(O2,'Disbursement File'!A:A,'Disbursement File'!L:L)"
+    
+            ' Lookup Value
+                ' O2
+                ' =TEXT(E2,"YYYY.MM.DD")&"_"&F2&" ("&H2&") [$"&TEXT(K2,"#,##0.00")&"] - "&I2&".csv"
+                    wsSummary.Range("O2").Formula = "=TEXT(E2,""YYYY.MM.DD"")&""_""&F2&"" (""&H2&"") [$""&TEXT(K2,""#,##0.00"")&""] - ""&I2&"".csv"""
+    
+    
+    
+    
+    
+            ' Variable for the Last Row of the Summary Page
+                SummaryEndRow = wsSummary.Cells(Rows.Count, 1).End(xlUp).Row
+             
+            ' Fill Down Summary Page (B2:O...)
+                wsSummary.Range("B2:O" & SummaryEndRow).FillDown
+                    
+        ' Add New File Name to Consolidated Reports Worksheet
+            ' Create a Variable for the end row of the "Consolidated Reports" Worksheet
+                ConsolidatedEndRow = wsConsolidated.Cells(Rows.Count, 1).End(xlUp).Row
+            ' Add New File Name to column AJ of the "Consolidated Reports" Workhseet
+                ' =XLOOKUP(AI2,Summary!A:A,Summary!B:B)
+                wsConsolidated.Range("AJ2").Formula = "=XLOOKUP(AI2,Summary!A:A,Summary!B:B)"
+            ' Fill Down in Column AJ
+                wsConsolidated.Range("AJ2:AJ" & ConsolidatedEndRow).FillDown
+            
+            
+            
+            
+        ' Fill in SF Import Information
+            'C&P Account Name Correction
+            '
+                wsSFImport.Range("A2").Formula = ""
+                
+            'Company
+            ' ='Consolidated Reports'!A2
+                wsSFImport.Range("B2").Formula = "='Consolidated Reports'!A2"
+
+            'Disbursement [ID]
+            ' =XLOOKUP('Consolidated Reports'!AI2,Summary!A:A,Summary!N:N)
+                wsSFImport.Range("C2").Formula = "=XLOOKUP('Consolidated Reports'!AI2,Summary!A:A,Summary!N:N)"
+
+            'Check Number/Reference Number
+            ' ='Consolidated Reports'!C2
+                wsSFImport.Range("D2").Formula = "='Consolidated Reports'!C2"
+
+            'Donation Date
+            ' =TEXT(IF('Consolidated Reports'!F2="",'Consolidated Reports'!E2,'Consolidated Reports'!F2),"MM/DD/YYYY")
+                wsSFImport.Range("E2").Formula = "=TEXT(IF('Consolidated Reports'!F2="""",'Consolidated Reports'!E2,'Consolidated Reports'!F2),""MM/DD/YYYY"")"
+
+            'Deposit Date
+            ' =TEXT('Consolidated Reports'!W2,"MM/DD/YYYY")
+                wsSFImport.Range("F2").Formula = "=TEXT('Consolidated Reports'!W2,""MM/DD/YYYY"")"
+
+            'Donation Amount
+            ' ='Consolidated Reports'!N2
+                wsSFImport.Range("G2").Formula = "='Consolidated Reports'!N2"
+
+            'Contact1 First Name
+            ' =PROPER(TRIM('Consolidated Reports'!Y2))
+                wsSFImport.Range("H2").Formula = "=PROPER(TRIM('Consolidated Reports'!Y2))"
+
+            ' Contact1 Last Name
+            ' =PROPER(TRIM('Consolidated Reports'!Z2))
+                wsSFImport.Range("I2").Formula = "=PROPER(TRIM('Consolidated Reports'!Z2))"
+
+            ' Contact1 Personal Email
+            ' =IF('Consolidated Reports'!AG2="","",'Consolidated Reports'!AG2)
+            wsSFImport.Range("J2").Formula = "=IF('Consolidated Reports'!AG2="""","""",'Consolidated Reports'!AG2)"
+
+            ' Donation Type
+            ' =IF('Consolidated Reports'!X2="Paper","Check",IF('Consolidated Reports'!X2="ACH","ACH","…"))
+            wsSFImport.Range("K2").Formula = "=IF('Consolidated Reports'!X2=""Paper"",""Check"",IF('Consolidated Reports'!X2=""ACH"",""ACH"",""…""))"
+
+            ' Stage
+            wsSFImport.Range("L2").Value = "Authorized"
+
+            ' Payment Method
+            '
+            wsSFImport.Range("M2").Formula = ""
+ 
+            ' Campaign Name
+            '
+            wsSFImport.Range("N2").Formula = ""
+ 
+            ' Donation Name
+            '
+            wsSFImport.Range("O2").Formula = ""
+ 
+            ' Description (Site Name)
+            '
+            wsSFImport.Range("P2").Formula = "Cyber Grants"
+
+            ' C&P Payment Type
+            '
+            wsSFImport.Range("Q2").Formula = ""
+
+            ' Check Number
+            ' =IF('Consolidated Reports'!X2="ACH","",'Consolidated Reports'!V2)
+            wsSFImport.Range("R2").Formula = "=IF('Consolidated Reports'!X2=""ACH"","""",'Consolidated Reports'!V2)"
+            
+        
+        
+        
+        
+        ' Fill Formulas Down
+            wsSFImport.Range("A2:R" & ConsolidatedEndRow).FillDown
+
+        ' Create a new folder for renamed files
+            newFolderPath = folderPath & "\Renamed Reports"
+            MkDir newFolderPath
+            
+        ' Move files to the new folder with new names
+            For i = 2 To SummaryEndRow
+                ' Get original file name from column A
+                fileName = wsSummary.Cells(i, 1).Value
+                ' Get new file name from column B
+                newName = wsSummary.Cells(i, 2).Value
+                ' If column B is empty, use the same name
+                If newName = "" Then
+                    newName = fileName
+                End If
+                ' Move the file to the new folder
+                FileCopy folderPath & "\" & fileName, newFolderPath & "\" & newName
+            Next i
+        
+        ' Format Cells on the Summary Sheet, Consolidated Report Sheet, and Saleforce Import File Sheet
+            With wsSummary.Range("A1").EntireRow.Font
+                .Underline = xlUnderlineStyleSingle
+                .Bold = True
+            End With
+            wsConsolidated.Range("A1").EntireRow.Font.Underline = xlUnderlineStyleSingle
+            wsConsolidated.Range("A1").EntireRow.Font.Bold = True
+            wsSFImport.Range("A1").EntireRow.Font.Underline = xlUnderlineStyleSingle
+            wsSFImport.Range("A1").EntireRow.Font.Bold = True
+        
+        ' AutoFit Columns on "Summary" Sheet and "Consolidated Reports" Sheet, and "Salesforce Import File" Sheet
+            wsSummary.Columns("A:O").AutoFit
+            wsConsolidated.Columns("A:AJ").AutoFit
+            wsSFImport.Columns("A:R").AutoFit
+        
+        
+        
+        UpdateWorksheetNames
+        SortWorksheetsAlphabeticallyDescending
+        
+        ' Define worksheets to keep visible
+            wsToKeep = Array("Summary", "Consolidated Reports", "Salesforce Import File", "Disbursement File")
+
+        ' Loop through all worksheets in the workbook
+            For Each ws In ThisWorkbook.Worksheets
+                found = False ' Reset flag
+                ' Check if the current worksheet is in the list of worksheets to keep
+                For Each wsName In wsToKeep
+                    If ws.Name = wsName Then
+                        found = True
+                        Exit For
+                    End If
+                Next wsName
+                ' Hide the worksheet if it's not in the list
+                If Not found Then
+                    ws.Visible = xlSheetHidden
+                End If
+            Next ws
+            
+        ' Activate Summary Sheet (for scrolling the worksheets all the way over) and then Salesforce Sheet
+            wsSummary.Activate
+            wsSFImport.Activate
+            wsSFImport.Range("A1").Select
+            
+        ' Select the Salesforce Information and then copy it, and paste values. Then I want to sort it by date and by disbursement ID.
+            'wsSFImport.Range("A:R").Select
+            'Selection.Copy
+            'Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                ':=False, Transpose:=False
+            'Application.CutCopyMode = False
+            'wsSFImport.Range("A1:R1").AutoFilter
+            'wsSFImport.Columns("A:R").AutoFit
+  
+End Sub
+
+Sub UpdateWorksheetNames()
+    Dim wsSummary As Worksheet
+    Dim ws As Worksheet
+    Dim SummaryLastRow As Long
+    Dim i As Long
+    Dim oldName As String
+    Dim newName As String
+    
+    ' Set reference to the Summary worksheet
+    Set wsSummary = ThisWorkbook.Worksheets("Summary")
+    
+    ' Find the last row in Column A of the Summary worksheet
+    SummaryLastRow = wsSummary.Cells(wsSummary.Rows.Count, "A").End(xlUp).Row
+    
+    ' Loop through each row in Column A of the Summary worksheet
+        For i = 2 To SummaryLastRow
+        ' Summary Sheet Column A name minus the last 4 characters (.csv)
+            oldName = Left(wsSummary.Cells(i, "A").Value, Len(wsSummary.Cells(i, "A").Value) - 4)
+        ' Check if there's a worksheet with a name matching oldName Variable (Column A value minus the last 4 characters)
+            For Each ws In ThisWorkbook.Worksheets
+                If Left(ws.Name, Len(ws.Name)) = oldName Then
+                ' Get the corresponding name from Column C
+                    newName = wsSummary.Cells(i, "C").Value
+                ' Rename the worksheet
+                    ws.Name = newName
+                ' Exit the loop after renaming the worksheet
+                    Exit For
+                End If
+            Next ws
+        Next i
+End Sub
+
+Sub SortWorksheetsAlphabeticallyDescending()
+    Dim i As Integer, j As Integer
+    Dim tempSheet As Worksheet
+
+    ' Bubble sort the worksheets
+        For i = 1 To Worksheets.Count - 1
+            For j = i + 1 To Worksheets.Count
+                If UCase(Worksheets(j).Name) > UCase(Worksheets(i).Name) Then
+                    ' Swap the worksheets
+                        Set tempSheet = Worksheets(j)
+                        Worksheets(j).Move Before:=Worksheets(i)
+                        Set tempSheet = Worksheets(i)
+                End If
+            Next j
+        Next i
+End Sub
+
+
+
