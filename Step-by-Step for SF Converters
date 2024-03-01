@@ -10,6 +10,9 @@ Sub __ ()
     Dim CurrentDate As String ' Defined in Step 3
 
   ' Other Variables that are used across all Platforms
+    Dim ConsolidatedFileColumn As String
+
+    Set ConsolidatedFileColumn = ""
     
 
   ' Reset Everything
@@ -57,76 +60,124 @@ Sub __ ()
 
   ' Step 9: Populate the Headers for each of the Worksheets.
     ' "Summary Page" Worksheet Headers
-      wsSummary.Range("A1").Value = "Original File Name"
-      wsSummary.Range("B1").Value = "Descriptive Name"
-      wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
-      wsSummary.Range("D1").Value = "Completed"
-      wsSummary.Range("E1").Value = "Disbursement Date"
-      wsSummary.Range("F1").Value = "School Name"
-      wsSummary.Range("G1").Value = "Abbreviated School Name"
-      wsSummary.Range("H1").Value = "Disbursement ID"
-      wsSummary.Range("I1").Value = "Company Match/Employee Giving"
-      wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
-      wsSummary.Range("K1").Value = "Gross Total - Company Match"
-      wsSummary.Range("L1").Value = "Total Gross Donations"
-      wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
-      wsSummary.Range("N1").Value = "Total Fees - Company Match"
-      wsSummary.Range("O1").Value = "Total Donation Fees"
-      wsSummary.Range("P1").Value = "Net Total - Employee Giving"
-      wsSummary.Range("Q1").Value = "Net Total - Company Match"
-      wsSummary.Range("R1").Value = "Total Net Donations"
-      wsSummary.Range("S1").Value = "# of Transactions"
-      wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+        wsSummary.Range("A1").Value = "Original File Name"
+        wsSummary.Range("B1").Value = "Descriptive Name"
+        wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+        wsSummary.Range("D1").Value = "Completed"
+        wsSummary.Range("E1").Value = "Disbursement Date"
+        wsSummary.Range("F1").Value = "School Name"
+        wsSummary.Range("G1").Value = "Abbreviated School Name"
+        wsSummary.Range("H1").Value = "Disbursement ID"
+        wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Company Match"
+        wsSummary.Range("L1").Value = "Total Gross Donations"
+        wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("N1").Value = "Total Fees - Company Match"
+        wsSummary.Range("O1").Value = "Total Donation Fees"
+        wsSummary.Range("P1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("Q1").Value = "Net Total - Company Match"
+        wsSummary.Range("R1").Value = "Total Net Donations"
+        wsSummary.Range("S1").Value = "# of Transactions"
+        wsSummary.Range("T1").Value = "Temporary Worksheet Name"
   
-  ' "Consolidated Reports" Worksheet Headers
-      wsConsolidated.Range("A1").Value = "Donation Date"
-      wsConsolidated.Range("B1").Value = "Company Name"
-      wsConsolidated.Range("C1").Value = "Transaction Id"
-      wsConsolidated.Range("D1").Value = "Transaction Id"
-      wsConsolidated.Range("E1").Value = "Transaction Amount"
-      wsConsolidated.Range("F1").Value = "Fee Amount"
-      wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
-      wsConsolidated.Range("H1").Value = "Received Amount"
-      wsConsolidated.Range("I1").Value = "Is Disbused?"
-      wsConsolidated.Range("J1").Value = "Payment ID"
-      wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
-      wsConsolidated.Range("L1").Value = "Payment Create Date"
-      wsConsolidated.Range("M1").Value = "Payment Status Date"
-      wsConsolidated.Range("N1").Value = "Payment Status"
-      wsConsolidated.Range("O1").Value = "Donor Type"
-      wsConsolidated.Range("P1").Value = "Donor ID"
-      wsConsolidated.Range("Q1").Value = "Donor First Name"
-      wsConsolidated.Range("R1").Value = "Donor Last Name"
-      wsConsolidated.Range("S1").Value = "Donor Full Name"
-      wsConsolidated.Range("T1").Value = "Donor Email Address"
-      wsConsolidated.Range("U1").Value = "Donor Address"
-      wsConsolidated.Range("V1").Value = "Donor Address 2"
-      wsConsolidated.Range("W1").Value = "Donor City"
-      wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
-      wsConsolidated.Range("Y1").Value = "Donor Postal Code"
-      wsConsolidated.Range("Z1").Value = "Donor Country"
-      wsConsolidated.Range("AA1").Value = "Match Donor Id"
-      wsConsolidated.Range("AB1").Value = "Match Donor First Name"
-      wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
-      wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
-      wsConsolidated.Range("AE1").Value = "Dedication Type"
-      wsConsolidated.Range("AF1").Value = "Dedication"
-      wsConsolidated.Range("AG1").Value = "Designation"
-      wsConsolidated.Range("AH1").Value = "Registration Id"
-      wsConsolidated.Range("AI1").Value = "Designated Charity Name"
-      wsConsolidated.Range("AJ1").Value = "Donation Status"
-      wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
-      wsConsolidated.Range("AL1").Value = "Segment Name"
-      wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
-      wsConsolidated.Range("AN1").Value = "Local Currency Type"
-      wsConsolidated.Range("AO1").Value = "Fundraising ID"
-      wsConsolidated.Range("AP1").Value = "Original File Name"
-      wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
+    ' "Consolidated Reports" Worksheet Headers
+        wsConsolidated.Range("A1").Value = "Donation Date"
+        wsConsolidated.Range("B1").Value = "Company Name"
+        wsConsolidated.Range("C1").Value = "Transaction Id"
+        wsConsolidated.Range("D1").Value = "Transaction Id"
+        wsConsolidated.Range("E1").Value = "Transaction Amount"
+        wsConsolidated.Range("F1").Value = "Fee Amount"
+        wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
+        wsConsolidated.Range("H1").Value = "Received Amount"
+        wsConsolidated.Range("I1").Value = "Is Disbused?"
+        wsConsolidated.Range("J1").Value = "Payment ID"
+        wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
+        wsConsolidated.Range("L1").Value = "Payment Create Date"
+        wsConsolidated.Range("M1").Value = "Payment Status Date"
+        wsConsolidated.Range("N1").Value = "Payment Status"
+        wsConsolidated.Range("O1").Value = "Donor Type"
+        wsConsolidated.Range("P1").Value = "Donor ID"
+        wsConsolidated.Range("Q1").Value = "Donor First Name"
+        wsConsolidated.Range("R1").Value = "Donor Last Name"
+        wsConsolidated.Range("S1").Value = "Donor Full Name"
+        wsConsolidated.Range("T1").Value = "Donor Email Address"
+        wsConsolidated.Range("U1").Value = "Donor Address"
+        wsConsolidated.Range("V1").Value = "Donor Address 2"
+        wsConsolidated.Range("W1").Value = "Donor City"
+        wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
+        wsConsolidated.Range("Y1").Value = "Donor Postal Code"
+        wsConsolidated.Range("Z1").Value = "Donor Country"
+        wsConsolidated.Range("AA1").Value = "Match Donor Id"
+        wsConsolidated.Range("AB1").Value = "Match Donor First Name"
+        wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
+        wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
+        wsConsolidated.Range("AE1").Value = "Dedication Type"
+        wsConsolidated.Range("AF1").Value = "Dedication"
+        wsConsolidated.Range("AG1").Value = "Designation"
+        wsConsolidated.Range("AH1").Value = "Registration Id"
+        wsConsolidated.Range("AI1").Value = "Designated Charity Name"
+        wsConsolidated.Range("AJ1").Value = "Donation Status"
+        wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
+        wsConsolidated.Range("AL1").Value = "Segment Name"
+        wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsConsolidated.Range("AN1").Value = "Local Currency Type"
+        wsConsolidated.Range("AO1").Value = "Fundraising ID"
+        wsConsolidated.Range(ConsolidatedLastColumn & "1").Value = "Original File Name"
+        wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
 
-  ' "Salesforce Import File" Worksheet Headers
+    ' "Salesforce Import File" Worksheet Headers
+      ' Salesforce Headers Here
 
+  ' Step 10: Ask user to open the folder to extract CSV files from to consolidate into Excel on the "Consolidated Reports" Worksheet
+    ' If the user cancels the operation, create a macro to start from this point and exit this Sub. Otherwise continue with the next part.
+      ' Prompt the user to select a folder
+        With Application.FileDialog(msoFileDialogFolderPicker)
+          .Title = "Select a Folder"
+          .AllowMultiSelect = False
+          If .Show = -1 Then
+            FolderPath = .SelectedItems(1)
+          Else
+            wsSummary.Activate
+            wsSumamry.Range("A2").Select
+            MsgBox "Operation was cancelled. Please click this button when you are ready to pick a folder with your files!"
+            ' Add a button to start from this point.
+              Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 600, 400)
+              ButtonText = "Click here when you have your files in a folder and are ready to select that folder."             ' Value of the text within the button
+              With ButtonShape
+                .OnAction = ""                                                                       ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = ButtonText
+                .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+              End With
+            Exit Sub
+          End If
+        End With
+  ' If the Folder was selected. Continue to the next part of this macro.
 
+  ' Step 11: Check that the folder path has at least 1 file in it. If it doesn't, end the sub and create a button for when the user is ready.
 
+  ' Step 12-22: If at least one file is in the folder path then Start a loop of the following processes:
+    ' Step 12: Define the Variables relevant to this Loop ()
+    ' Loop through the files from the folder, one at a time, completing these steps.
+      ' Step 13: Open the file
+      ' Step 14: Copy the whole report from the file into a new worksheet at the end of all other worksheets in the workbook, 
+      ' Step 15: Temporarily name the worksheet based on the file count 1, 2, ...
+      ' Step 16: Create a hyperlink in the new worksheet in Row 1 after the completion of other row headers linked to the "Summary Page" A1 cell, 
+      ' Step 17: Adjust the column width to AutoFit. _
+      ' Step 18: After those steps copy only the data relevant to the "Consolidate Reports" Worksheet (not the entire report, exclude headings and other unnecessary data)
+      ' Step 19: Now Place the file name into Column A of the "Summary Page" Worksheet as well as the ConsolidatedLastColumn variable of the "Consolidated Reports" Worksheet
+      ' Step 20: Close the File
+      ' Step 21: Place an "x" in Column D of the "Summary" Page to indicate the loop has been completed for that file
+      ' Step 22: Repeat until all files have been added
+
+    ' Once the loop is completed, start adding formulas to help analyze the data collected
+
+  ' Step 23: Populate the formulas in 
 
 
 End Sub
