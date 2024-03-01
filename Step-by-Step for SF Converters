@@ -1,0 +1,48 @@
+' Define a Subroutine
+Sub __ ()
+  ' Worksheets that are the same across all Platforms
+    Dim wsConsolidated As Worksheet
+    Dim wsSchoolMap As Worksheet
+    Dim wsSFImport As Worksheet
+    Dim wsSummary As Worksheet
+
+  ' Worksheet/Variable to Reset Everything
+    Dim CurrentDate As String ' Used in Step 3
+
+  ' Other Variables that are used across all Platforms
+    
+
+  ' Reset Everything
+    ' Step 1: Prompt the user for the confirmation of Reset
+      UserResponse = MsgBox("Are you sure you want to Start the ______ Converter? Doing so will result in the reset of this entire workbook.", _
+        vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+
+    ' Step 2: Check User's Response: If the user clicked "Yes" Continue, otherwise end the Subroutine
+      If UserResponse <> vbYes Then
+        End Sub
+      End If
+
+    ' Step 3: Create a New Worksheet that is unlikely to already be created ("ZYXWVUT" & the current date and time)
+      ' This will be used as the new worksheet name (example "ZYXWVUT2024.03.01 - 03.22.57") - Variable is different every second.
+        CurrentDate = "ZYXWVUT" & Format(Now(), "yyyy.mm.dd - hh.mm.ss")
+      ' Create the New Worksheet with the CurrentDate Variable's Name. Adding it to the end of all worksheets in the workbook.
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = CurrentDate
+
+    ' Step 4: Delete all Worksheets not named with the CurrentDate Variable
+      Application.DisplayAlerts = False
+      For Each ws In ThisWorkbook.Worksheets
+        If ws.Name <> CurrentDate Then
+          ws.Delete
+        End If
+      Next ws
+      Application.DisplayAlerts = True
+
+  ' Step 5: 
+
+
+
+
+
+
+
+End Sub
