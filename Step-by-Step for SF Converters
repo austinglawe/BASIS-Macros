@@ -1,5 +1,7 @@
 ' Define a Subroutine
 Sub __ ()
+  ' Last Updated 03/01/2024
+
   ' Worksheets that are the same across all Platforms
     Dim wsConsolidated As Worksheet ' "Consolidated Reports" Worksheet
     Dim wsSchoolMap As Worksheet ' "School Mapping" Worksheet
@@ -9,10 +11,18 @@ Sub __ ()
   ' Worksheet/Variable to Reset Everything
     Dim CurrentDate As String ' Defined in Step 3
 
+
   ' Other Variables that are used across all Platforms
     Dim ConsolidatedFileColumn As String
+    Dim ConsolidatedEndColumn As String
+    Dim SFEndColumn As String
+    Dim SummaryEndColumn As String
 
-    Set ConsolidatedFileColumn = ""
+  ' Set the Variables for the specific converter
+    ConsolidatedFileColumn = ""
+    ConsolidatedEndColumn = ""
+    SFEndColumn = ""
+    SummaryEndColumn = ""
     
 
   ' Reset Everything
@@ -177,7 +187,34 @@ Sub __ ()
 
     ' Once the loop is completed, start adding formulas to help analyze the data collected
 
-  ' Step 23: Populate the formulas in 
+  ' Step 23: Populate the formulas in the "Summary Page" Worksheet
 
+  ' Step 24: Fill down the formulas in the "Summary Page" Worksheet
+
+  ' Step 25: Populate the formula(s) in the "Consolidated Reports" Worksheet
+
+  ' Step 26: Fill down the formula(s) in the "Consolidated Reports" Worksheet
+
+  ' Step 27: Populate the formulas in the "Salesforce Import File" Worksheet
+
+  ' Step 28: Fill down the formulas in the the "Salesforce Import File" Worksheet
+
+  ' Using the original folder path provided by the user, create 2 new folders within that folder. Called: "Descriptive File Name", and "CSV File Name". _
+    Copy the original files and rename them based on the Descriptive Naming Convention and CSV Naming Convention found in the "Summary Page" Worksheet
+    ' Create the "Descriptive File Name" Folder and copy and paste the files with the Descriptive File Naming Convention
+
+    ' Create the "CSV File Name" Folder and copy and paste the files with the CSV File Naming Convention
+
+  ' Format the Cells in the "Summary Page" sheet, "Consolidated Reports" sheet, and "Salesforce Import File" sheet
+
+  ' Rename the worksheet names from the Temporary Worksheet Name to the CSV Naming Convention
+
+  ' Reorder the worksheets in a descending order (Z-A)-(9-0)
+
+  ' Hide all the worksheets except for "Consolidated Reports", "Summary Page", "Salesforce Import File", ....
+
+  ' Reorder the non-hidden worksheets in ascending order (0-9)-(A-Z)
+
+  ' Activate the "Salesforce Import File" Worksheet and go to "A1"
 
 End Sub
