@@ -1,9 +1,10 @@
 Goal Steps: (only manual processes left)
   Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports) - 40+ Reports per month (the "+" due to increasing number of schools for the future)
-  Step 2: Download the Salesforce Report
-  Step 3: Put the Click and Pledge and Salesforce reports into the converter.
-  Step 4: Check all information is accurate and complete (There will be some information that appears on the converter that will need to be reviewed by the user)
-  Step 5: Upload the file to Intacct.
+  Step 2: Place all Click and Pledge Reports into 1 folder.
+  Step 3: Download the Salesforce Report
+  Step 4: Put the Click and Pledge and Salesforce reports into the converter.
+  Step 5: Check all information is accurate and complete (There will be some information that appears on the converter that will need to be reviewed by the user)
+  Step 6: Upload the file to Intacct.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -17,11 +18,16 @@ Step 2:
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Initial thoughts for changing the process:
+Initial issues causing additional checks:
+  1. We were grouping transactions together incorrectly. We were using transaction date as our date. This grouped things together incorrectly. Everything was based on SweepID.
+  2. Sometimes the fundraising team changes the school names and so the campaign names are different from the initial school they came from - CNP School ID needed to be compared with the
+     School in the Campaign Name. The Campaign name needed to be extracted based on lookups to achieve this.
+  3. There's times when 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Every Step to complete in order:
 Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports)
+Step 2: Put all Click and Pledge monthly reports into 1 folder.
 Step 2: Download the Salesforce Report (1.1d_ProPay)
 Step 3: 
