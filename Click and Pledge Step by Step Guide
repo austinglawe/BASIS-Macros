@@ -30,9 +30,13 @@ Initial issues causing additional checks:
 Every Step to complete in order:
 Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports)
 Step 2: Put all Click and Pledge monthly reports into 1 folder.
-Step 2: Download the Salesforce Report (1.1d_ProPay)
-Step 3: 
+Step 3: Download the Salesforce Report (1.1d_ProPay)
+Step 4: 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 VBA to Achieve this:
+' (First Steps are not VBA related but are required to be preformed by the user)
+' Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports)
+' Step 2: Put all Click and Pledge monthly reports into 1 folder.
+' Step 3: Download the Salesforce Report (1.1d_ProPay)
 
