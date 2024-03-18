@@ -1,10 +1,12 @@
-Goal Steps:
+Goal Steps: (only manual processes left)
   Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports) - 40+ Reports per month (the "+" due to increasing number of schools for the future)
   Step 2: Download the Salesforce Report
   Step 3: Put the Click and Pledge and Salesforce reports into the converter.
   Step 4: Check all information is accurate and complete (There will be some information that appears on the converter that will need to be reviewed by the user)
   Step 5: Upload the file to Intacct.
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Steps before I started:
 Step 1: Download Reports from the Click and Pledge website. (Every single day report for every school) - This equates to 500-700 reports to download each month.
 Step 2: 
@@ -12,8 +14,9 @@ Step 2:
 
 
 
-
-Current Steps:
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Every Step to complete in order:
 Step 1: Download Reports from the Click and Pledge website. (Every school's monthly reports)
 Step 2: Download the Salesforce Report (1.1d_ProPay)
 Step 3: 
