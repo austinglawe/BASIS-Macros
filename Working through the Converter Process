@@ -251,7 +251,7 @@ Dim Key As Variant
             Exit Sub
         End If
 
-    ' Step 13: Ask User to pick a Folder Path.
+    ' Steps 13-...: Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
 
 
 
