@@ -186,11 +186,13 @@ Public Sub YourCause_AR_Team_Step2()
             Dim CompanyNameColumn As String
             Dim OpportunityNameColumn As String
             Dim CampaignNameColumn As String
+Dim EmptyItems As String
+Dim Key As Variant
 
 ' Step 4: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
     Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
 
-' Step 5-: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
+' Step 5-12: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
     
     ' Step 5: Define the range to search for column headers
         Set SearchRange = wsSFReport.Rows(1)
@@ -208,8 +210,48 @@ Public Sub YourCause_AR_Team_Step2()
     ' Step 9: Search for the required ("Target") Column Headers
             ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (below is the same as: i = 0 To 10) - indexes in VBA start at 0 rather than 1.
         For i = LBound(TargetColumnHeadrs To UBound(TargetColumnHeaders)
+            On Error Resume Next
+            Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))
+            If Not ColumnHeader Is Nothing Then
+                ColumnLetters(i) = Split(ColumnHeader.Address, "$")(1)
+                ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)
+            Else
+                MsgBox "Column """ & TargetColumnHeaders(i) & """" not found.", vbExclamation
+            End If
+            On Error GoTo 0
+        Next i
 
+    ' Step 10: Retrieve values from the dictionary to add a column letter to each variable.
+        FirstNameColumn = columnDictionary("First Name")
+        LastNameColumn = columnDictionary("Last Name")
+        PaymentAmountColumn = columnDictionary("Payment Amount")
+        PaymentIDColumn = columnDictionary("Payment: Payment Number")
+        CheckNumberColumn = columnDictionary("Check Number")
+        TransactionIDColumn = columnDictionary("Check/Reference Number")
+        DisbursementIDColumn = columnDictionary("Disbursement ID")
+        DescriptionColumn = columnDictionary("Description")
+        CompanyNameColumn = columnDictionary("Company Name")
+        OpportunityNameColumn = columnDictionary("Opportunity Name")
+        CampaignNameColumn = columnDictionary("Primary Campaign Source")
 
+    ' Step 11: Check for empty dictionary items
+        EmptyItems = ""
+        For Each Key In ColumnDictionary.Keys
+            If ColumnDictionary(Key) = "" Then
+                EmptyItems = EmptyItems & Key & vbCrLf
+            End If
+        Next Key
+
+    ' Step 12: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+        If emptyItems <> "" Then
+            wsSFReport.Columns("B:XFD").ClearContents
+            wsSFReport.Range("B1").Select
+            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use:" _
+                    & vbCrLf & emptyItems & vbCrLf & "Please find the Correct Report and Try again!", vbExclamation, "Missing Column Headers"
+            Exit Sub
+        End If
+
+    ' Step 13: Ask User to pick a Folder Path.
 
 
 
