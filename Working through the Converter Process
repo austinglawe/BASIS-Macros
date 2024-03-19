@@ -31,52 +31,110 @@ Step 4: Open the Excel Converter Macro File ()
 Step 5:Run the First Macro (Subroutine)
 (The macro's step by step process is below)
 
-Public Sub YourCause_AR_Team_Step2()
-' Step 1: Dim the variables that will be used.
-    Dim DateTime As String
-    Dim wsSFReport As Worksheet
+Public Sub YourCause_AR_Team_Step1()
+    ' Last Updated 03.19.2024
+    
+    ' Step 1: Dim the variables that will be used.
+        Dim ConverterName As String
+        Dim SFReportName As String
+        Dim DateTime As String
+        Dim wsSFReport As Worksheet
+    
+    ' Step 2: Set the value of the ConverterName (based on the converter this is) and SFReportName based on the Converter's Site and the report we use in Salesforce.
+        ConverterName = "Your Cause"
+        SFReportName = "1.1d_Propay"
+    
+    ' Step 3: Prompt the user for confirmation of Reset and to start the macro
+        UserResponse = MsgBox("Are you sure you want to start the " & ConverterName & " Macro? Doing so, will reset all worksheets in this file.", _
+          vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+    
+    ' Step 4: Check User's Response (if user clicks No, then end the macro, otherwise proceed to next steps)
+        If UserResponse = vbNo Then
+          Exit Sub
+        End if
+    
+    ' Step 5: Assign a value to the DateTime Variable (ZYXWVUT Year.Month.Day - Hour.Minute.Second) - This will allow it to be a new unique variable any given second.
+        DateTime = "ZYXWVUT" & Format(Now()," YYYY.MM.DD - HH.MM.SS")
+    
+    ' Step 6: Create a new Worksheet using the "DateTime" variable name.
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DateTime
+    
+    ' Step 7: Delete all exisiting worksheets except for the 'DateTime' worksheet that was just created.
+        Application.DisplayAlerts = False
+          For Each ws In ThisWorkbook.Worksheets
+            If ws.Name <> DateTime Then
+              ws.Delete
+            End If
+          Next ws
+        Application.DisplayAlerts = True
+    
+    ' Step 8: Rename the 'DateTime' Worksheet to "Salesforce Report"
+        ThisWorkbook.Sheets(DateTime).Name = "Salesforce Report"
+    
+    ' Step 9: Set the variable 'wsSFReport' to the worksheet that was just renamed to "Salesforce Report".
+        Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
+    
+    
+    ' Steps 10-14: Format the "Salesforce Report" worksheet to be ready for user to input the Salesforce Report and proceed to the second step of the macro.
+        
+        ' Step 10: Unprotect all the cells in the "Salesforce Report" Worksheet excel for column A.
+          wsSFReport.Columns("B:XFD").Locked = False
+          wsSFReport.Columns("A:A").Locked = True
+      
+        ' Start setting up the environment to make it easy for the user to know what steps to take next
+            ' Step 11: Change the Column Width of Column A.
+                wsSFReport.Range("A:A").ColumnWidth = 38
+            
+            ' Step 12: Create a message pointing the user where to put the Salesforce Report
+                With wsSFReport.Range("A1")
+                    .Value = ",------------------------------------------------------->"
+                    .Interior.Color = vbRed
+                    .Font.ColorIndex = 6
+                End With
+    
+                With wsSFReport.Range("A2:A4")
+                    .Merge
+                    .WrapText = True
+                    .HorizontalAlignment = xlLeft
+                    .VerticalAlignment = xlTop
+                    .Value = "''---Please place the Salesforce information from the " & SFReportName & " in Column B"
+                    .Interior.Color = RGB(255, 0, 0)
+                    .Font.Color = vbYellow
+                End With
+    
+            ' Step 13: Add a button for the user to easily click when they are ready for the next step.
+                ' 13a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                    Set ButtonShape = wsSFReport.Shapes.AddShape(msoShapeRectangle, 0, 59, 209, 301)
+    
+                ' 13b: Format the Text on the Button
+                    ButtonText = "CLICK HERE to go to the second step of the " & ConverterName & " Converter."                  ' Value of the text within the button
+                    With ButtonShape
+                        .OnAction = ConverterName & "_AR_Team_Step2"                                                            ' Embedding the Specific Converter Macro to the button
+                        .TextFrame.Characters.Text = ButtonText
+                        .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                        .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                        .TextFrame.Characters.Font.Size = 35                                                                    ' Button Font Size
+                        .TextFrame.Characters.Font.Color = RGB(0, 0, 0)                                                         ' Black Font Color
+                        .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                        .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+                    End With
+    
+        ' Step 14: Protect the "Salesforce Report" Worksheet.
+            wsSFReport.Protect _
+                DrawingObjects:=False, Contents:=True, Scenarios:= False, AllowFormattingCells:=True, _
+                AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+                AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+                AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
 
-' Step 2: Prompt the user for confirmation of Reset and to start the YourCause Macro
-    UserResponse = MsgBox("Are you sure you want to start the YourCause Macro? Doing so will reset all worksheets in this file.", _
-      vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
-
-' Step 3: Check User's Response (if user clicks No, then end the macro, otherwise proceed to next steps)
-    If UserResponse = vbNo Then
-      Exit Sub
-    End if
-
-' Step 4: Assign a value to the DateTime Variable (ZYXWVUT Year.Month.Day - Hour.Minute.Second) - This will allow it to be a new unique variable any given second.
-    DateTime = "ZYXWVUT" & Format(Now()," YYYY.MM.DD - HH.MM.SS")
-
-' Step 5: Create a new Worksheet using the "DateTime" variable name.
-    ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DateTime
-
-' Step 6: Delete all exisiting worksheets except for the 'DateTime' worksheet that was just created.
-    Application.DisplayAlerts = False
-      For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> DateTime Then
-          ws.Delete
-        End If
-      Next ws
-    Application.DisplayAlerts = True
-
-' Step 7: Rename the 'DateTime' Worksheet to "Salesforce Report"
-    ThisWorkbook.Sheets(DateTime).Name = "Salesforce Report"
-
-' Step 8: Set the variable 'wsSFReport' to the worksheet that was just renamed to "Salesforce Report".
-    Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
-
-' Steps 9-...: Format the "Salesforce Report" worksheet to be ready for user to input the Salesforce Report and proceed to the second step of the YourCause Macro.
-  ' Step 9: Unprotect all the cells in the "Salesforce Report" Worksheet excel for column A.
-      wsSFReport.Columns("B:XFD").Locked = False
-      wsSFReport.Columns("A:A").Locked = True
-  
-  ' Step 10: Create a message pointing the user where to put the Salesforce Report
-      wsSFReport.Range("A1").
-
+    ' Step 15: Select B1 of the "Salesforce Report" Worksheet
+        wsSFReport.Range("B1").Select
 
 End Sub
 
+Step 6: Put the Salesforce Report into the "Salesforce Report" Worksheet.
+
+Step 7: Run the Second Step of the Macro by Clicking the Macro Button
+(The macro's step by step process is below)
 
 Public Sub YourCause_AR_Team_Step2()
 
