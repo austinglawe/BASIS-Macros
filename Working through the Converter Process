@@ -11,7 +11,7 @@ Step 6: Then upload the Salesforce upload file into Salesforce.
 AR Side
 Goal Steps:
 Step 1: Download the YourCause Reports from SharePoint. (Ready for AR Team to Process)
-Step 2: Put them all into 1 folder.
+Step 2: Put them all into a single folder.
 Step 3: Download the Salesforce Report.
 Step 4: Run the first macro, inserting the Salesforce Report.
 Step 5: Run the second part of the macro to create an import file for Intacct.
@@ -20,7 +20,8 @@ Step 7: Upload file into Intacct.
 
 
 
-
+-------------------------------------------------------------------------------------------------------------------------------------------
+Execution:
 
 AR Side
 Step 1: Download the YourCause Reports from SharePoint
@@ -35,17 +36,17 @@ Public Sub YourCause_AR_Team_Step1()
     ' Last Updated 03.19.2024
     
     ' Step 1: Dim the variables that will be used.
-        Dim ConverterName As String
+        Dim DonationSiteName As String
         Dim SFReportName As String
         Dim DateTime As String
         Dim wsSFReport As Worksheet
     
-    ' Step 2: Set the value of the ConverterName (based on the converter this is) and SFReportName based on the Converter's Site and the report we use in Salesforce.
-        ConverterName = "Your Cause"
+    ' Step 2: Set the value of the DonationSiteName and SFReportName (based on the report to be used).
+        DonationSiteName = "YourCause"
         SFReportName = "1.1d_Propay"
     
     ' Step 3: Prompt the user for confirmation of Reset and to start the macro
-        UserResponse = MsgBox("Are you sure you want to start the " & ConverterName & " Macro? Doing so, will reset all worksheets in this file.", _
+        UserResponse = MsgBox("Are you sure you want to start the " & DonationSiteName & " Macro? Doing so, will reset all worksheets in this file.", _
           vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
     
     ' Step 4: Check User's Response (if user clicks No, then end the macro, otherwise proceed to next steps)
@@ -82,6 +83,7 @@ Public Sub YourCause_AR_Team_Step1()
           wsSFReport.Columns("A:A").Locked = True
       
         ' Start setting up the environment to make it easy for the user to know what steps to take next
+
             ' Step 11: Change the Column Width of Column A.
                 wsSFReport.Range("A:A").ColumnWidth = 38
             
@@ -103,13 +105,14 @@ Public Sub YourCause_AR_Team_Step1()
                 End With
     
             ' Step 13: Add a button for the user to easily click when they are ready for the next step.
+
                 ' 13a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
                     Set ButtonShape = wsSFReport.Shapes.AddShape(msoShapeRectangle, 0, 59, 209, 301)
     
                 ' 13b: Format the Text on the Button
-                    ButtonText = "CLICK HERE to go to the second step of the " & ConverterName & " Converter."                  ' Value of the text within the button
+                    ButtonText = "CLICK HERE to go to the second step of the " & DonationSiteName & " Converter."               ' Value of the text within the button
                     With ButtonShape
-                        .OnAction = ConverterName & "_AR_Team_Step2"                                                            ' Embedding the Specific Converter Macro to the button
+                        .OnAction = DonationSiteName & "_AR_Team_Step2"                                                         ' Embedding the Specific Converter Macro to the button
                         .TextFrame.Characters.Text = ButtonText
                         .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
                         .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
@@ -131,26 +134,91 @@ Public Sub YourCause_AR_Team_Step1()
 
 End Sub
 
+
 Step 6: Put the Salesforce Report into the "Salesforce Report" Worksheet.
 
 Step 7: Run the Second Step of the Macro by Clicking the Macro Button
 (The macro's step by step process is below)
 
 Public Sub YourCause_AR_Team_Step2()
+' Last Updated 03.19.2024
 
-' Step 1: Dim the variables that will be used.
-  ' The Worksheets
-    Dim wsReset As Worksheet
-    Dim wsConsolidated As Worksheet
-    Dim wsSummary As Worksheet
-    Dim wsSchoolMap As Worksheet
-    Dim wsSFReport As Worksheet
-    Dim wsImportFile As Worksheet
-    Dim wsRelevantSF As Worksheet
+' Step 1: Prompt user if they are ready to continue to the second step of the YourCause Converter.
+    UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
+          vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
 
-  ' Others
-    Dim DateTime As String
-    Dim FolderPath As String
+' Step 2: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
+    If UserResponse = vbNo Then
+        Exit Sub
+    End if
+
+' Step 3: Dim the variables that will be used.
+    ' The Worksheets
+        Dim wsReset As Worksheet
+        Dim wsConsolidated As Worksheet
+        Dim wsSummary As Worksheet
+        Dim wsSchoolMap As Worksheet
+        Dim wsSFReport As Worksheet
+        Dim wsImportFile As Worksheet
+        Dim wsRelevantSF As Worksheet
+    ' Others
+        Dim FolderPath As String
+
+    ' Variables For Checking and Finding Column Headings in the Salesforce Report
+            Dim SearchRange As Range
+            Dim ColumnLetters() As String
+            Dim TargetColumnHeaders As Variant
+            Dim ColumnHeader As Variant
+            Dim i As Integer
+
+        ' To create a dictionary for the array of column headers that need to be checked 
+            Dim ColumnDictionary As Object 
+
+        ' To use for locating the Salesforce Column Headers later on
+            Dim FirstNameColumn As String
+            Dim LastNameColumn As String
+            Dim PaymentAmountColumn As String
+            Dim PaymentIDColumn As String
+            Dim CheckNumberColumn As String
+            Dim TransactionIDColumn As String
+            Dim DisbursementIDColumn As String
+            Dim DescriptionColumn As String
+            Dim CompanyNameColumn As String
+            Dim OpportunityNameColumn As String
+            Dim CampaignNameColumn As String
+
+' Step 4: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
+    Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
+
+' Step 5-: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
+    
+    ' Step 5: Define the range to search for column headers
+        Set SearchRange = wsSFReport.Rows(1)
+
+    ' Step 6: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+        TargetColumnHeaders = Array("First Name", "Last Name", "Payment Amount", "Payment: Payment Number", "Check Number", "Check/Reference Number", _
+                                    "Disbursement ID", "Description", "Company Name", "Opportunity Name", "Primary Campaign Source")
+
+    ' Step 7: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
+        Set ColumnDictionary = CreateObject("Scripting.Dictionary")
+
+    ' Step 8: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+        ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
+
+    ' Step 9: Search for the required ("Target") Column Headers
+            ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (below is the same as: i = 0 To 10) - indexes in VBA start at 0 rather than 1.
+        For i = LBound(TargetColumnHeadrs To UBound(TargetColumnHeaders)
+
+
+
+
+
+
+
+
+
+
+
 
 
 ' Step 4: Ask User for a FolderPath (if the user cancels, end the Sub).
