@@ -483,7 +483,7 @@ Public Sub YourCause_AR_Team_Step2()
         Loop
 
 ' Step : Populate the formulas and Fill Down in all worksheets
-    ' Redefine the _EndRow Variables
+    ' Redefine the "______EndRow" Variables
         LastRowSummary = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
         LastRowConsolidated = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
         LastRowRelevantSF = wsRelevantSF.Cells(Rows.Count, "A").End(xlUp).Row
@@ -496,7 +496,22 @@ Public Sub YourCause_AR_Team_Step2()
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
-' Create New folders to hold the new file names
+' Using the original folder path provided by the user, create 2 new folders within that folder. Called: "Descriptive File Name", and "CSV File Name". _
+    Copy the original files and rename them based on the Descriptive Naming Convention and CSV Naming Convention found in the "Summary Page" Worksheet
+
+' Create the "Descriptive File Name" Folder and copy and paste the files with the Descriptive File Naming Convention
+
+' Create the "CSV File Name" Folder and copy and paste the files with the CSV File Naming Convention
+
+' Rename the worksheet names from the Temporary Worksheet Name to the CSV Naming Convention
+
+' Reorder the worksheets in a descending order (Z-A)-(9-0)
+
+' Hide all the worksheets except for "Consolidated Reports", "Summary Page", "Salesforce Import File", ....
+
+' Reorder the non-hidden worksheets in ascending order (0-9)-(A-Z)
+
+' Activate the "Salesforce Import File" Worksheet and go to "A1"
 
 End Sub
 --------------------------
@@ -508,18 +523,6 @@ ImportSheet = "'Import File'!"
 SchoolMap = "'School Mapping'!"
 ResetSheet = "'Total Reset'!"
 
-  ' Using the original folder path provided by the user, create 2 new folders within that folder. Called: "Descriptive File Name", and "CSV File Name". _
-    Copy the original files and rename them based on the Descriptive Naming Convention and CSV Naming Convention found in the "Summary Page" Worksheet
-    ' Create the "Descriptive File Name" Folder and copy and paste the files with the Descriptive File Naming Convention
 
-    ' Create the "CSV File Name" Folder and copy and paste the files with the CSV File Naming Convention
 
-  ' Rename the worksheet names from the Temporary Worksheet Name to the CSV Naming Convention
 
-  ' Reorder the worksheets in a descending order (Z-A)-(9-0)
-
-  ' Hide all the worksheets except for "Consolidated Reports", "Summary Page", "Salesforce Import File", ....
-
-  ' Reorder the non-hidden worksheets in ascending order (0-9)-(A-Z)
-
-  ' Activate the "Salesforce Import File" Worksheet and go to "A1"
