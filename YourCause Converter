@@ -237,6 +237,20 @@ TempEndRowsToDelete = 0
             Dim EmptyItems As String
             Dim Key As Variant
 
+        ' These are used for naming the Worksheet Names
+            Dim SummarySheet As String
+            Dim ConsolidatedSheet As String
+            Dim ResetSheet As String
+            Dim ImportSheet As String
+            Dim RelevantSF As String
+    
+            SummarySheet = "'Summary Page'!"
+            ConsolidatedSheet = "'Consolidated - " & DonationSiteName & "'!"
+            RelevantSF = "'Relevant Salesforce'!"
+            ImportSheet = "'Import File'!"
+            SchoolMap = "'School Mapping'!"
+            ResetSheet = "'Total Reset'!"
+
 ' Step 5: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
     Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
 
@@ -329,19 +343,6 @@ TempEndRowsToDelete = 0
     ' Step : Add the rest of the worksheets that are needed. The variables include the 'WorksheetName'! (the single quotes and exlamation mark in order to use to refer to these sheets later). _
             To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
 
-        Dim SummarySheet As String
-        Dim ConsolidatedSheet As String
-        Dim ResetSheet As String
-        Dim ImportSheet As String
-        Dim RelevantSF As String
-
-        SummarySheet = "'Summary Page'!"
-        ConsolidatedSheet = "'Consolidated - " & DonationSiteName & "'!"
-        RelevantSF = "'Relevant Salesforce'!"
-        ImportSheet = "'Import File'!"
-        ResetSheet = "'Total Reset'!"
-        SchoolMap = "'School Mapping'!"
-
         ' Add a worksheet with the name "Summary Page"
             ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
 
@@ -361,11 +362,17 @@ TempEndRowsToDelete = 0
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
 
     ' Step : Set the worksheets to variables.
+        ' Worksheet: "Summary Page"
         Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))
+        ' Worksheet: "Consolidated - YourCause"
         Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))
+        ' Worksheet: "Relevant Salesforce"
         Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))
+        ' Worksheet: "Import File"
         Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))
+        ' Worksheet: "School Mappping"
         Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))
+        ' Worksheet: "Total Reset"
         Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))
 
     ' Step : Populate the Headers of the "Summary Page" Worksheet
