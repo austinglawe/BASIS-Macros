@@ -172,7 +172,14 @@ Public Sub YourCause_AR_Team_Step2()
 
 ' Step 1: Define and Set the value of DonationSiteName based on the Donation site used in this converter.
 Dim DonationSiteName As String
+
+Dim HyperlinkColumn As String
+Dim TempFirstRow As Integer
+Dim TempEndRowsToDelete As Integer
 DonationSiteName = "YourCause"
+HyperlinkColumn = "AP"
+TempFirstRow = 2
+TempEndRowsToDelete = 0
 
 ' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
     UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
@@ -194,6 +201,12 @@ DonationSiteName = "YourCause"
         Dim wsRelevantSF As Worksheet
     ' Others
         Dim FolderPath As String
+        Dim SummaryLastRow As Long
+        Dim ConsolidatedLastRow As Long
+    ' For Loop when pulling files from Folder
+        Dim TempLastRow As Integer
+        Dim TempSheetName As Integer
+            
 
     ' Variables For Checking and Finding Column Headings in the Salesforce Report
             Dim SearchRange As Range
@@ -233,8 +246,8 @@ DonationSiteName = "YourCause"
         Set SearchRange = wsSFReport.Rows(1)
 
     ' Step 7: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
-        TargetColumnHeaders = Array("First Name", "Last Name", "Payment Amount", "Payment: Payment Number", "Check Number", "Check/Reference Number", _
-                                    "Disbursement ID", "Description", "Company Name", "Opportunity Name", "Primary Campaign Source")
+        TargetColumnHeaders = Array("Check/Reference Number", "Check Number", "Company Name", "Description", "Disbursement ID", "First Name", "Last Name", _
+                                    "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Primary Campaign Source")
 
     ' Step 8: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
         Set ColumnDictionary = CreateObject("Scripting.Dictionary")
@@ -257,17 +270,17 @@ DonationSiteName = "YourCause"
         Next i
 
     ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+        PaymentIDColumn = ColumnDictionary("Payment: Payment Number")
+        CampaignNameColumn = ColumnDictionary("Primary Campaign Source")
+        OpportunityNameColumn = ColumnDictionary("Opportunity Name")
+        CheckNumberColumn = ColumnDictionary("Check Number")
+        CompanyNameColumn = ColumnDictionary("Company Name")
+        TransactionIDColumn = ColumnDictionary("Check/Reference Number")
+        DisbursementIDColumn = ColumnDictionary("Disbursement ID")
         FirstNameColumn = ColumnDictionary("First Name")
         LastNameColumn = ColumnDictionary("Last Name")
         PaymentAmountColumn = ColumnDictionary("Payment Amount")
-        PaymentIDColumn = ColumnDictionary("Payment: Payment Number")
-        CheckNumberColumn = ColumnDictionary("Check Number")
-        TransactionIDColumn = ColumnDictionary("Check/Reference Number")
-        DisbursementIDColumn = ColumnDictionary("Disbursement ID")
         DescriptionColumn = ColumnDictionary("Description")
-        CompanyNameColumn = ColumnDictionary("Company Name")
-        OpportunityNameColumn = ColumnDictionary("Opportunity Name")
-        CampaignNameColumn = ColumnDictionary("Primary Campaign Source")
 
     ' Step 12: Check for empty dictionary items
         EmptyItems = ""
@@ -323,18 +336,28 @@ DonationSiteName = "YourCause"
         Dim RelevantSF As String
 
         SummarySheet = "'Summary Page'!"
-        ConsolidatedSheet = "'" & DonationSiteName & " Consolidated'!"
-        ResetSheet = "'Total Reset'!"
-        ImportSheet = "'Import File'!"
+        ConsolidatedSheet = "'Consolidated - " & DonationSiteName & "'!"
         RelevantSF = "'Relevant Salesforce'!"
+        ImportSheet = "'Import File'!"
+        ResetSheet = "'Total Reset'!"
 
+        ' Add a worksheet with the name "Summary Page"
+            ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
 
-        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)
-        'SchoolMapping.School_Map    ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
+        ' Add a worksheet with the name "Consolidated - YourCause"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)
+
+        ' Add a worksheet with the name "Relevant Salesforce"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)
+
+        ' Add a worksheet with the name "Import File"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)
+
+        ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
+            ' SchoolMapping.School_Map
+
+        ' Add a worksheet with the name "Total Reset"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
 
     ' Step : Set the worksheets to variables.
         Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))
@@ -412,75 +435,34 @@ DonationSiteName = "YourCause"
         wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
 
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
-        of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "YourCause Consolidated" Worksheet. _
-        The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "YourCause Consolidated" Worksheet. Once that is completed _
+        of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
+        The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "Consolidated - YourCause" Worksheet. Once that is completed _
         A checkmark will be made in the "Summary Page" in column D. Then the original file will be closed and it will continue onto the next file until it finishes.
 
-    ' Step :
+    ' Step : Define the Files to be pulled from the FolderPath and set the variable "TempSheetName" to 1
+        File = Dir(FolderPath & "\*.*")
+        TempSheetName = 1
 
-Dim SummaryLastRow As Long
-Dim ConsolidatedLastRow As Long
-Dim HyperlinkColumn As String
-Dim TempFirstRow As Integer
-Dim TempLastRow As Integer
-Dim TempEndRowsToDelete As Integer
-Dim TempSheetName As Integer
-
-
-HyperlinkColumn = "AP"
-TempFirstRow = 2
-TempEndRowsToDelete = 0
-TempSheetName = 1
-
-' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
-
-File = Dir(FolderPath & "\*.*")
-
-Do While File <> ""
-
-CurrentFile = Left(File, Len(File) - 4)
-
-' Find the last row in column A of the "Summary" Worksheet
-LastRowSummary = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row + 1
-
-ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row + 1
-
-' Add the file name to column A of the "Summary" Worksheet
-wsSummary.Cells(LastRowSummary, 1).Value = CurrentFile
-
-' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
-Set wsTemp = Workbooks.Open(FolderPath & "\" & File).Sheets(1)
-
-TempEndRow = wsTemp.Cells(Rows.Count, "A").End(xlUp).Row
-
-wsTemp.Rows(TempFirstRow & ":" & (TempEndRow - TempEndRowsToDelete)).Copy wsConsolidated.Cells(ConsolidatedLastRow, 1)
-
-' Put current_file_name in column AN of the "Consolidated Report" Worksheet
-wsConsolidated.Range(HyperlinkColumn & ConsolidatedLastRow & ":" & HyperlinkColumn & ((ConsolidatedLastRow) + (TempEndRow - TempEndRowsToDelete - TempFirstRow))).Value = CurrentFile
-
-' Copy the data to a new worksheet in the Converter's Workbook
-Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
-
-' Use the Current FileCount ("b") Name as the temporary Sheet Name
-NewSheet.Name = TempSheetName
-ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
-
-' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (to cell A1)
-NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn & "1"), Address:="", SubAddress:=SummarySheet & "A1", TextToDisplay:="Return to Summary Page"
-
-' Auto-adjust column widths in the new worksheet
-NewSheet.Cells.EntireColumn.AutoFit
-
-' Close the opened file
-wsTemp.Parent.Close
-
-wsSummary.Cells(LastRowSummary, "D").Value = "x"
-
-TempSheetName = TempSheetName + 1
-
-' Move to the next file
-File = Dir
-Loop
+    ' Start the loop to accomplish the goals above
+        Do While File <> ""
+            CurrentFile = Left(File, Len(File) - 4)                                                                                                                                                      ' Create a variable to hold the name of the current file (Taking off the extensions CSV).
+            LastRowSummary = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row + 1                                                                                                                  ' Find the last row in column A of the "Summary" Worksheet
+            ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row + 1                                                                                                                ' Find the last row in column A of the "Consolidated - YourCause" Worksheet
+            wsSummary.Cells(LastRowSummary, 1).Value = CurrentFile                                                                                                                                       ' Add the file name to column A of the "Summary" Worksheet    
+            Set wsTemp = Workbooks.Open(FolderPath & "\" & File).Sheets(1)                                                                                                                               ' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
+            TempEndRow = wsTemp.Cells(Rows.Count, "A").End(xlUp).Row                                                                                                                                     ' Cl
+            wsTemp.Rows(TempFirstRow & ":" & (TempEndRow - TempEndRowsToDelete)).Copy wsConsolidated.Cells(ConsolidatedLastRow, 1)                                                                       ' Cl
+            wsConsolidated.Range(HyperlinkColumn & ConsolidatedLastRow & ":" & HyperlinkColumn & ((ConsolidatedLastRow) + (TempEndRow - TempEndRowsToDelete - TempFirstRow))).Value = CurrentFile        ' Put current_file_name in column AN of the "Consolidated Report" Worksheet
+            Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))                                                                                                     ' Copy the data to a new worksheet in the Converter's Workbook
+            NewSheet.Name = TempSheetName                                                                                                                                                                ' Use the TempSheetName 
+            ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)                                                                                                                                              ' Cl
+            NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn & "1"), Address:="", SubAddress:=SummarySheet & "A1", TextToDisplay:="Return to Summary Page"                                 ' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (to cell A1)
+            NewSheet.Cells.EntireColumn.AutoFit                                                                                                                                                          ' Auto-adjust column widths in the new worksheet
+            wsTemp.Parent.Close                                                                                                                                                                          ' Close the opened file.
+            wsSummary.Cells(LastRowSummary, "D").Value = "x"                                                                                                                                             ' Place an "x" in the "Summary Page" to show that file is completed.
+            TempSheetName = TempSheetName + 1                                                                                                                                                            ' Add 1 to the TempSheetName count (Temporarily Naming the next sheet 1 + the sheet name just name)
+            File = Dir                                                                                                                                                                                   ' Go to the next file
+        Loop
 End Sub
 --------------------------
 
