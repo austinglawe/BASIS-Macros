@@ -299,11 +299,11 @@ DonationSiteName = "YourCause"
             End If
         End With
 
-    ' Step 15: Check that the folder has at least one file. If it doesn't exit the Sub. If it does, continue on.
-        If Dir(FolderPath & "\*.*") = "" Then
-            MsgBox "The selected folder does not contain any files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
+    ' Step 15: Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+        If Dir(FolderPath & "\*.csv") = "" Then
+            MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
             Exit Sub
-    End If
+        End If
 
 ' Step 16-: Start setting up the workbook environment to be able to consolidate the reports into it.
     
@@ -330,7 +330,7 @@ DonationSiteName = "YourCause"
         ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ConsolidatedSheet
         ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = RelevantSF
         ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ImportSheet
-        SchoolMapping.School_Map                                                                                           ' Run the School Mapping Macro to create the appropriate school mapping worksheet.
+        SchoolMapping.School_Map                                                                                           ' Run the School Mapping Macro to create the appropriate "School Mapping" worksheet.
         ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ResetSheet
 
     ' Step : Set the worksheets to variables.
@@ -341,7 +341,7 @@ DonationSiteName = "YourCause"
         Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
         Set wsReset = ThisWorkbook(ResetSheet)
 
-    ' Step : Format the Headers of the "Summary" Worksheet
+    ' Step : Populate the Headers of the "Summary Page" Worksheet
         wsSummary.Range("A1").Value = "Original File Name"
         wsSummary.Range("B1").Value = "Descriptive Name"
         wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
@@ -363,11 +363,11 @@ DonationSiteName = "YourCause"
         wsSummary.Range("S1").Value = "# of Transactions"
         wsSummary.Range("T1").Value = "Temporary Worksheet Name"
 
-    ' Step : Format the Headers of the "YourCause Consolidated" Worksheet
+    ' Step : Populate the Headers of the "YourCause Consolidated" Worksheet
         wsConsolidated.Range("A1").Value = "Donation Date"
         wsConsolidated.Range("B1").Value = "Company Name"
         wsConsolidated.Range("C1").Value = "Transaction Id"
-        wsConsolidated.Range("D1").Value = "Transaction Id"
+        wsConsolidated.Range("D1").Value = "Transaction Id [Type]"
         wsConsolidated.Range("E1").Value = "Transaction Amount"
         wsConsolidated.Range("F1").Value = "Fee Amount"
         wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
@@ -405,15 +405,114 @@ DonationSiteName = "YourCause"
         wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
         wsConsolidated.Range("AN1").Value = "Local Currency Type"
         wsConsolidated.Range("AO1").Value = "Fundraising ID"
-
         wsConsolidated.Range("AP1").Value = "Original File Name"
         wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
 
+' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
+        of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "YourCause Consolidated" Worksheet. _
+        The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "YourCause Consolidated" Worksheet. Once that is completed _
+        A checkmark will be made in the "Summary Page" in column D. Then the original file will be closed and it will continue onto the next file until it finishes.
+
+    ' Step : 
+Dim SummaryLastRow As Long
+Dim ConsolidatedLastRow As Long
+SummaryLastRow = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
+ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
+
+
+Dim FileName As String
+
+
+' Collect CSV File Names from the folder the user provided.
+' Initialize the array to hold file names
+ReDim FileList(1 To 1) ' Start with a single element
+
+
+' Use a Loop to create a variable called FileCount to hold the count of CSV files in the folder.
+FileName = Dir(FolderPath & "\*.csv")
+Do While FileName <> ""
+FileCount = FileCount + 1
+ReDim Preserve FileList(1 To FileCount)
+FileList(FileCount) = FileName
+FileName = Dir
+Loop
+
+Dim b As Long
+
+b = 1
+
+' Open and copy the contents of the CSV files as a New Worksheet
+For b = 1 To FileCount
+' Open the CSV file in the selected folder
+Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
+
+
+' Copy the data to a new worksheet in the Converter's Workbook
+Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+' Use the Current FileCount ("b") Name as the temporary Sheet Name 
+NewSheet.Name = b
+ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
+
+' Add a hyperlink in cell AP1 to the "Summary Page" Worksheet (Cell A1)
+NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range("AP1"), Address:="", SubAddress:="'Summary Page'!A1", TextToDisplay:="Return to Summary Page"
+
+' Auto-adjust column widths in the new worksheet
+NewSheet.Cells.EntireColumn.AutoFit
+
+' Close the opened workbook without saving changes
+Workbooks(FileList(i)).Close SaveChanges:=False
+Next b
+
+--------------------------
+' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
+file = Dir(folderPath & "\*.*")
+
+Do While file <> ""
+' Set current_file_name to the file name
+current_file_name = file
+
+' Find the last row in column A of the "Summary" Worksheet
+home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+
+' Add the file name to column A of the "Summary" Worksheet
+wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
+
+' Redefine the last row in column A of the "Summary" Worksheet
+home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+
+' Find the last row in column A of the the "Consolidated Report" Worksheet
+reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+
+' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
+Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
+wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
+
+' Put current_file_name in column AN of the "Consolidated Report" Worksheet
+wsConsolidated.Range("AP" & reports_column_a_max + 1 & ":AP" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
+
+' Close the opened file
+wsTemp.Parent.Close
+
+' Mark the file as "x" in column D of the "Summary" Worksheet
+If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
+wsSummary.Cells(home_column_a_max, "D").Value = "x"
+End If
+
+' Move to the next file
+file = Dir
+Loop
 
 
 
 
-' Step : Populate the Formulas into the "Summage Page" Worksheet
+
+
+
+
+
+
+
+' Step : Populate the Formulas in the "Summage Page" Worksheet
 ' Descriptive Name
 ' B2
 '
@@ -654,41 +753,7 @@ Sub YourCause_SF_Converter_Part2_of_2()
 
 
 
-        ' Collect CSV File Names from the folder the user provided.
-            ' Initialize the array to hold file names
-                ReDim FileList(1 To 1) ' Start with a single element
-                
-                
-            ' Loop through files in the specified folder
-                fileName = Dir(folderPath & "\*.csv")
-                Do While fileName <> ""
-                    FileCount = FileCount + 1
-                    ReDim Preserve FileList(1 To FileCount)
-                    FileList(FileCount) = fileName
-                    fileName = Dir
-                Loop
-    
-    
-        ' Open and copy the contents of the CSV files as a New Worksheet
-            For i = 1 To FileCount
-                ' Open the CSV file in the selected folder
-                    Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
         
-                ' Copy the data to a new worksheet in the Converter's Workbook
-                    Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
-                ' Use the file name (without CSV extension) as the New Worksheet Name
-                    NewSheet.Name = i
-                    ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
-
-                ' Add a hyperlink in cell AP1 to the "Summary" Worksheet (Cell A1)
-                    NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range("AP1"), Address:="", SubAddress:="Summary!A1", TextToDisplay:="Return to Summary Page"
-        
-                ' Auto-adjust column widths in the new worksheet
-                    NewSheet.Cells.EntireColumn.AutoFit
-        
-                ' Close the opened workbook without saving changes
-                    Workbooks(FileList(i)).Close SaveChanges:=False
-            Next i
       
         ' Get the file count in the specified directory
             file_path_count = 0
@@ -721,43 +786,7 @@ Sub YourCause_SF_Converter_Part2_of_2()
                     Exit Sub
             End If
     
-        ' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
-            file = Dir(folderPath & "\*.*")
-            
-            Do While file <> ""
-                ' Set current_file_name to the file name
-                    current_file_name = file
         
-                ' Find the last row in column A of the "Summary" Worksheet
-                    home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
-        
-                ' Add the file name to column A of the "Summary" Worksheet
-                    wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
-                
-                ' Redefine the last row in column A of the "Summary" Worksheet
-                    home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
-                
-                ' Find the last row in column A of the the "Consolidated Report" Worksheet
-                    reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
-        
-                ' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
-                    Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
-                    wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
-        
-                ' Put current_file_name in column AN of the "Consolidated Report" Worksheet
-                    wsConsolidated.Range("AP" & reports_column_a_max + 1 & ":AP" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
-
-                ' Close the opened file
-                    wsTemp.Parent.Close
-        
-                ' Mark the file as "x" in column D of the "Summary" Worksheet
-                    If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
-                        wsSummary.Cells(home_column_a_max, "D").Value = "x"
-                    End If
-        
-                ' Move to the next file
-                    file = Dir
-            Loop
         ' Collect CSV File Names from the folder the user provided.
 
         ' Initialize the array to hold file names
