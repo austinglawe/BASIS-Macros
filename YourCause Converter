@@ -423,32 +423,46 @@ SummaryLastRow = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
 ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
 
 
-Dim FileNames As String
+'Dim FileNames As String
 
 
 ' Collect CSV File Names from the folder the user provided.
 ' Initialize the array to hold file names
-ReDim FileList(1 To 1) ' Start with a single element
+'ReDim FileList(1 To 1) ' Start with a single element
 
 
 ' Use a Loop to create a variable called FileCount to hold the count of CSV files in the folder.
-FileNames = Dir(FolderPath & "\*.csv")
-Do While FileNames <> ""
-FileCount = FileCount + 1
-ReDim Preserve FileList(1 To FileCount)
-FileList(FileCount) = FileNames
-FileNames = Dir
-Loop
+'FileNames = Dir(FolderPath & "\*.csv")
+'Do While FileNames <> ""
+'FileCount = FileCount + 1
+'ReDim Preserve FileList(1 To FileCount)
+'FileList(FileCount) = FileNames
+'FileNames = Dir
+'Loop
 
-Dim b As Long
+'Dim b As Long
 Dim HyperlinkColumn As String
 
-HyperlinkColumn = "AP1"
+HyperlinkColumn = "AP" & "1"
 
-b = 1
+'b = 1
 
 ' Open and copy the contents of the CSV files as a New Worksheet
-For b = 1 To FileCount
+'For b = 1 To FileCount
+
+
+' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
+File = Dir(FolderPath & "\*.*")
+
+Do While File <> ""
+
+CurrentFile = File
+
+
+
+
+
+
 ' Open the CSV file in the selected folder
 Workbooks.OpenText FolderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
 
@@ -469,38 +483,33 @@ Workbooks(FileList(b)).Close SaveChanges:=False
 Next b
 
 --------------------------
-' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
-file = Dir(folderPath & "\*.*")
 
-Do While file <> ""
-' Set current_file_name to the file name
-current_file_name = file
 
 ' Find the last row in column A of the "Summary" Worksheet
-home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+LastRowSummary = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
 
 ' Add the file name to column A of the "Summary" Worksheet
-wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
+wsSummary.Cells(LastRowSummary + 1, 1).Value = CurrentFile
 
 ' Redefine the last row in column A of the "Summary" Worksheet
-home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+LastRowSummary = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
 
 ' Find the last row in column A of the the "Consolidated Report" Worksheet
-reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+ConsolidatedLastRow = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
 
 ' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
 Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
-wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
+wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(ConsolidatedLastRow + 1, 1)
 
 ' Put current_file_name in column AN of the "Consolidated Report" Worksheet
-wsConsolidated.Range("AP" & reports_column_a_max + 1 & ":AP" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
+wsConsolidated.Range("AP" & ConsolidatedLastRow + 1 & ":AP" & ConsolidatedLastRow + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = CurrentFile
 
 ' Close the opened file
 wsTemp.Parent.Close
 
 ' Mark the file as "x" in column D of the "Summary" Worksheet
-If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
-wsSummary.Cells(home_column_a_max, "D").Value = "x"
+If LastRowSummary > 1 And wsSummary.Cells(LastRowSummary, "D").Value <> "Completed" Then
+wsSummary.Cells(LastRowSummary, "D").Value = "x"
 End If
 
 ' Move to the next file
