@@ -182,7 +182,7 @@ Public Sub YourCause_AR_Team_Step2()
     TempEndRowsToDelete = 0
 
 ' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
-    UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
+    UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all of the files in one folder? If not, please select 'No'", _
           vbYesNo + vbExclamation + vbDefaultButton2, "Proceed to Step 2 of the " & DonationSiteName & " Converter")
 
 ' Step 3: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
@@ -322,7 +322,7 @@ Public Sub YourCause_AR_Team_Step2()
         If EmptyItems <> "" Then
             wsSFReport.Columns("B:XFD").ClearContents
             wsSFReport.Range("B1").Select
-            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: & vbCrLF" _
+            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: " & vbCrLF _
                     & vbCrLf & EmptyItems & vbCrLf & "Please find the Correct Report and Try again!", vbExclamation, "Missing Column Headers"
             Exit Sub
         End If
