@@ -438,6 +438,9 @@ FileName = Dir
 Loop
 
 Dim b As Long
+Dim HyperlinkColumn As String
+
+HyperlinkColumn = "AP1"
 
 b = 1
 
@@ -446,7 +449,6 @@ For b = 1 To FileCount
 ' Open the CSV file in the selected folder
 Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
 
-
 ' Copy the data to a new worksheet in the Converter's Workbook
 Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
 ' Use the Current FileCount ("b") Name as the temporary Sheet Name 
@@ -454,13 +456,13 @@ NewSheet.Name = b
 ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
 
 ' Add a hyperlink in cell AP1 to the "Summary Page" Worksheet (Cell A1)
-NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range("AP1"), Address:="", SubAddress:="'Summary Page'!A1", TextToDisplay:="Return to Summary Page"
+NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn), Address:="", SubAddress:="'Summary Page'!A1", TextToDisplay:="Return to Summary Page"
 
 ' Auto-adjust column widths in the new worksheet
 NewSheet.Cells.EntireColumn.AutoFit
 
 ' Close the opened workbook without saving changes
-Workbooks(FileList(i)).Close SaveChanges:=False
+Workbooks(FileList(b)).Close SaveChanges:=False
 Next b
 
 --------------------------
