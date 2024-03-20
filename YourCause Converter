@@ -373,20 +373,13 @@ Public Sub YourCause_AR_Team_Step2()
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
 
     ' Step : Set the worksheets to variables.
-        ' Worksheet: "Salesforce Columns Re-Arranged"
-            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))
-        ' Worksheet: "Summary Page"
-            Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))
-        ' Worksheet: "Consolidated - YourCause"
-            Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))
-        ' Worksheet: "Relevant Salesforce"
-            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))
-        ' Worksheet: "Import File"
-            Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))
-        ' Worksheet: "School Mappping"
-            Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))
-        ' Worksheet: "Total Reset"
-            Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))
+            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                    ' Worksheet: "Salesforce Columns Re-Arranged"
+            Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))                                                    ' Worksheet: "Summary Page"
+            Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))                           ' Worksheet: "Consolidated - YourCause"
+            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                         ' Worksheet: "Relevant Salesforce"
+            Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))                                                     ' Worksheet: "Import File"
+            Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))                                                              ' Worksheet: "School Mappping"
+            Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))                                                              ' Worksheet: "Total Reset"
 
 
 
