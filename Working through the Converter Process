@@ -99,7 +99,7 @@ Public Sub YourCause_AR_Team_Step1()
                     .WrapText = True
                     .HorizontalAlignment = xlLeft
                     .VerticalAlignment = xlTop
-                    .Value = "''---Please place the Salesforce information from the " & SFReportName & " in Column B"
+                    .Value = "''---Please place the Salesforce information from the """ & SFReportName & """ Report, in Cell B1"
                     .Interior.Color = RGB(255, 0, 0)
                     .Font.Color = vbYellow
                 End With
@@ -135,24 +135,28 @@ Public Sub YourCause_AR_Team_Step1()
 End Sub
 
 
-Step 6: Put the Salesforce Report into the "Salesforce Report" Worksheet.
+'Step 6: Put the Salesforce Report into the "Salesforce Report" Worksheet.
 
-Step 7: Run the Second Step of the Macro by Clicking the Macro Button
-(The macro's step by step process is below)
+'Step 7: Run the Second Step of the Macro by Clicking the Macro Button
+'(The macro's step by step process is below)
 
 Public Sub YourCause_AR_Team_Step2()
 ' Last Updated 03.19.2024
 
-' Step 1: Prompt user if they are ready to continue to the second step of the YourCause Converter.
+' Step 1: Define and Set the value of DonationSiteName based on the Donation site used in this converter.
+Dim DonationSiteName As String
+DonationSiteName = "YourCause"
+
+' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
     UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
           vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
 
-' Step 2: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
+' Step 3: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
     If UserResponse = vbNo Then
         Exit Sub
     End if
 
-' Step 3: Dim the variables that will be used.
+' Step 4: Dim the variables that will be used.
     ' The Worksheets
         Dim wsReset As Worksheet
         Dim wsConsolidated As Worksheet
@@ -186,42 +190,56 @@ Public Sub YourCause_AR_Team_Step2()
             Dim CompanyNameColumn As String
             Dim OpportunityNameColumn As String
             Dim CampaignNameColumn As String
-Dim EmptyItems As String
-Dim Key As Variant
 
-' Step 4: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
+        ' Used to Check Column Headers from the Salesforce Report are present.
+            Dim EmptyItems As String
+            Dim Key As Variant
+
+' Step 5: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
     Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
 
-' Step 5-12: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
+' Step 6-13: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
     
-    ' Step 5: Define the range to search for column headers
+    ' Step 6: Define the range to search for column headers
         Set SearchRange = wsSFReport.Rows(1)
 
-    ' Step 6: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+    ' Step 7: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
         TargetColumnHeaders = Array("First Name", "Last Name", "Payment Amount", "Payment: Payment Number", "Check Number", "Check/Reference Number", _
                                     "Disbursement ID", "Description", "Company Name", "Opportunity Name", "Primary Campaign Source")
 
-    ' Step 7: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
+    ' Step 8: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
         Set ColumnDictionary = CreateObject("Scripting.Dictionary")
 
-    ' Step 8: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+    ' Step 9: Resize the ColumnLetters array to match the size of TargetColumnHeaders
         ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
 
-    ' Step 9: Search for the required ("Target") Column Headers
+    ' Step 10: Search for the required ("Target") Column Headers
             ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (below is the same as: i = 0 To 10) - indexes in VBA start at 0 rather than 1.
-        For i = LBound(TargetColumnHeadrs To UBound(TargetColumnHeaders)
-            On Error Resume Next
-            Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))
-            If Not ColumnHeader Is Nothing Then
-                ColumnLetters(i) = Split(ColumnHeader.Address, "$")(1)
-                ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)
-            Else
-                MsgBox "Column """ & TargetColumnHeaders(i) & """" not found.", vbExclamation
-            End If
-            On Error GoTo 0
+        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)
+            ' This will turn off the error prompts (in case there are any column headers that are missing).
+                On Error Resume Next
+            ' This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))
+            ' If the column header is found, proceed
+                If Not ColumnHeader Is Nothing Then
+                    ' Get the column index of the ColumnHeader
+                        Dim columnIndex As Integer
+                        columnIndex = Range(ColumnHeader.Address).Column
+                    ' Subtract 1 from the column index
+                        columnIndex = columnIndex - 1
+                    ' Convert the modified column index back to the column letter
+                        Dim newColumnLetter As String
+                        newColumnLetter = Cells(1, columnIndex).Address(False, False)
+                    ' Assign the new column letter to ColumnLetters(i)
+                        ColumnLetters(i) = Left(newColumnLetter, Len(newColumnLetter) - 1)
+                    ' Set the Column Letter with its appropriate Column Header
+                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)
+                End If
+            ' This will turn error notifications back on.
+                On Error GoTo 0
         Next i
 
-    ' Step 10: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+    ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
         FirstNameColumn = columnDictionary("First Name")
         LastNameColumn = columnDictionary("Last Name")
         PaymentAmountColumn = columnDictionary("Payment Amount")
@@ -234,7 +252,7 @@ Dim Key As Variant
         OpportunityNameColumn = columnDictionary("Opportunity Name")
         CampaignNameColumn = columnDictionary("Primary Campaign Source")
 
-    ' Step 11: Check for empty dictionary items
+    ' Step 12: Check for empty dictionary items
         EmptyItems = ""
         For Each Key In ColumnDictionary.Keys
             If ColumnDictionary(Key) = "" Then
@@ -242,7 +260,7 @@ Dim Key As Variant
             End If
         Next Key
 
-    ' Step 12: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+    ' Step 13: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
         If emptyItems <> "" Then
             wsSFReport.Columns("B:XFD").ClearContents
             wsSFReport.Range("B1").Select
@@ -251,21 +269,37 @@ Dim Key As Variant
             Exit Sub
         End If
 
-    ' Steps 13-...: Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
-        ' Step 13: Ask User for a FolderPath (if the user cancels, end the Sub).
-            With Application.FileDialog(msoFileDialogFolderPicker)
-                .Title = "Select a folder"
-                .AllowMultiSelect = False
-                If .Show = -1 Then
-                    FolderPath = .SelectedItems(1)
-                Else
-                    MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use."
-                    Exit Sub
-                End If
-            End With
+' Steps 14-15: Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
+    ' Step 14: Ask User for a FolderPath (if the user cancels, end the Sub).
+        With Application.FileDialog(msoFileDialogFolderPicker)
+            .Title = "Select a folder"
+            .AllowMultiSelect = False
+            If .Show = -1 Then
+                FolderPath = .SelectedItems(1)
+            Else
+                MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use."
+                Exit Sub
+            End If
+        End With
 
-        ' Step 14: Check that the folder has at least 1 file. 
-            '
+    ' Step 15: Check that the folder has at least one file. If it doesn't exit the Sub. If it does, continue on.
+        If Dir(FolderPath & "\*.*") = "" Then
+            MsgBox "The selected folder does not contain any files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
+            Exit Sub
+    End If
+
+' Step 16-: Start setting up the workbook environment to be able to consolidate the reports into it.
+    
+    ' Step 16: Unprotect the "Salesforce Report" Worksheet
+        wsSFReport.Unprotect
+
+    ' Step 17: Delete Column A of the "Salesforce Report" Worksheet
+        wsSFReport.Columns("A:A").Delete
+
+    ' Step : Add the rest of the worksheets that are needed.
+
+
+    ' Step : Set the worksheets to variables.
 
 
 
