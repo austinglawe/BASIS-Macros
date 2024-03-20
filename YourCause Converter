@@ -250,7 +250,7 @@ Public Sub YourCause_AR_Team_Step2()
             Dim ImportSheet As String
             Dim RelevantSF As String
 
-            SF Report = "'Salesforce Report'!"
+            SFReport = "'Salesforce Report'!"
             SFReArrange = "'Salesforce Columns Re-Arranged'!"
             SummarySheet = "'Summary Page'!"
             ConsolidatedSheet = "'Consolidated - " & DonationSiteName & "'!"
