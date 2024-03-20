@@ -478,6 +478,7 @@ Public Sub YourCause_AR_Team_Step2()
             NewSheet.Cells.EntireColumn.AutoFit                                                                                                                                                          ' Auto-adjust column widths in the new worksheet
             wsTemp.Parent.Close                                                                                                                                                                          ' Close the opened file.
             wsSummary.Cells(LastRowSummary, "D").Value = "x"                                                                                                                                             ' Place an "x" in the "Summary Page" to show that file is completed.
+            wsSummary.Cells(LastRowSummary, "T").Vaule = TempSheetName                                                                                                                                   ' Add the Temporary Sheet Name to the Summary Page with the corresponding File
             TempSheetName = TempSheetName + 1                                                                                                                                                            ' Add 1 to the TempSheetName count (Temporarily Naming the next sheet 1 + the sheet name just name)
             File = Dir                                                                                                                                                                                   ' Go to the next file
         Loop
@@ -490,6 +491,74 @@ Public Sub YourCause_AR_Team_Step2()
         LastRowImport = wsImportFile.Cells(Rows.Count, "A").End(xlUp).Row
 
     ' Populate the formulas in the "Summary Page" Worksheet
+        ' Descriptive Name
+            ' 
+                wsSummary.Range("B2").Formula = ""
+        ' CSV Naming (Worksheet Name)
+            ' 
+                wsSummary.Range("C2").Formula = ""
+
+
+        ' Disbursement Date
+            ' 
+                wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(A2, " & ConsolidatedSheet & "AP:AP, " & ConsolidatedSheet & "M:M), ""YYYY.MM.DD"")"
+
+        ' School Name
+            ' 
+                wsSummary.Range("F2").Formula = "XLOOKUP(A2, " & ConsolidatedSheet & "AI:AI, " & ConsolidatedSheet & "M:M)"
+
+        ' Abbreviated School Name
+            ' 
+                wsSummary.Range("G2").Formula = ""
+
+        ' Disbursement ID
+            ' 
+                wsSummary.Range("H2").Formula = "XLOOKUP(A2, " & ConsolidatedSheet & "AI:AI, " & ConsolidatedSheet & "J:J)"
+
+        ' Company Match/Employee Giving
+            ' 
+                wsSummary.Range("I2").Formula = ""
+
+        ' Gross Total - Employee Giving
+            ' 
+                wsSummary.Range("J2").Formula = ""
+
+        ' Gross Total - Company Match
+            ' 
+                wsSummary.Range("K2").Formula = ""
+
+        ' Total Gross Donation
+            ' 
+                wsSummary.Range("L2").Formula = ""
+
+        ' Total Fees - Employee Giving
+            ' 
+                wsSummary.Range("M2").Formula = ""
+
+        ' Total Fees - Company Match
+            ' 
+                wsSummary.Range("N2").Formula = ""
+
+        ' Total Donation Fees
+            ' 
+                wsSummary.Range("O2").Formula = ""
+
+        ' Net Total - Employee Giving
+            ' 
+                wsSummary.Range("P2").Formula = ""
+
+        ' Net Total - Company Match
+            ' 
+                wsSummary.Range("Q2").Formula = ""
+
+        ' Total Net Donations
+            ' 
+                wsSummary.Range("R2").Formula = ""
+
+        ' # of Transactions
+            ' 
+                wsSummary.Range("S2").Formula = ""
+
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
     ' Populate the formulas in the "Import File" Worksheet
@@ -520,3 +589,27 @@ End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
 'Step 8: Check that all the information is correct. Make any adjustments that are needed.
 'Step 9: Import the File to Intacct.
+
+
+
+
+
+
+        .Range("B2").Formula = ""
+        .Range("C2").Formula = ""
+        .Range("D2").Formula = ""
+        .Range("E2").Formula = ""
+        .Range("F2").Formula = ""
+        .Range("G2").Formula = ""
+        .Range("H2").Formula = ""
+        .Range("I2").Formula = ""
+        .Range("J2").Formula = ""
+        .Range("K2").Formula = ""
+        .Range("L2").Formula = ""
+        .Range("M2").Formula = ""
+        .Range("N2").Formula = ""
+        .Range("O2").Formula = ""
+        .Range("P2").Formula = ""
+        .Range("Q2").Formula = ""
+        .Range("R2").Formula = ""
+        .Range("S2").Formula = ""
