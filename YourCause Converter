@@ -313,33 +313,36 @@ DonationSiteName = "YourCause"
     ' Step 17: Delete Column A of the "Salesforce Report" Worksheet
         wsSFReport.Columns("A:A").Delete
 
-    ' Step : Add the rest of the worksheets that are needed.
+    ' Step : Add the rest of the worksheets that are needed. The variables include the 'WorksheetName'! (the single quotes and exlamation mark in order to use to refer to these sheets later). _
+            To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
+
         Dim SummarySheet As String
         Dim ConsolidatedSheet As String
         Dim ResetSheet As String
         Dim ImportSheet As String
         Dim RelevantSF As String
 
-        SummarySheet = "Summary Page"
-        ConsolidatedSheet = DonationSiteName & " Consolidated"
-        ResetSheet = "Total Reset"
-        ImportSheet = "Import File"
-        RelevantSF = "Relevant Salesforce"
-        
-        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = SummarySheet
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ConsolidatedSheet
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = RelevantSF
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ImportSheet
-        SchoolMapping.School_Map                                                                                           ' Run the School Mapping Macro to create the appropriate "School Mapping" worksheet.
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ResetSheet
+        SummarySheet = "'Summary Page'!"
+        ConsolidatedSheet = "'"& DonationSiteName & " Consolidated'!"
+        ResetSheet = "'Total Reset'!"
+        ImportSheet = "'Import File'!"
+        RelevantSF = "'Relevant Salesforce'!"
+
+
+        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(SummarySheet, LEN(SummarySheet)-1), LEN(RIGHT(SummarySheet, LEN(SummarySheet)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(RelevantSF, LEN(RelevantSF)-1), LEN(RIGHT(RelevantSF, LEN(RelevantSF)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ImportSheet, LEN(ImportSheet)-1), LEN(RIGHT(ImportSheet, LEN(ImportSheet)-1))-2)
+        SchoolMapping.School_Map    ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ResetSheet, LEN(ResetSheet)-1), LEN(RIGHT(ResetSheet, LEN(ResetSheet)-1))-2)
 
     ' Step : Set the worksheets to variables.
-        Set wsSummary = ThisWorkbook.Sheets(SummarySheet)
-        Set wsConsolidated = ThisWorkbook.Sheets(ConsolidatedSheet)
-        Set wsRelevantSF = ThisWorkbook.Sheets(RelevantSF)
-        Set wsImportFile = ThisWorkbook.Sheets(ImportSheet)
+        Set wsSummary = ThisWorkbook.Sheets(LEFT(RIGHT(SummarySheet, LEN(SummarySheet)-1), LEN(RIGHT(SummarySheet, LEN(SummarySheet)-1))-2))
+        Set wsConsolidated = ThisWorkbook.Sheets(LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1))-2))
+        Set wsRelevantSF = ThisWorkbook.Sheets(LEFT(RIGHT(RelevantSF, LEN(RelevantSF)-1), LEN(RIGHT(RelevantSF, LEN(RelevantSF)-1))-2))
+        Set wsImportFile = ThisWorkbook.Sheets(LEFT(RIGHT(ImportSheet, LEN(ImportSheet)-1), LEN(RIGHT(ImportSheet, LEN(ImportSheet)-1))-2))
         Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
-        Set wsReset = ThisWorkbook(ResetSheet)
+        Set wsReset = ThisWorkbook(LEFT(RIGHT(ResetSheet, LEN(ResetSheet)-1), LEN(RIGHT(ResetSheet, LEN(ResetSheet)-1))-2))
 
     ' Step : Populate the Headers of the "Summary Page" Worksheet
         wsSummary.Range("A1").Value = "Original File Name"
@@ -420,7 +423,7 @@ SummaryLastRow = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
 ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
 
 
-Dim FileName As String
+Dim FileNames As String
 
 
 ' Collect CSV File Names from the folder the user provided.
@@ -429,12 +432,12 @@ ReDim FileList(1 To 1) ' Start with a single element
 
 
 ' Use a Loop to create a variable called FileCount to hold the count of CSV files in the folder.
-FileName = Dir(FolderPath & "\*.csv")
-Do While FileName <> ""
+FileNames = Dir(FolderPath & "\*.csv")
+Do While FileNames <> ""
 FileCount = FileCount + 1
 ReDim Preserve FileList(1 To FileCount)
-FileList(FileCount) = FileName
-FileName = Dir
+FileList(FileCount) = FileNames
+FileNames = Dir
 Loop
 
 Dim b As Long
@@ -447,7 +450,7 @@ b = 1
 ' Open and copy the contents of the CSV files as a New Worksheet
 For b = 1 To FileCount
 ' Open the CSV file in the selected folder
-Workbooks.OpenText folderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
+Workbooks.OpenText FolderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
 
 ' Copy the data to a new worksheet in the Converter's Workbook
 Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
@@ -455,7 +458,7 @@ Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets
 NewSheet.Name = b
 ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
 
-' Add a hyperlink in cell AP1 to the "Summary Page" Worksheet (Cell A1)
+' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (Cell A1)
 NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn), Address:="", SubAddress:="'Summary Page'!A1", TextToDisplay:="Return to Summary Page"
 
 ' Auto-adjust column widths in the new worksheet
