@@ -349,28 +349,15 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFReport.Columns("A:A").Delete
 
     ' Step : Add the rest of the worksheets that are needed. The variables include the 'WorksheetName'! (the single quotes and exlamation mark in order to use to refer to these sheets later). _
-            To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
+        To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
 
-        ' Add a worksheet with the name "Salesforce Columns Re-Arranged
-            ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2)
-
-        ' Add a worksheet with the name "Summary Page"
-            ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
-
-        ' Add a worksheet with the name "Consolidated - YourCause"
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)
-
-        ' Add a worksheet with the name "Relevant Salesforce"
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)
-
-        ' Add a worksheet with the name "Import File"
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)
-
-        ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
-            SchoolMapping.School_Map
-
-        ' Add a worksheet with the name "Total Reset"
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
+            ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2)                                 ' Worksheet: "Salesforce Columns Re-Arranged"
+            ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)                             ' Worksheet: "Summary Page"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)          ' Worksheet: "Consolidated - YourCause"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)                                      ' Worksheet: "Relevant Salesforce"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)                                  ' Worksheet: "Import File"
+            SchoolMapping.School_Map                                                                                                                                                                                                 ' Worksheet: "School Mapping"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)                                      ' Worksheet: "Total Reset"
 
     ' Step : Set the worksheets to variables.
             Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                    ' Worksheet: "Salesforce Columns Re-Arranged"
