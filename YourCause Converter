@@ -243,27 +243,17 @@ DonationSiteName = "YourCause"
         ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
 
     ' Step 10: Search for the required ("Target") Column Headers
-            ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (below is the same as: i = 0 To 10) - indexes in VBA start at 0 rather than 1.
-        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)
-            ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
-                On Error Resume Next
-            ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
-                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))
-            ' 10c0. If the column header is found, proceed
-                If Not ColumnHeader Is Nothing Then
-                    ' 10c1. Get the column index of the ColumnHeader
-                        ColumnIndex = Range(ColumnHeader.Address).Column
-                    ' 10c2. Subtract 1 from the column index
-                        ColumnIndex = ColumnIndex - 1
-                    ' 10c3. Convert the modified column index back to the column letter
-                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)
-                    ' 10c4. Assign the new column letter to ColumnLetters(i)
-                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)
-                    ' 10c5. Set the Column Letter with its appropriate Column Header
-                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)
+        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                              ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                On Error Resume Next                                                                    ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
+                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                             ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                If Not ColumnHeader Is Nothing Then                                                     ' 10c0. If the column header is found, proceed
+                        ColumnIndex = Range(ColumnHeader.Address).Column                                ' 10c1. Get the column index of the ColumnHeader
+                        ColumnIndex = ColumnIndex - 1                                                   ' 10c2. Subtract 1 from the column index
+                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                   ' 10c3. Convert the modified column index back to the column letter
+                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)              ' 10c4. Assign the new column letter to ColumnLetters(i)
+                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                     ' 10c5. Set the Column Letter with its appropriate Column Header
                 End If
-            ' 10d. This will turn error notifications back on.
-                On Error GoTo 0
+                On Error GoTo 0                                                                         ' 10d. This will turn error notifications back on.
         Next i
 
     ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
@@ -324,32 +314,195 @@ DonationSiteName = "YourCause"
         wsSFReport.Columns("A:A").Delete
 
     ' Step : Add the rest of the worksheets that are needed.
-        SummaryPage = "Summary Page"
+        Dim SummarySheet As String
+        Dim ConsolidatedSheet As String
+        Dim ResetSheet As String
+        Dim ImportSheet As String
+        Dim RelevantSF As String
 
-        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = SummaryPage
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DonationSiteName & " Consolidated"
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = 
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name =
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name =
-        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Total Reset"
-
-        Dim wsReset As Worksheet
-        Dim wsConsolidated As Worksheet
-        Dim wsSummary As Worksheet
-        Dim wsSchoolMap As Worksheet
-        Dim wsSFReport As Worksheet
-        Dim wsImportFile As Worksheet
-        Dim wsRelevantSF As Worksheet
+        SummarySheet = "Summary Page"
+        ConsolidatedSheet = DonationSiteName & " Consolidated"
+        ResetSheet = "Total Reset"
+        ImportSheet = "Import File"
+        RelevantSF = "Relevant Salesforce"
+        
+        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = SummarySheet
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ConsolidatedSheet
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = RelevantSF
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ImportSheet
+        SchoolMapping.School_Map                                                                                           ' Run the School Mapping Macro to create the appropriate school mapping worksheet.
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = ResetSheet
 
     ' Step : Set the worksheets to variables.
+        Set wsSummary = ThisWorkbook.Sheets(SummarySheet)
+        Set wsConsolidated = ThisWorkbook.Sheets(ConsolidatedSheet)
+        Set wsRelevantSF = ThisWorkbook.Sheets(RelevantSF)
+        Set wsImportFile = ThisWorkbook.Sheets(ImportSheet)
+        Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
+        Set wsReset = ThisWorkbook(ResetSheet)
+
+    ' Step : Format the Headers of the "Summary" Worksheet
+        wsSummary.Range("A1").Value = "Original File Name"
+        wsSummary.Range("B1").Value = "Descriptive Name"
+        wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+        wsSummary.Range("D1").Value = "Completed"
+        wsSummary.Range("E1").Value = "Disbursement Date"
+        wsSummary.Range("F1").Value = "School Name"
+        wsSummary.Range("G1").Value = "Abbreviated School Name"
+        wsSummary.Range("H1").Value = "Disbursement ID"
+        wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Company Match"
+        wsSummary.Range("L1").Value = "Total Gross Donations"
+        wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("N1").Value = "Total Fees - Company Match"
+        wsSummary.Range("O1").Value = "Total Donation Fees"
+        wsSummary.Range("P1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("Q1").Value = "Net Total - Company Match"
+        wsSummary.Range("R1").Value = "Total Net Donations"
+        wsSummary.Range("S1").Value = "# of Transactions"
+        wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+
+    ' Step : Format the Headers of the "YourCause Consolidated" Worksheet
+        wsConsolidated.Range("A1").Value = "Donation Date"
+        wsConsolidated.Range("B1").Value = "Company Name"
+        wsConsolidated.Range("C1").Value = "Transaction Id"
+        wsConsolidated.Range("D1").Value = "Transaction Id"
+        wsConsolidated.Range("E1").Value = "Transaction Amount"
+        wsConsolidated.Range("F1").Value = "Fee Amount"
+        wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
+        wsConsolidated.Range("H1").Value = "Received Amount"
+        wsConsolidated.Range("I1").Value = "Is Disbused?"
+        wsConsolidated.Range("J1").Value = "Payment ID"
+        wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
+        wsConsolidated.Range("L1").Value = "Payment Create Date"
+        wsConsolidated.Range("M1").Value = "Payment Status Date"
+        wsConsolidated.Range("N1").Value = "Payment Status"
+        wsConsolidated.Range("O1").Value = "Donor Type"
+        wsConsolidated.Range("P1").Value = "Donor ID"
+        wsConsolidated.Range("Q1").Value = "Donor First Name"
+        wsConsolidated.Range("R1").Value = "Donor Last Name"
+        wsConsolidated.Range("S1").Value = "Donor Full Name"
+        wsConsolidated.Range("T1").Value = "Donor Email Address"
+        wsConsolidated.Range("U1").Value = "Donor Address"
+        wsConsolidated.Range("V1").Value = "Donor Address 2"
+        wsConsolidated.Range("W1").Value = "Donor City"
+        wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
+        wsConsolidated.Range("Y1").Value = "Donor Postal Code"
+        wsConsolidated.Range("Z1").Value = "Donor Country"
+        wsConsolidated.Range("AA1").Value = "Match Donor Id"
+        wsConsolidated.Range("AB1").Value = "Match Donor First Name"
+        wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
+        wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
+        wsConsolidated.Range("AE1").Value = "Dedication Type"
+        wsConsolidated.Range("AF1").Value = "Dedication"
+        wsConsolidated.Range("AG1").Value = "Designation"
+        wsConsolidated.Range("AH1").Value = "Registration Id"
+        wsConsolidated.Range("AI1").Value = "Designated Charity Name"
+        wsConsolidated.Range("AJ1").Value = "Donation Status"
+        wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
+        wsConsolidated.Range("AL1").Value = "Segment Name"
+        wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsConsolidated.Range("AN1").Value = "Local Currency Type"
+        wsConsolidated.Range("AO1").Value = "Fundraising ID"
+
+        wsConsolidated.Range("AP1").Value = "Original File Name"
+        wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
 
 
 
 
 
+' Step : Populate the Formulas into the "Summage Page" Worksheet
+' Descriptive Name
+' B2
+'
+wsSummary.Range("B2").Value = ""
 
+' CSV Naming (Worksheet Name)
+' C2
+'
+wsSummary.Range("C2").Value = ""
 
+' Disbursement Date
+' E2
+' =TEXT(XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!M:M), "MM/DD/YYYY")
+wsSummary.Range("E2").Value = ""
 
+' School Name
+' F2
+' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!AI:AI)
+wsSummary.Range("F2").Value = ""
+
+' Abbreviated School Name
+' G2
+' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
+wsSummary.Range("G2").Value = ""
+
+' Disbursement ID
+' H2
+' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!J:J)
+wsSummary.Range("H2").Value = ""
+
+' Company Match/Employee Giving
+' I2
+' =IF(AND(J2>0,K2>0),"Company Match and Employee Giving",IF(K2>0,"Company Match","Employee Giving"))
+wsSummary.Range("I2").Value = ""
+
+' Gross Total - Employee Giving
+' J2
+' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("J2").Value = ""
+
+' Gross Total - Company Match
+' K2
+' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("K2").Value = ""
+
+' Total Gross Donations
+' L2
+' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!E:E)
+wsSummary.Range("L2").Value = ""
+
+' Total Fees - Employee Giving
+' M2
+' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("M2").Value = ""
+
+' Total Fees - Company Match
+' N2
+' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("N2").Value = ""
+
+' Total Donation Fees
+' O2
+' =M2+N2
+wsSummary.Range("O2").Value = ""
+
+' Net Total - Employee Giving
+' P2
+' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("P2").Value = ""
+
+' Net Total - Company Match
+' Q2
+' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("Q2").Value = ""
+
+' Total Net Donations
+' R2
+' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!H:H)
+wsSummary.Range("R2").Value = ""
+
+' # of Transactions
+' S2
+' =COUNTIF('Consolidated Reports'!AP:AP,A2)
+wsSummary.Range("S2").Value = ""
+
+' Temporary Worksheet Name
+' T2
+' 1
+wsSummary.Range("T2").Value = ""
 
 
 
@@ -429,78 +582,14 @@ Sub YourCause_SF_Converter_Part2_of_2()
             ' Create a variable called wsDisbursements to represent "Summary" Worksheet
                 Set wsSummary = ThisWorkbook.Sheets("Summary")
                 
-        ' Format the Headers of the "Summary" Worksheet
-            wsSummary.Range("A1").Value = "Original File Name"
-            wsSummary.Range("B1").Value = "Descriptive Name"
-            wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
-            wsSummary.Range("D1").Value = "Completed"
-            wsSummary.Range("E1").Value = "Disbursement Date"
-            wsSummary.Range("F1").Value = "School Name"
-            wsSummary.Range("G1").Value = "Abbreviated School Name"
-            wsSummary.Range("H1").Value = "Disbursement ID"
-            wsSummary.Range("I1").Value = "Company Match/Employee Giving"
-            wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
-            wsSummary.Range("K1").Value = "Gross Total - Company Match"
-            wsSummary.Range("L1").Value = "Total Gross Donations"
-            wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
-            wsSummary.Range("N1").Value = "Total Fees - Company Match"
-            wsSummary.Range("O1").Value = "Total Donation Fees"
-            wsSummary.Range("P1").Value = "Net Total - Employee Giving"
-            wsSummary.Range("Q1").Value = "Net Total - Company Match"
-            wsSummary.Range("R1").Value = "Total Net Donations"
-            wsSummary.Range("S1").Value = "# of Transactions"
-            wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+        
             
             
         ' Create a Worksheet called "Consolidated Reports"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Consolidated Reports"
             Set wsConsolidated = ThisWorkbook.Sheets("Consolidated Reports")
         
-        ' Format the Headers of the "Consolidated Reports" Worksheet
-            wsConsolidated.Range("A1").Value = "Donation Date"
-            wsConsolidated.Range("B1").Value = "Company Name"
-            wsConsolidated.Range("C1").Value = "Transaction Id"
-            wsConsolidated.Range("D1").Value = "Transaction Id"
-            wsConsolidated.Range("E1").Value = "Transaction Amount"
-            wsConsolidated.Range("F1").Value = "Fee Amount"
-            wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
-            wsConsolidated.Range("H1").Value = "Received Amount"
-            wsConsolidated.Range("I1").Value = "Is Disbused?"
-            wsConsolidated.Range("J1").Value = "Payment ID"
-            wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
-            wsConsolidated.Range("L1").Value = "Payment Create Date"
-            wsConsolidated.Range("M1").Value = "Payment Status Date"
-            wsConsolidated.Range("N1").Value = "Payment Status"
-            wsConsolidated.Range("O1").Value = "Donor Type"
-            wsConsolidated.Range("P1").Value = "Donor ID"
-            wsConsolidated.Range("Q1").Value = "Donor First Name"
-            wsConsolidated.Range("R1").Value = "Donor Last Name"
-            wsConsolidated.Range("S1").Value = "Donor Full Name"
-            wsConsolidated.Range("T1").Value = "Donor Email Address"
-            wsConsolidated.Range("U1").Value = "Donor Address"
-            wsConsolidated.Range("V1").Value = "Donor Address 2"
-            wsConsolidated.Range("W1").Value = "Donor City"
-            wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
-            wsConsolidated.Range("Y1").Value = "Donor Postal Code"
-            wsConsolidated.Range("Z1").Value = "Donor Country"
-            wsConsolidated.Range("AA1").Value = "Match Donor Id"
-            wsConsolidated.Range("AB1").Value = "Match Donor First Name"
-            wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
-            wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
-            wsConsolidated.Range("AE1").Value = "Dedication Type"
-            wsConsolidated.Range("AF1").Value = "Dedication"
-            wsConsolidated.Range("AG1").Value = "Designation"
-            wsConsolidated.Range("AH1").Value = "Registration Id"
-            wsConsolidated.Range("AI1").Value = "Designated Charity Name"
-            wsConsolidated.Range("AJ1").Value = "Donation Status"
-            wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
-            wsConsolidated.Range("AL1").Value = "Segment Name"
-            wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
-            wsConsolidated.Range("AN1").Value = "Local Currency Type"
-            wsConsolidated.Range("AO1").Value = "Fundraising ID"
-
-            wsConsolidated.Range("AP1").Value = "Original File Name"
-            wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
+        
 
         ' Create a Worksheet called "Salesforce Import File" and create a variable to refer to the worksheet.
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Salesforce Import File"
@@ -707,96 +796,7 @@ Sub YourCause_SF_Converter_Part2_of_2()
             ' =XLOOKUP(AN2,Summary!A:A,Summary!B:B)
 
             
-            ' Descriptive Name
-                ' B2
-                '
-                    wsSummary.Range("B2").Value = ""
             
-            ' CSV Naming (Worksheet Name)
-                ' C2
-                '
-                    wsSummary.Range("C2").Value = ""
-
-            ' Disbursement Date
-                ' E2
-                ' =TEXT(XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!M:M), "MM/DD/YYYY")
-                    wsSummary.Range("E2").Value = ""
-
-            ' School Name
-                ' F2
-                ' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!AI:AI)
-                    wsSummary.Range("F2").Value = ""
-
-            ' Abbreviated School Name
-                ' G2
-                ' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
-                    wsSummary.Range("G2").Value = ""
-
-            ' Disbursement ID
-                ' H2
-                ' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!J:J)
-                    wsSummary.Range("H2").Value = ""
-
-            ' Company Match/Employee Giving
-                ' I2
-                ' =IF(AND(J2>0,K2>0),"Company Match and Employee Giving",IF(K2>0,"Company Match","Employee Giving"))
-                    wsSummary.Range("I2").Value = ""
-
-            ' Gross Total - Employee Giving
-                ' J2
-                ' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("J2").Value = ""
-
-            ' Gross Total - Company Match
-                ' K2
-                ' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("K2").Value = ""
-
-            ' Total Gross Donations
-                ' L2
-                ' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!E:E)
-                    wsSummary.Range("L2").Value = ""
-
-            ' Total Fees - Employee Giving
-                ' M2
-                ' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("M2").Value = ""
-
-            ' Total Fees - Company Match
-                ' N2
-                ' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("N2").Value = ""
-
-            ' Total Donation Fees
-                ' O2
-                ' =M2+N2
-                    wsSummary.Range("O2").Value = ""
-
-            ' Net Total - Employee Giving
-                ' P2
-                ' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("P2").Value = ""
- 
-            ' Net Total - Company Match
-                ' Q2
-                ' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
-                    wsSummary.Range("Q2").Value = ""
-
-            ' Total Net Donations
-                ' R2
-                ' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!H:H)
-                    wsSummary.Range("R2").Value = ""
-
-            ' # of Transactions
-                ' S2
-                ' =COUNTIF('Consolidated Reports'!AP:AP,A2)
-                    wsSummary.Range("S2").Value = ""
-
-            ' Temporary Worksheet Name
-                ' T2
-                ' 1
-                    wsSummary.Range("T2").Value = ""
-
 
     End If
 End Sub
