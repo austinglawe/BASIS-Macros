@@ -236,13 +236,16 @@ Public Sub YourCause_AR_Team_Step2()
             Dim CompanyNameColumn As String
             Dim OpportunityNameColumn As String
             Dim CampaignNameColumn As String
+            Dim SchoolNameColumn As String
+            Dim TransactionDateColumn As String
+            Dim DepositDateColumn As String
 
         ' Used to Check Column Headers from the Salesforce Report are present.
             Dim EmptyItems As String
             Dim Key As Variant
 
         ' These are used for naming the Worksheet Names
-            Dim SFReport As Sting
+            Dim SFReport As String
             Dim SFReArrange As String
             Dim SummarySheet As String
             Dim ConsolidatedSheet As String
@@ -268,8 +271,8 @@ Public Sub YourCause_AR_Team_Step2()
         Set SearchRange = wsSFReport.Rows(1)
 
     ' Step 7: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
-        TargetColumnHeaders = Array("Check/Reference Number", "Check Number", "Company Name", "Description", "Disbursement ID", "First Name", "Last Name", _
-                                    "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Primary Campaign Source")
+        TargetColumnHeaders = Array("Check/Reference Number", "Check Number", "Close Date", "Company Name", "Deposit Date", "Description", "Disbursement ID", "First Name", "Last Name", _
+                                    "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Primary Campaign Source", "School Name")
 
     ' Step 8: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
         Set ColumnDictionary = CreateObject("Scripting.Dictionary")
@@ -292,18 +295,21 @@ Public Sub YourCause_AR_Team_Step2()
         Next i
 
     ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
-        PaymentIDColumn = ColumnDictionary("Payment: Payment Number")
-        CampaignNameColumn = ColumnDictionary("Primary Campaign Source")
-        OpportunityNameColumn = ColumnDictionary("Opportunity Name")
-        CheckNumberColumn = ColumnDictionary("Check Number")
-        CompanyNameColumn = ColumnDictionary("Company Name")
         TransactionIDColumn = ColumnDictionary("Check/Reference Number")
+        CheckNumberColumn = ColumnDictionary("Check Number")
+        TransactionDateColumn = ColumnDictionary("Close Date")
+        CompanyNameColumn = ColumnDictionary("Company Name")
+        DepositDateColumn = ColumnDictionary("DepositDate")
+        DescriptionColumn = ColumnDictionary("Description")
         DisbursementIDColumn = ColumnDictionary("Disbursement ID")
         FirstNameColumn = ColumnDictionary("First Name")
         LastNameColumn = ColumnDictionary("Last Name")
+        OpportunityNameColumn = ColumnDictionary("Opportunity Name")
+        PaymentIDColumn = ColumnDictionary("Payment: Payment Number")
         PaymentAmountColumn = ColumnDictionary("Payment Amount")
-        DescriptionColumn = ColumnDictionary("Description")
-
+        CampaignNameColumn = ColumnDictionary("Primary Campaign Source")
+        SchoolNameColumn = ColumnDictionary("School Name")
+        
     ' Step 12: Check for empty dictionary items
         EmptyItems = ""
         For Each Key In ColumnDictionary.Keys
@@ -316,7 +322,7 @@ Public Sub YourCause_AR_Team_Step2()
         If EmptyItems <> "" Then
             wsSFReport.Columns("B:XFD").ClearContents
             wsSFReport.Range("B1").Select
-            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use:" _
+            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: & vbCrLF" _
                     & vbCrLf & EmptyItems & vbCrLf & "Please find the Correct Report and Try again!", vbExclamation, "Missing Column Headers"
             Exit Sub
         End If
