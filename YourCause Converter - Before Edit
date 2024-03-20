@@ -1,0 +1,1144 @@
+Your Cause
+___________________________________________________________________________________________________________________________________________
+Fundraising Side
+-------------------------------------------------------------------------------------------------------------------------------------------
+Goal Steps:
+Step 1: Download each individual Report from YourCause for each school.
+Step 2: Put each file into a single folder.
+Step 3: Run the macro to pull files together and create Salesforce Import File.
+Step 4: The Macro will produce new folders that will have renamed each report. Once it is completed, upload those files to SharePoint.
+Step 5: Review the Salesforce upload file and make any necessary adjustments.
+Step 6: Then upload the Salesforce upload file into Salesforce.
+___________________________________________________________________________________________________________________________________________
+AR Side
+-------------------------------------------------------------------------------------------------------------------------------------------
+Goal Steps:
+Step 1: Download the YourCause Reports from SharePoint. (Ready for AR Team to Process)
+Step 2: Put them all into a single folder.
+Step 3: Download the Salesforce Report.
+Step 4: Run the first macro, inserting the Salesforce Report.
+Step 5: Run the second part of the macro to create an import file for Intacct.
+Step 6: Review the information in the import file.
+Step 7: Upload file into Intacct.
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+
+Execution:
+___________________________________________________________________________________________________________________________________________
+Fundraising Side
+-------------------------------------------------------------------------------------------------------------------------------------------
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________
+
+AR Side
+-------------------------------------------------------------------------------------------------------------------------------------------
+Step 1: Download the YourCause Reports from SharePoint
+Step 2: Put all the Reports into a single folder.
+Step 3: Download the Salesforce Report ()
+Step 4: Open the Excel Converter Macro File ()
+Step 5:Run the First Macro (Subroutine)
+(The macro's step by step process is below)
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+
+Public Sub YourCause_AR_Team_Step1()
+    ' Last Updated 03.19.2024
+    
+    ' Step 1: Dim the variables that will be used.
+        Dim DonationSiteName As String
+        Dim SFReportName As String
+        Dim DateTime As String
+        Dim wsSFReport As Worksheet
+    
+    ' Step 2: Set the value of the DonationSiteName and SFReportName (based on the report to be used).
+        DonationSiteName = "YourCause"
+        SFReportName = "1.1d_Propay"
+    
+    ' Step 3: Prompt the user for confirmation of Reset and to start the macro
+        UserResponse = MsgBox("Are you sure you want to start the " & DonationSiteName & " Macro? Doing so, will reset all worksheets in this file.", _
+          vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+    
+    ' Step 4: Check User's Response (if user clicks No, then end the macro, otherwise proceed to next steps)
+        If UserResponse = vbNo Then
+          Exit Sub
+        End if
+    
+    ' Step 5: Assign a value to the DateTime Variable (ZYXWVUT Year.Month.Day - Hour.Minute.Second) - This will allow it to be a new unique variable any given second.
+        DateTime = "ZYXWVUT" & Format(Now()," YYYY.MM.DD - HH.MM.SS")
+    
+    ' Step 6: Create a new Worksheet using the "DateTime" variable name.
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DateTime
+    
+    ' Step 7: Delete all exisiting worksheets except for the 'DateTime' worksheet that was just created.
+        Application.DisplayAlerts = False
+          For Each ws In ThisWorkbook.Worksheets
+            If ws.Name <> DateTime Then
+              ws.Delete
+            End If
+          Next ws
+        Application.DisplayAlerts = True
+    
+    ' Step 8: Rename the 'DateTime' Worksheet to "Salesforce Report"
+        ThisWorkbook.Sheets(DateTime).Name = "Salesforce Report"
+    
+    ' Step 9: Set the variable 'wsSFReport' to the worksheet that was just renamed to "Salesforce Report".
+        Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
+    
+    
+    ' Steps 10-14: Format the "Salesforce Report" worksheet to be ready for user to input the Salesforce Report and proceed to the second step of the macro.
+        
+        ' Step 10: Unprotect all the cells in the "Salesforce Report" Worksheet excel for column A.
+          wsSFReport.Columns("B:XFD").Locked = False
+          wsSFReport.Columns("A:A").Locked = True
+      
+        ' Start setting up the environment to make it easy for the user to know what steps to take next
+
+            ' Step 11: Change the Column Width of Column A.
+                wsSFReport.Range("A:A").ColumnWidth = 38
+            
+            ' Step 12: Create a message pointing the user where to put the Salesforce Report
+                With wsSFReport.Range("A1")
+                    .Value = ",------------------------------------------------------->"
+                    .Interior.Color = vbRed
+                    .Font.ColorIndex = 6
+                End With
+    
+                With wsSFReport.Range("A2:A4")
+                    .Merge
+                    .WrapText = True
+                    .HorizontalAlignment = xlLeft
+                    .VerticalAlignment = xlTop
+                    .Value = "''---Please place the Salesforce information from the """ & SFReportName & """ Report, in Cell B1"
+                    .Interior.Color = RGB(255, 0, 0)
+                    .Font.Color = vbYellow
+                End With
+    
+            ' Step 13: Add a button for the user to easily click when they are ready for the next step.
+
+                ' 13a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                    Set ButtonShape = wsSFReport.Shapes.AddShape(msoShapeRectangle, 0, 59, 209, 301)
+    
+                ' 13b: Format the Text on the Button
+                    ButtonText = "CLICK HERE to go to the second step of the " & DonationSiteName & " Converter."               ' Value of the text within the button
+                    With ButtonShape
+                        .OnAction = DonationSiteName & "_AR_Team_Step2"                                                         ' Embedding the Specific Converter Macro to the button
+                        .TextFrame.Characters.Text = ButtonText
+                        .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                        .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                        .TextFrame.Characters.Font.Size = 35                                                                    ' Button Font Size
+                        .TextFrame.Characters.Font.Color = RGB(0, 0, 0)                                                         ' Black Font Color
+                        .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                        .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+                    End With
+    
+        ' Step 14: Protect the "Salesforce Report" Worksheet.
+            wsSFReport.Protect _
+                DrawingObjects:=False, Contents:=True, Scenarios:= False, AllowFormattingCells:=True, _
+                AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+                AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+                AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+
+    ' Step 15: Select B1 of the "Salesforce Report" Worksheet
+        wsSFReport.Range("B1").Select
+
+End Sub
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'Step 6: Put the Salesforce Report into the "Salesforce Report" Worksheet.
+
+'Step 7: Run the Second Step of the Macro by Clicking the Macro Button
+'(The macro's step by step process is below)
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+Public Sub YourCause_AR_Team_Step2()
+' Last Updated 03.19.2024
+
+' Step 1: Define and Set the value of DonationSiteName based on the Donation site used in this converter.
+Dim DonationSiteName As String
+DonationSiteName = "YourCause"
+
+' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
+    UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
+          vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+
+' Step 3: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
+    If UserResponse = vbNo Then
+        Exit Sub
+    End if
+
+' Step 4: Dim the variables that will be used.
+    ' The Worksheets
+        Dim wsReset As Worksheet
+        Dim wsConsolidated As Worksheet
+        Dim wsSummary As Worksheet
+        Dim wsSchoolMap As Worksheet
+        Dim wsSFReport As Worksheet
+        Dim wsImportFile As Worksheet
+        Dim wsRelevantSF As Worksheet
+    ' Others
+        Dim FolderPath As String
+
+    ' Variables For Checking and Finding Column Headings in the Salesforce Report
+            Dim SearchRange As Range
+            Dim ColumnLetters() As String
+            Dim TargetColumnHeaders As Variant
+            Dim ColumnHeader As Variant
+            Dim i As Integer
+            Dim ColumnIndex As Integer
+            Dim NewColumnLetter As String
+
+        ' To create a dictionary for the array of column headers that need to be checked 
+            Dim ColumnDictionary As Object 
+
+        ' To use for locating the Salesforce Column Headers later on
+            Dim FirstNameColumn As String
+            Dim LastNameColumn As String
+            Dim PaymentAmountColumn As String
+            Dim PaymentIDColumn As String
+            Dim CheckNumberColumn As String
+            Dim TransactionIDColumn As String
+            Dim DisbursementIDColumn As String
+            Dim DescriptionColumn As String
+            Dim CompanyNameColumn As String
+            Dim OpportunityNameColumn As String
+            Dim CampaignNameColumn As String
+
+        ' Used to Check Column Headers from the Salesforce Report are present.
+            Dim EmptyItems As String
+            Dim Key As Variant
+
+' Step 5: Set the "Salesforce Report" worksheet to the "wsSFReport" Variable
+    Set wsSFReport = ThisWorkbook.Sheets("Salesforce Report")
+
+' Step 6-13: Check the headings of the Worksheet to make sure it has all the required columns (if it doesn't exit the sub, otherwise proceed to the next steps)
+    
+    ' Step 6: Define the range to search for column headers
+        Set SearchRange = wsSFReport.Rows(1)
+
+    ' Step 7: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+        TargetColumnHeaders = Array("First Name", "Last Name", "Payment Amount", "Payment: Payment Number", "Check Number", "Check/Reference Number", _
+                                    "Disbursement ID", "Description", "Company Name", "Opportunity Name", "Primary Campaign Source")
+
+    ' Step 8: Set the "ColumnDictionary" variable to hold the Column Letter Mappings.
+        Set ColumnDictionary = CreateObject("Scripting.Dictionary")
+
+    ' Step 9: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+        ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
+
+    ' Step 10: Search for the required ("Target") Column Headers
+        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                              ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                On Error Resume Next                                                                    ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
+                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                             ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                If Not ColumnHeader Is Nothing Then                                                     ' 10c0. If the column header is found, proceed
+                        ColumnIndex = Range(ColumnHeader.Address).Column                                ' 10c1. Get the column index of the ColumnHeader
+                        ColumnIndex = ColumnIndex - 1                                                   ' 10c2. Subtract 1 from the column index
+                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                   ' 10c3. Convert the modified column index back to the column letter
+                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)              ' 10c4. Assign the new column letter to ColumnLetters(i)
+                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                     ' 10c5. Set the Column Letter with its appropriate Column Header
+                End If
+                On Error GoTo 0                                                                         ' 10d. This will turn error notifications back on.
+        Next i
+
+    ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+        FirstNameColumn = columnDictionary("First Name")
+        LastNameColumn = columnDictionary("Last Name")
+        PaymentAmountColumn = columnDictionary("Payment Amount")
+        PaymentIDColumn = columnDictionary("Payment: Payment Number")
+        CheckNumberColumn = columnDictionary("Check Number")
+        TransactionIDColumn = columnDictionary("Check/Reference Number")
+        DisbursementIDColumn = columnDictionary("Disbursement ID")
+        DescriptionColumn = columnDictionary("Description")
+        CompanyNameColumn = columnDictionary("Company Name")
+        OpportunityNameColumn = columnDictionary("Opportunity Name")
+        CampaignNameColumn = columnDictionary("Primary Campaign Source")
+
+    ' Step 12: Check for empty dictionary items
+        EmptyItems = ""
+        For Each Key In ColumnDictionary.Keys
+            If ColumnDictionary(Key) = "" Then
+                EmptyItems = EmptyItems & Key & vbCrLf
+            End If
+        Next Key
+
+    ' Step 13: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+        If emptyItems <> "" Then
+            wsSFReport.Columns("B:XFD").ClearContents
+            wsSFReport.Range("B1").Select
+            MsgBox "These required column headers are missing from the Salesforce Report you attempted to use:" _
+                    & vbCrLf & emptyItems & vbCrLf & "Please find the Correct Report and Try again!", vbExclamation, "Missing Column Headers"
+            Exit Sub
+        End If
+
+' Steps 14-15: Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
+    ' Step 14: Ask User for a FolderPath (if the user cancels, end the Sub).
+        With Application.FileDialog(msoFileDialogFolderPicker)
+            .Title = "Select a folder"
+            .AllowMultiSelect = False
+            If .Show = -1 Then
+                FolderPath = .SelectedItems(1)
+            Else
+                MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use."
+                Exit Sub
+            End If
+        End With
+
+    ' Step 15: Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+        If Dir(FolderPath & "\*.csv") = "" Then
+            MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
+            Exit Sub
+        End If
+
+' Step 16-: Start setting up the workbook environment to be able to consolidate the reports into it.
+    
+    ' Step 16: Unprotect the "Salesforce Report" Worksheet
+        wsSFReport.Unprotect
+
+    ' Step 17: Delete Column A of the "Salesforce Report" Worksheet
+        wsSFReport.Columns("A:A").Delete
+
+    ' Step : Add the rest of the worksheets that are needed. The variables include the 'WorksheetName'! (the single quotes and exlamation mark in order to use to refer to these sheets later). _
+            To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
+
+        Dim SummarySheet As String
+        Dim ConsolidatedSheet As String
+        Dim ResetSheet As String
+        Dim ImportSheet As String
+        Dim RelevantSF As String
+
+        SummarySheet = "'Summary Page'!"
+        ConsolidatedSheet = "'"& DonationSiteName & " Consolidated'!"
+        ResetSheet = "'Total Reset'!"
+        ImportSheet = "'Import File'!"
+        RelevantSF = "'Relevant Salesforce'!"
+
+
+        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(SummarySheet, LEN(SummarySheet)-1), LEN(RIGHT(SummarySheet, LEN(SummarySheet)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(RelevantSF, LEN(RelevantSF)-1), LEN(RIGHT(RelevantSF, LEN(RelevantSF)-1))-2)
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ImportSheet, LEN(ImportSheet)-1), LEN(RIGHT(ImportSheet, LEN(ImportSheet)-1))-2)
+        SchoolMapping.School_Map    ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = LEFT(RIGHT(ResetSheet, LEN(ResetSheet)-1), LEN(RIGHT(ResetSheet, LEN(ResetSheet)-1))-2)
+
+    ' Step : Set the worksheets to variables.
+        Set wsSummary = ThisWorkbook.Sheets(LEFT(RIGHT(SummarySheet, LEN(SummarySheet)-1), LEN(RIGHT(SummarySheet, LEN(SummarySheet)-1))-2))
+        Set wsConsolidated = ThisWorkbook.Sheets(LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1))-2))
+        Set wsRelevantSF = ThisWorkbook.Sheets(LEFT(RIGHT(RelevantSF, LEN(RelevantSF)-1), LEN(RIGHT(RelevantSF, LEN(RelevantSF)-1))-2))
+        Set wsImportFile = ThisWorkbook.Sheets(LEFT(RIGHT(ImportSheet, LEN(ImportSheet)-1), LEN(RIGHT(ImportSheet, LEN(ImportSheet)-1))-2))
+        Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
+        Set wsReset = ThisWorkbook(LEFT(RIGHT(ResetSheet, LEN(ResetSheet)-1), LEN(RIGHT(ResetSheet, LEN(ResetSheet)-1))-2))
+
+    ' Step : Populate the Headers of the "Summary Page" Worksheet
+        wsSummary.Range("A1").Value = "Original File Name"
+        wsSummary.Range("B1").Value = "Descriptive Name"
+        wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+        wsSummary.Range("D1").Value = "Completed"
+        wsSummary.Range("E1").Value = "Disbursement Date"
+        wsSummary.Range("F1").Value = "School Name"
+        wsSummary.Range("G1").Value = "Abbreviated School Name"
+        wsSummary.Range("H1").Value = "Disbursement ID"
+        wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Company Match"
+        wsSummary.Range("L1").Value = "Total Gross Donations"
+        wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("N1").Value = "Total Fees - Company Match"
+        wsSummary.Range("O1").Value = "Total Donation Fees"
+        wsSummary.Range("P1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("Q1").Value = "Net Total - Company Match"
+        wsSummary.Range("R1").Value = "Total Net Donations"
+        wsSummary.Range("S1").Value = "# of Transactions"
+        wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+
+    ' Step : Populate the Headers of the "YourCause Consolidated" Worksheet
+        wsConsolidated.Range("A1").Value = "Donation Date"
+        wsConsolidated.Range("B1").Value = "Company Name"
+        wsConsolidated.Range("C1").Value = "Transaction Id"
+        wsConsolidated.Range("D1").Value = "Transaction Id [Type]"
+        wsConsolidated.Range("E1").Value = "Transaction Amount"
+        wsConsolidated.Range("F1").Value = "Fee Amount"
+        wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
+        wsConsolidated.Range("H1").Value = "Received Amount"
+        wsConsolidated.Range("I1").Value = "Is Disbused?"
+        wsConsolidated.Range("J1").Value = "Payment ID"
+        wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
+        wsConsolidated.Range("L1").Value = "Payment Create Date"
+        wsConsolidated.Range("M1").Value = "Payment Status Date"
+        wsConsolidated.Range("N1").Value = "Payment Status"
+        wsConsolidated.Range("O1").Value = "Donor Type"
+        wsConsolidated.Range("P1").Value = "Donor ID"
+        wsConsolidated.Range("Q1").Value = "Donor First Name"
+        wsConsolidated.Range("R1").Value = "Donor Last Name"
+        wsConsolidated.Range("S1").Value = "Donor Full Name"
+        wsConsolidated.Range("T1").Value = "Donor Email Address"
+        wsConsolidated.Range("U1").Value = "Donor Address"
+        wsConsolidated.Range("V1").Value = "Donor Address 2"
+        wsConsolidated.Range("W1").Value = "Donor City"
+        wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
+        wsConsolidated.Range("Y1").Value = "Donor Postal Code"
+        wsConsolidated.Range("Z1").Value = "Donor Country"
+        wsConsolidated.Range("AA1").Value = "Match Donor Id"
+        wsConsolidated.Range("AB1").Value = "Match Donor First Name"
+        wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
+        wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
+        wsConsolidated.Range("AE1").Value = "Dedication Type"
+        wsConsolidated.Range("AF1").Value = "Dedication"
+        wsConsolidated.Range("AG1").Value = "Designation"
+        wsConsolidated.Range("AH1").Value = "Registration Id"
+        wsConsolidated.Range("AI1").Value = "Designated Charity Name"
+        wsConsolidated.Range("AJ1").Value = "Donation Status"
+        wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
+        wsConsolidated.Range("AL1").Value = "Segment Name"
+        wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsConsolidated.Range("AN1").Value = "Local Currency Type"
+        wsConsolidated.Range("AO1").Value = "Fundraising ID"
+        wsConsolidated.Range("AP1").Value = "Original File Name"
+        wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
+
+' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
+        of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "YourCause Consolidated" Worksheet. _
+        The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "YourCause Consolidated" Worksheet. Once that is completed _
+        A checkmark will be made in the "Summary Page" in column D. Then the original file will be closed and it will continue onto the next file until it finishes.
+
+    ' Step : 
+Dim SummaryLastRow As Long
+Dim ConsolidatedLastRow As Long
+SummaryLastRow = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
+ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
+
+
+Dim FileNames As String
+
+
+' Collect CSV File Names from the folder the user provided.
+' Initialize the array to hold file names
+ReDim FileList(1 To 1) ' Start with a single element
+
+
+' Use a Loop to create a variable called FileCount to hold the count of CSV files in the folder.
+FileNames = Dir(FolderPath & "\*.csv")
+Do While FileNames <> ""
+FileCount = FileCount + 1
+ReDim Preserve FileList(1 To FileCount)
+FileList(FileCount) = FileNames
+FileNames = Dir
+Loop
+
+Dim b As Long
+Dim HyperlinkColumn As String
+
+HyperlinkColumn = "AP1"
+
+b = 1
+
+' Open and copy the contents of the CSV files as a New Worksheet
+For b = 1 To FileCount
+' Open the CSV file in the selected folder
+Workbooks.OpenText FolderPath & "\" & FileList(i), DataType:=xlDelimited, Comma:=True
+
+' Copy the data to a new worksheet in the Converter's Workbook
+Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+' Use the Current FileCount ("b") Name as the temporary Sheet Name 
+NewSheet.Name = b
+ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)
+
+' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (Cell A1)
+NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn), Address:="", SubAddress:="'Summary Page'!A1", TextToDisplay:="Return to Summary Page"
+
+' Auto-adjust column widths in the new worksheet
+NewSheet.Cells.EntireColumn.AutoFit
+
+' Close the opened workbook without saving changes
+Workbooks(FileList(b)).Close SaveChanges:=False
+Next b
+
+--------------------------
+' Loop through each file in the directory to put the information in the "Consolidated Reports" Worksheet
+file = Dir(folderPath & "\*.*")
+
+Do While file <> ""
+' Set current_file_name to the file name
+current_file_name = file
+
+' Find the last row in column A of the "Summary" Worksheet
+home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+
+' Add the file name to column A of the "Summary" Worksheet
+wsSummary.Cells(home_column_a_max + 1, 1).Value = current_file_name
+
+' Redefine the last row in column A of the "Summary" Worksheet
+home_column_a_max = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+
+' Find the last row in column A of the the "Consolidated Report" Worksheet
+reports_column_a_max = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+
+' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
+Set wsTemp = Workbooks.Open(folderPath & "\" & file).Sheets(1)
+wsTemp.Rows("2:" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(reports_column_a_max + 1, 1)
+
+' Put current_file_name in column AN of the "Consolidated Report" Worksheet
+wsConsolidated.Range("AP" & reports_column_a_max + 1 & ":AP" & reports_column_a_max + (wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row - 1)).Value = current_file_name
+
+' Close the opened file
+wsTemp.Parent.Close
+
+' Mark the file as "x" in column D of the "Summary" Worksheet
+If home_column_a_max > 1 And wsSummary.Cells(home_column_a_max, "D").Value <> "Completed" Then
+wsSummary.Cells(home_column_a_max, "D").Value = "x"
+End If
+
+' Move to the next file
+file = Dir
+Loop
+
+
+
+
+
+
+
+
+
+
+
+' Step : Populate the Formulas in the "Summage Page" Worksheet
+' Descriptive Name
+' B2
+'
+wsSummary.Range("B2").Value = ""
+
+' CSV Naming (Worksheet Name)
+' C2
+'
+wsSummary.Range("C2").Value = ""
+
+' Disbursement Date
+' E2
+' =TEXT(XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!M:M), "MM/DD/YYYY")
+wsSummary.Range("E2").Value = ""
+
+' School Name
+' F2
+' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!AI:AI)
+wsSummary.Range("F2").Value = ""
+
+' Abbreviated School Name
+' G2
+' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
+wsSummary.Range("G2").Value = ""
+
+' Disbursement ID
+' H2
+' =XLOOKUP(A2,'Consolidated Reports'!AP:AP,'Consolidated Reports'!J:J)
+wsSummary.Range("H2").Value = ""
+
+' Company Match/Employee Giving
+' I2
+' =IF(AND(J2>0,K2>0),"Company Match and Employee Giving",IF(K2>0,"Company Match","Employee Giving"))
+wsSummary.Range("I2").Value = ""
+
+' Gross Total - Employee Giving
+' J2
+' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("J2").Value = ""
+
+' Gross Total - Company Match
+' K2
+' =SUMIFS('Consolidated Reports'!E:E,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("K2").Value = ""
+
+' Total Gross Donations
+' L2
+' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!E:E)
+wsSummary.Range("L2").Value = ""
+
+' Total Fees - Employee Giving
+' M2
+' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("M2").Value = ""
+
+' Total Fees - Company Match
+' N2
+' =SUMIFS('Consolidated Reports'!F:F,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2) + SUMIFS('Consolidated Reports'!G:G,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("N2").Value = ""
+
+' Total Donation Fees
+' O2
+' =M2+N2
+wsSummary.Range("O2").Value = ""
+
+' Net Total - Employee Giving
+' P2
+' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Individual",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("P2").Value = ""
+
+' Net Total - Company Match
+' Q2
+' =SUMIFS('Consolidated Reports'!H:H,'Consolidated Reports'!O:O,"Company",'Consolidated Reports'!AP:AP,Summary!A2)
+wsSummary.Range("Q2").Value = ""
+
+' Total Net Donations
+' R2
+' =SUMIF('Consolidated Reports'!AP:AP,Summary!A2,'Consolidated Reports'!H:H)
+wsSummary.Range("R2").Value = ""
+
+' # of Transactions
+' S2
+' =COUNTIF('Consolidated Reports'!AP:AP,A2)
+wsSummary.Range("S2").Value = ""
+
+' Temporary Worksheet Name
+' T2
+' 1
+wsSummary.Range("T2").Value = ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sub YourCause_SF_Converter_Part2_of_2()
+    Dim folderPath As String
+    Dim newFolderPath As String
+    Dim fileName As String
+    Dim newName As String
+    Dim SummaryEndRow As Long
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    Dim wsSFImport As Worksheet
+    Dim ConsolidatedEndRow As Long
+    Dim DisbursementsEndRow As Long
+    Dim wsSchoolMapping As Worksheet
+    
+  ''''''''''''''''''''''''''''
+    Dim ws As Worksheet
+    Dim wsToKeep As Variant
+    Dim wsName As Variant
+    Dim found As Boolean
+    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Dim DisbursementDate As String
+    Dim MaxDate As Date
+    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+   ''''''''''''''''''''''''''''
+   Dim FileNameColumn As String
+   FileNameColumn = "AN"
+   
+   
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+   Dim CurrentDate As String
+    
+    DateTime = "ZYXWVUT" & Format(Now(), "YYYY.MM.DD - HH.MM.SS")
+    ' Assign Value to CurrentDate Variable = ZYXWVUT(Year.Month.Day - Hour.Minute.Second)
+        CurrentDate = "ZYXWVUT" & Format(Now(), "yyyy.mm.dd - hh.mm.ss")
+
+    ' Prompt the user for confirmation of Reset
+        UserResponse = MsgBox("Are you sure you want to start the Cyber Grants Macro. Doing so will erase all other worksheets in this workbook.", _
+                              vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+
+    ' Check user's response
+        If UserResponse = vbYes Then
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = CurrentDate ' Add a new worksheet with the CurrentDate variable Value
+
+            ' Delete all existing worksheets except for CurrentDate
+                Application.DisplayAlerts = False
+                For Each ws In ThisWorkbook.Worksheets
+                    If ws.Name <> CurrentDate Then
+                        ws.Delete
+                    End If
+                Next ws
+                Application.DisplayAlerts = True
+                
+            ' Rename CurrentDate worksheet to "Summary"
+                ThisWorkbook.Sheets(CurrentDate).Name = "Summary"
+            
+            ' Create a variable called wsDisbursements to represent "Summary" Worksheet
+                Set wsSummary = ThisWorkbook.Sheets("Summary")
+                
+        
+            
+            
+        ' Create a Worksheet called "Consolidated Reports"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Consolidated Reports"
+            Set wsConsolidated = ThisWorkbook.Sheets("Consolidated Reports")
+        
+        
+
+        ' Create a Worksheet called "Salesforce Import File" and create a variable to refer to the worksheet.
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Salesforce Import File"
+            Set wsSFImport = ThisWorkbook.Sheets("Salesforce Import File")
+        
+        ' Format the Headers of the "Salesforce Import File" Workhsheet
+            wsSFImport.Range("A1").Value = "C&P Account Name Correction"
+            wsSFImport.Range("B1").Value = "Company"
+            wsSFImport.Range("C1").Value = "Disbursement"
+            wsSFImport.Range("D1").Value = "Check Number/Reference Number"
+            wsSFImport.Range("E1").Value = "Donation Date"
+            wsSFImport.Range("F1").Value = "Deposit Date"
+            wsSFImport.Range("G1").Value = "Donation Amount"
+            wsSFImport.Range("H1").Value = "Contact1 First Name"
+            wsSFImport.Range("I1").Value = "Contact1 Last Name"
+            wsSFImport.Range("J1").Value = "Contact1 Personal Email"
+            wsSFImport.Range("K1").Value = "Donation Type"
+            wsSFImport.Range("L1").Value = "Stage"
+            wsSFImport.Range("M1").Value = "Payment Method"
+            wsSFImport.Range("N1").Value = "Campaign Name"
+            wsSFImport.Range("O1").Value = "Donation Name"
+            wsSFImport.Range("P1").Value = "Description"
+            wsSFImport.Range("Q1").Value = "C&P Payment Type"
+            wsSFImport.Range("R1").Value = "Check Number"
+            
+        ' Create the School Mapping - by running the "School_Map" Subroutine from the "SchoolMapping" Module and then set the value of the variable wsSchoolMapping to "School Mapping" Worksheet
+            SchoolMapping.School_Map
+            Set wsSchoolMapping = ThisWorkbook.Sheets("School Mapping")
+                
+        ' Prompt the user to select a folder
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    folderPath = .SelectedItems(1)
+                Else
+                    wsSummary.Activate
+                    wsSummary.Range("A2").Select
+                    MsgBox "No folder selected. Operation cancelled."
+                    ' Add a button for a Complete Reset on account of the macro will not work unless it's restarted.
+                    ' (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                        Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 600, 400)
+                        ButtonText = "You will now need to reset this macro back to its starting place. Press here when you are ready."             ' Value of the text within the button
+                        With ButtonShape
+                            .OnAction = ""                                                                       ' Embedding the Specific Converter Macro to the button
+                            .TextFrame.Characters.Text = ButtonText
+                            .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                            .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                            .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                            .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                            .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                            .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+                        End With
+                    Exit Sub
+                End If
+            End With
+    
+    
+     ''''''''''''''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''
+     ''''''''''''''''''''''''''''''''''''''''
+
+
+
+        
+      
+        ' Get the file count in the specified directory
+            file_path_count = 0
+            Dim file As String
+            file = Dir(folderPath & "\*.*")
+            Do While file <> ""
+                file_path_count = file_path_count + 1
+                file = Dir
+            Loop
+    
+        ' Check if the file_path_count is less than 1, if it is, exit the sub.
+            If file_path_count < 1 Then
+                wsSummary.Activate
+                    wsSummary.Range("A2").Select
+                    MsgBox "Sorry, this folder is empty. Please reset and try again!"
+                    ' Add a button for a Complete Reset on account of the macro will not work unless it's restarted.
+                    ' (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+                        Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 750, 400)
+                        ButtonText = "You will now need to reset this macro back to its starting place. Press here when you are ready."             ' Value of the text within the button
+                        With ButtonShape
+                            .OnAction = ""                                                                       ' Embedding the Specific Converter Macro to the button
+                            .TextFrame.Characters.Text = ButtonText
+                            .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                            .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                            .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                            .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                            .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                            .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+                        End With
+                    Exit Sub
+            End If
+    
+        
+        ' Collect CSV File Names from the folder the user provided.
+
+        ' Initialize the array to hold file names
+            ReDim FileList(1 To 1) ' Start with a single element
+        
+        ' Loop through CSV files in the specified folder
+            fileName = Dir(folderPath & "\*.csv")
+            Do While fileName <> ""
+                FileCount = FileCount + 1
+                ReDim Preserve FileList(1 To FileCount)
+                FileList(FileCount) = fileName
+                fileName = Dir
+            Loop
+        
+        ' Check if there are CSV files in the folder
+            If FileCount < 1 Then
+                wsSummary.Activate
+                wsSummary.Range("A2").Select
+                MsgBox "Sorry, this folder is empty. Please reset and try again!"
+                ' Add a button for a Complete Reset
+                    Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 750, 400)
+                    ButtonText = "You will now need to reset this macro back to its starting place. Press here when you are ready."
+                    With ButtonShape
+                        .OnAction = "CyberGrants_SF_Converter_Part1_of_2"
+                        .TextFrame.Characters.Text = ButtonText
+                        .TextFrame.Characters.Font.Name = "Calibri"
+                        .TextFrame.Characters.Font.FontStyle = "Bold"
+                        .TextFrame.Characters.Font.Size = 35
+                        .TextFrame.Characters.Font.Color = RGB(255, 255, 0)
+                        .TextFrame.HorizontalAlignment = xlCenter
+                        .TextFrame.VerticalAlignment = xlCenter
+                    End With
+                Exit Sub
+            End If
+            ' Consolidated Reports - AO 2
+            ' =XLOOKUP(AN2,Summary!A:A,Summary!B:B)
+
+            
+            
+
+    End If
+End Sub
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+' Define a Subroutine
+Sub __ ()
+  ' Last Updated 03/01/2024
+
+  ' Worksheets that are the same across all Platforms
+    Dim wsConsolidated As Worksheet ' "Consolidated Reports" Worksheet
+    Dim wsSchoolMap As Worksheet ' "School Mapping" Worksheet
+    Dim wsSFImport As Worksheet ' "Salesforce Import File" Worksheet
+    Dim wsSummary As Worksheet ' "Summary Page" Worksheet
+
+  ' Worksheet/Variable to Reset Everything
+    Dim CurrentDate As String ' Defined in Step 3
+
+
+  ' Other Variables that are used across all Platforms
+    Dim ConsolidatedFileColumn As String
+    Dim ConsolidatedEndColumn As String
+    Dim SFEndColumn As String
+    Dim SummaryEndColumn As String
+
+  ' Set the Variables for the specific converter
+    ConsolidatedFileColumn = ""
+    ConsolidatedEndColumn = ""
+    SFEndColumn = ""
+    SummaryEndColumn = ""
+    
+
+  ' Reset Everything
+    ' Step 1: Prompt the user for the confirmation of Reset
+      UserResponse = MsgBox("Are you sure you want to Start the ______ Converter? Doing so will result in the reset of this entire workbook.", _
+        vbYesNo + vbExclamation + vbDefaultButton2, "Confirm Reset")
+
+    ' Step 2: Check User's Response: If the user clicked "Yes" Continue, otherwise end the Subroutine
+      If UserResponse = vbNo Then
+        Exit Sub
+      End If
+
+    ' Step 3: Create a New Worksheet that is unlikely to already be created ("ZYXWVUT" & the current date and time)
+      ' This will be used as the new worksheet name (example "ZYXWVUT2024.03.01 - 03.22.57") - Variable is different every second.
+        CurrentDate = "ZYXWVUT" & Format(Now(), "yyyy.mm.dd - hh.mm.ss")
+      ' Create the New Worksheet with the CurrentDate Variable's Name. Adding it to the end of all worksheets in the workbook.
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = CurrentDate
+
+    ' Step 4: Delete all Worksheets not named with the CurrentDate Variable
+      Application.DisplayAlerts = False
+      For Each ws In ThisWorkbook.Worksheets
+        If ws.Name <> CurrentDate Then
+          ws.Delete
+        End If
+      Next ws
+      Application.DisplayAlerts = True
+
+    ' Step 5: Rename Worksheet (CurrentDate's Value) Name from "ZYXWVUT..." to "Summary Page"
+      ThisWorkbook.Sheets(CurrentDate).Name = "Summary Page"
+
+  ' End of Reset.
+
+  ' Step 6: Add a worksheet named "Consolidated Reports" and "Salesforce Import File"
+    ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Consolidated Reports"
+    ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Salesforce Import File"
+
+  ' Step 7: Add the "School Mapping" Worksheet by using a Public sub called "School_Map" from the "SchoolMapping" Module
+    SchoolMapping.School_Map
+
+  ' Step 8: Set the Worksheet Variable to the following Worksheets: "Summary Page", "Consolidated Reports", "Saleforce Import File", and "School Mapping"
+    Set wsSummary = ThisWorkbook.Sheets("Summary Page")
+    Set wsConoslidated = ThisWorkbook.Sheets("Consolidated Reports")
+    Set wsSFImport = ThisWorkbook.Sheets("Salesforce Import File")
+    Set wsSummary = ThisWorkbook.Sheets("School Mapping")
+
+  ' Step 9: Populate the Headers for each of the Worksheets.
+    ' "Summary Page" Worksheet Headers
+        wsSummary.Range("A1").Value = "Original File Name"
+        wsSummary.Range("B1").Value = "Descriptive Name"
+        wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+        wsSummary.Range("D1").Value = "Completed"
+        wsSummary.Range("E1").Value = "Disbursement Date"
+        wsSummary.Range("F1").Value = "School Name"
+        wsSummary.Range("G1").Value = "Abbreviated School Name"
+        wsSummary.Range("H1").Value = "Disbursement ID"
+        wsSummary.Range("I1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Company Match"
+        wsSummary.Range("L1").Value = "Total Gross Donations"
+        wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("N1").Value = "Total Fees - Company Match"
+        wsSummary.Range("O1").Value = "Total Donation Fees"
+        wsSummary.Range("P1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("Q1").Value = "Net Total - Company Match"
+        wsSummary.Range("R1").Value = "Total Net Donations"
+        wsSummary.Range("S1").Value = "# of Transactions"
+        wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+  
+    ' "Consolidated Reports" Worksheet Headers
+        wsConsolidated.Range("A1").Value = "Donation Date"
+        wsConsolidated.Range("B1").Value = "Company Name"
+        wsConsolidated.Range("C1").Value = "Transaction Id"
+        wsConsolidated.Range("D1").Value = "Transaction Id"
+        wsConsolidated.Range("E1").Value = "Transaction Amount"
+        wsConsolidated.Range("F1").Value = "Fee Amount"
+        wsConsolidated.Range("G1").Value = "Disbursement Fee Amount"
+        wsConsolidated.Range("H1").Value = "Received Amount"
+        wsConsolidated.Range("I1").Value = "Is Disbused?"
+        wsConsolidated.Range("J1").Value = "Payment ID"
+        wsConsolidated.Range("K1").Value = "Is Most Recent Payment"
+        wsConsolidated.Range("L1").Value = "Payment Create Date"
+        wsConsolidated.Range("M1").Value = "Payment Status Date"
+        wsConsolidated.Range("N1").Value = "Payment Status"
+        wsConsolidated.Range("O1").Value = "Donor Type"
+        wsConsolidated.Range("P1").Value = "Donor ID"
+        wsConsolidated.Range("Q1").Value = "Donor First Name"
+        wsConsolidated.Range("R1").Value = "Donor Last Name"
+        wsConsolidated.Range("S1").Value = "Donor Full Name"
+        wsConsolidated.Range("T1").Value = "Donor Email Address"
+        wsConsolidated.Range("U1").Value = "Donor Address"
+        wsConsolidated.Range("V1").Value = "Donor Address 2"
+        wsConsolidated.Range("W1").Value = "Donor City"
+        wsConsolidated.Range("X1").Value = "Donor State/Province/Region"
+        wsConsolidated.Range("Y1").Value = "Donor Postal Code"
+        wsConsolidated.Range("Z1").Value = "Donor Country"
+        wsConsolidated.Range("AA1").Value = "Match Donor Id"
+        wsConsolidated.Range("AB1").Value = "Match Donor First Name"
+        wsConsolidated.Range("AC1").Value = "Match Donor Last Name"
+        wsConsolidated.Range("AD1").Value = "Match Donor Email Address"
+        wsConsolidated.Range("AE1").Value = "Dedication Type"
+        wsConsolidated.Range("AF1").Value = "Dedication"
+        wsConsolidated.Range("AG1").Value = "Designation"
+        wsConsolidated.Range("AH1").Value = "Registration Id"
+        wsConsolidated.Range("AI1").Value = "Designated Charity Name"
+        wsConsolidated.Range("AJ1").Value = "Donation Status"
+        wsConsolidated.Range("AK1").Value = "Alternate Recognition Name"
+        wsConsolidated.Range("AL1").Value = "Segment Name"
+        wsConsolidated.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsConsolidated.Range("AN1").Value = "Local Currency Type"
+        wsConsolidated.Range("AO1").Value = "Fundraising ID"
+        wsConsolidated.Range(ConsolidatedLastColumn & "1").Value = "Original File Name"
+        wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
+
+    ' "Salesforce Import File" Worksheet Headers
+      ' Salesforce Headers Here
+
+  ' Step 10: Ask user to open the folder to extract CSV files from to consolidate into Excel on the "Consolidated Reports" Worksheet
+    ' If the user cancels the operation, create a macro to start from this point and exit this Sub. Otherwise continue with the next part.
+      ' Prompt the user to select a folder
+        With Application.FileDialog(msoFileDialogFolderPicker)
+          .Title = "Select a Folder"
+          .AllowMultiSelect = False
+          If .Show = -1 Then
+            FolderPath = .SelectedItems(1)
+          Else
+            wsSummary.Activate
+            wsSumamry.Range("A2").Select
+            MsgBox "Operation was cancelled. Please click this button when you are ready to pick a folder with your files!"
+            ' Add a button to start from this point.
+              Set ButtonShape = wsSummary.Shapes.AddShape(msoShapeRectangle, 0, 16, 600, 400)
+              ButtonText = "Click here when you have your files in a folder and are ready to select that folder."             ' Value of the text within the button
+              With ButtonShape
+                .OnAction = ""                                                                       ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = ButtonText
+                .TextFrame.Characters.Font.Name = "Calibri"                                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 35                                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                                     ' Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                                 ' Center the font within the button (up and down)
+              End With
+            Exit Sub
+          End If
+        End With
+  ' If the Folder was selected. Continue to the next part of this macro.
+
+  ' Step 11: Check that the folder path has at least 1 file in it. If it doesn't, end the sub and create a button for when the user is ready.
+
+  ' Step 12-22: If at least one file is in the folder path then Start a loop of the following processes:
+    ' Step 12: Define the Variables relevant to this Loop ()
+    ' Loop through the files from the folder, one at a time, completing these steps.
+      ' Step 13: Open the file
+      ' Step 14: Copy the whole report from the file into a new worksheet at the end of all other worksheets in the workbook, 
+      ' Step 15: Temporarily name the worksheet based on the file count 1, 2, ...
+      ' Step 16: Create a hyperlink in the new worksheet in Row 1 after the completion of other row headers linked to the "Summary Page" A1 cell, 
+      ' Step 17: Adjust the column width to AutoFit. _
+      ' Step 18: After those steps copy only the data relevant to the "Consolidate Reports" Worksheet (not the entire report, exclude headings and other unnecessary data)
+      ' Step 19: Now Place the file name into Column A of the "Summary Page" Worksheet as well as the ConsolidatedLastColumn variable of the "Consolidated Reports" Worksheet
+      ' Step 20: Close the File
+      ' Step 21: Place an "x" in Column D of the "Summary" Page to indicate the loop has been completed for that file
+      ' Step 22: Repeat until all files have been added
+
+    ' Once the loop is completed, start adding formulas to help analyze the data collected
+
+  ' Step 23: Populate the formulas in the "Summary Page" Worksheet
+
+  ' Step 24: Fill down the formulas in the "Summary Page" Worksheet
+
+  ' Step 25: Populate the formula(s) in the "Consolidated Reports" Worksheet
+
+  ' Step 26: Fill down the formula(s) in the "Consolidated Reports" Worksheet
+
+  ' Step 27: Populate the formulas in the "Salesforce Import File" Worksheet
+
+  ' Step 28: Fill down the formulas in the the "Salesforce Import File" Worksheet
+
+  ' Using the original folder path provided by the user, create 2 new folders within that folder. Called: "Descriptive File Name", and "CSV File Name". _
+    Copy the original files and rename them based on the Descriptive Naming Convention and CSV Naming Convention found in the "Summary Page" Worksheet
+    ' Create the "Descriptive File Name" Folder and copy and paste the files with the Descriptive File Naming Convention
+
+    ' Create the "CSV File Name" Folder and copy and paste the files with the CSV File Naming Convention
+
+  ' Format the Cells in the "Summary Page" sheet, "Consolidated Reports" sheet, and "Salesforce Import File" sheet
+
+  ' Rename the worksheet names from the Temporary Worksheet Name to the CSV Naming Convention
+
+  ' Reorder the worksheets in a descending order (Z-A)-(9-0)
+
+  ' Hide all the worksheets except for "Consolidated Reports", "Summary Page", "Salesforce Import File", ....
+
+  ' Reorder the non-hidden worksheets in ascending order (0-9)-(A-Z)
+
+  ' Activate the "Salesforce Import File" Worksheet and go to "A1"
+
+End Sub
