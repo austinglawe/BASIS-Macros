@@ -324,7 +324,22 @@ DonationSiteName = "YourCause"
         wsSFReport.Columns("A:A").Delete
 
     ' Step : Add the rest of the worksheets that are needed.
+        SummaryPage = "Summary Page"
 
+        ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = SummaryPage
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DonationSiteName & " Consolidated"
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = 
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name =
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name =
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Total Reset"
+
+        Dim wsReset As Worksheet
+        Dim wsConsolidated As Worksheet
+        Dim wsSummary As Worksheet
+        Dim wsSchoolMap As Worksheet
+        Dim wsSFReport As Worksheet
+        Dim wsImportFile As Worksheet
+        Dim wsRelevantSF As Worksheet
 
     ' Step : Set the worksheets to variables.
 
