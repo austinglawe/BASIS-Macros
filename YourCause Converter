@@ -168,18 +168,18 @@ End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
 '------------------------------------------------------------------------------------------------------------------------------------------
 Public Sub YourCause_AR_Team_Step2()
-' Last Updated 03.19.2024
+' Last Updated 03.20.2024
 
 ' Step 1: Define and Set the value of DonationSiteName based on the Donation site used in this converter.
-Dim DonationSiteName As String
+    Dim DonationSiteName As String
+    Dim HyperlinkColumn As String
+    Dim TempFirstRow As Integer
+    Dim TempEndRowsToDelete As Integer
 
-Dim HyperlinkColumn As String
-Dim TempFirstRow As Integer
-Dim TempEndRowsToDelete As Integer
-DonationSiteName = "YourCause"
-HyperlinkColumn = "AP"
-TempFirstRow = 2
-TempEndRowsToDelete = 0
+    DonationSiteName = "YourCause"
+    HyperlinkColumn = "AP"
+    TempFirstRow = 2
+    TempEndRowsToDelete = 0
 
 ' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
     UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all files in one folder? If not, please select 'No'", _
@@ -199,14 +199,17 @@ TempEndRowsToDelete = 0
         Dim wsSFReport As Worksheet
         Dim wsImportFile As Worksheet
         Dim wsRelevantSF As Worksheet
+
     ' Others
         Dim FolderPath As String
         Dim SummaryLastRow As Long
         Dim ConsolidatedLastRow As Long
+        Dim LastRowRelevantSF As Long
+        Dim LastRowImport As Long
+
     ' For Loop when pulling files from Folder
         Dim TempLastRow As Integer
         Dim TempSheetName As Integer
-            
 
     ' Variables For Checking and Finding Column Headings in the Salesforce Report
             Dim SearchRange As Range
@@ -397,7 +400,7 @@ TempEndRowsToDelete = 0
         wsSummary.Range("S1").Value = "# of Transactions"
         wsSummary.Range("T1").Value = "Temporary Worksheet Name"
 
-    ' Step : Populate the Headers of the "YourCause Consolidated" Worksheet
+    ' Step : Populate the Headers of the "Counsolidated - YourCause" Worksheet
         wsConsolidated.Range("A1").Value = "Donation Date"
         wsConsolidated.Range("B1").Value = "Company Name"
         wsConsolidated.Range("C1").Value = "Transaction Id"
@@ -442,6 +445,13 @@ TempEndRowsToDelete = 0
         wsConsolidated.Range("AP1").Value = "Original File Name"
         wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
 
+    ' Step : Populate the Headers of the "Relevant Salesforce" Worksheet
+        wsRelevantSF.Range("A1").Value = "
+
+    ' Step : Populate the Headers of the "Import File" Worksheet
+        wsImportFile.Range("A1").Value = "
+
+
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
         of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
         The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "Consolidated - YourCause" Worksheet. Once that is completed _
@@ -472,7 +482,13 @@ TempEndRowsToDelete = 0
             File = Dir                                                                                                                                                                                   ' Go to the next file
         Loop
 
-' Step : Populate the formulas in all worksheets
+' Step : Populate the formulas and Fill Down in all worksheets
+    ' Redefine the _EndRow Variables
+        LastRowSummary = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
+        LastRowConsolidated = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
+        LastRowRelevantSF = wsRelevantSF.Cells(Rows.Count, "A").End(xlUp).Row
+        LastRowImport = wsImportFile.Cells(Rows.Count, "A").End(xlUp).Row
+
     ' Populate the formulas in the "Summary Page" Worksheet
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
@@ -492,28 +508,11 @@ ImportSheet = "'Import File'!"
 SchoolMap = "'School Mapping'!"
 ResetSheet = "'Total Reset'!"
 
-
-    ' Once the loop is completed, start adding formulas to help analyze the data collected
-
-  ' Step 23: Populate the formulas in the "Summary Page" Worksheet
-
-  ' Step 24: Fill down the formulas in the "Summary Page" Worksheet
-
-  ' Step 25: Populate the formula(s) in the "Consolidated Reports" Worksheet
-
-  ' Step 26: Fill down the formula(s) in the "Consolidated Reports" Worksheet
-
-  ' Step 27: Populate the formulas in the "Salesforce Import File" Worksheet
-
-  ' Step 28: Fill down the formulas in the the "Salesforce Import File" Worksheet
-
   ' Using the original folder path provided by the user, create 2 new folders within that folder. Called: "Descriptive File Name", and "CSV File Name". _
     Copy the original files and rename them based on the Descriptive Naming Convention and CSV Naming Convention found in the "Summary Page" Worksheet
     ' Create the "Descriptive File Name" Folder and copy and paste the files with the Descriptive File Naming Convention
 
     ' Create the "CSV File Name" Folder and copy and paste the files with the CSV File Naming Convention
-
-  ' Format the Cells in the "Summary Page" sheet, "Consolidated Reports" sheet, and "Salesforce Import File" sheet
 
   ' Rename the worksheet names from the Temporary Worksheet Name to the CSV Naming Convention
 
@@ -524,5 +523,3 @@ ResetSheet = "'Total Reset'!"
   ' Reorder the non-hidden worksheets in ascending order (0-9)-(A-Z)
 
   ' Activate the "Salesforce Import File" Worksheet and go to "A1"
-
-End Sub
