@@ -174,6 +174,8 @@ DonationSiteName = "YourCause"
             Dim TargetColumnHeaders As Variant
             Dim ColumnHeader As Variant
             Dim i As Integer
+            Dim ColumnIndex As Integer
+            Dim NewColumnLetter As String
 
         ' To create a dictionary for the array of column headers that need to be checked 
             Dim ColumnDictionary As Object 
@@ -216,26 +218,24 @@ DonationSiteName = "YourCause"
     ' Step 10: Search for the required ("Target") Column Headers
             ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (below is the same as: i = 0 To 10) - indexes in VBA start at 0 rather than 1.
         For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)
-            ' This will turn off the error prompts (in case there are any column headers that are missing).
+            ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
                 On Error Resume Next
-            ' This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+            ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
                 Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))
-            ' If the column header is found, proceed
+            ' 10c0. If the column header is found, proceed
                 If Not ColumnHeader Is Nothing Then
-                    ' Get the column index of the ColumnHeader
-                        Dim columnIndex As Integer
-                        columnIndex = Range(ColumnHeader.Address).Column
-                    ' Subtract 1 from the column index
-                        columnIndex = columnIndex - 1
-                    ' Convert the modified column index back to the column letter
-                        Dim newColumnLetter As String
-                        newColumnLetter = Cells(1, columnIndex).Address(False, False)
-                    ' Assign the new column letter to ColumnLetters(i)
-                        ColumnLetters(i) = Left(newColumnLetter, Len(newColumnLetter) - 1)
-                    ' Set the Column Letter with its appropriate Column Header
+                    ' 10c1. Get the column index of the ColumnHeader
+                        ColumnIndex = Range(ColumnHeader.Address).Column
+                    ' 10c2. Subtract 1 from the column index
+                        ColumnIndex = ColumnIndex - 1
+                    ' 10c3. Convert the modified column index back to the column letter
+                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)
+                    ' 10c4. Assign the new column letter to ColumnLetters(i)
+                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)
+                    ' 10c5. Set the Column Letter with its appropriate Column Header
                         ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)
                 End If
-            ' This will turn error notifications back on.
+            ' 10d. This will turn error notifications back on.
                 On Error GoTo 0
         Next i
 
