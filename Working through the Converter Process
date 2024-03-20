@@ -221,7 +221,7 @@ Dim Key As Variant
             On Error GoTo 0
         Next i
 
-    ' Step 10: Retrieve values from the dictionary to add a column letter to each variable.
+    ' Step 10: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
         FirstNameColumn = columnDictionary("First Name")
         LastNameColumn = columnDictionary("Last Name")
         PaymentAmountColumn = columnDictionary("Payment Amount")
@@ -252,21 +252,20 @@ Dim Key As Variant
         End If
 
     ' Steps 13-...: Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
+        ' Step 13: Ask User for a FolderPath (if the user cancels, end the Sub).
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    FolderPath = .SelectedItems(1)
+                Else
+                    MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use."
+                    Exit Sub
+                End If
+            End With
 
-
-
-
-
-
-
-
-
-
-
-' Step 4: Ask User for a FolderPath (if the user cancels, end the Sub).
-
-' Step 5: Check that the folder has at least 1 file. 
-  
+        ' Step 14: Check that the folder has at least 1 file. 
+            '
 
 
 
