@@ -340,6 +340,7 @@ TempEndRowsToDelete = 0
         RelevantSF = "'Relevant Salesforce'!"
         ImportSheet = "'Import File'!"
         ResetSheet = "'Total Reset'!"
+        SchoolMap = "'School Mapping'!"
 
         ' Add a worksheet with the name "Summary Page"
             ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
@@ -354,7 +355,7 @@ TempEndRowsToDelete = 0
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)
 
         ' Run the School Mapping Macro to create the appropriate worksheet called "School Mapping"
-            ' SchoolMapping.School_Map
+            SchoolMapping.School_Map
 
         ' Add a worksheet with the name "Total Reset"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)
@@ -364,7 +365,7 @@ TempEndRowsToDelete = 0
         Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))
         Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))
         Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))
-        'Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
+        Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))
         Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))
 
     ' Step : Populate the Headers of the "Summary Page" Worksheet
@@ -463,6 +464,14 @@ TempEndRowsToDelete = 0
             TempSheetName = TempSheetName + 1                                                                                                                                                            ' Add 1 to the TempSheetName count (Temporarily Naming the next sheet 1 + the sheet name just name)
             File = Dir                                                                                                                                                                                   ' Go to the next file
         Loop
+
+' Step : Populate the formulas in all worksheets
+
+
+' Rename the Temporary Worksheet Names to CSV Naming Convention
+
+' Create New folders to hold the new file names
+
 End Sub
 --------------------------
 
