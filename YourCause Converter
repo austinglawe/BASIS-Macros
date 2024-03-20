@@ -107,7 +107,7 @@ Public Sub YourCause_AR_Team_Step1()
         ' Start setting up the environment to make it easy for the user to know what steps to take next
 
             ' Step 11: Change the Column Width of Column A.
-                wsSFReport.Range("A:A").ColumnWidth = 38
+                wsSFReport.Range("A:A").ColumnWidth = 42
             
             ' Step 12: Create a message pointing the user where to put the Salesforce Report
                 With wsSFReport.Range("A1")
