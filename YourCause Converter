@@ -739,14 +739,32 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID) - From Column AS
         ' In B2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!"))
-                wsMissingSF.Range("B2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
+                wsMissingSF.Range("B2").Formula2 = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
         ' Column B, M, and N then need to be changed to a "Short Date" Type
             wsMissingSF.Range("B:B,M:M,N:N").NumberFormat = "MM/DD/YYYY"
 
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
-        ' (Column A)
+        ' (A2) - Filter of Salesforce Transactions that match to YourCause Transactions
             ' =FILTER('Salesforce Columns Re-Arranged'!A:N,ISNUMBER(MATCH('Consolidated - YourCause'!AT:AT,'Salesforce Columns Re-Arranged'!A:A,0)),"There are no matching Salesforce transactions.")
-                wsRelevantSF.Range("A2").Formula =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & Consolidated & "AT:AT, " & SFReArrange & "A:A,0)),""There are no matching Salesforce transactions."")"
+                wsRelevantSF.Range("A2").Formula2 =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & Consolidated & "AT:AT, " & SFReArrange & "A:A,0)),""There are no matching Salesforce transactions."")"
+        ' YourCause - Company Name (Column O)
+            '
+                '
+        ' YourCause - Transaction ID (Column P)
+            '
+                '
+        ' YourCause - Disbursement ID (Column Q)
+            '
+                '
+        ' YourCause - School Name (Column R)
+            '
+                '
+        ' YourCause - Transaction Date (Column S)
+            '
+                '
+        ' YourCause - Deposit Date (Column T)
+            '
+                '
 
 
     ' Populate the formulas in the "Import File" Worksheet
@@ -755,9 +773,12 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Still not in SF Report|SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID) - From column AT
         ' In A2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!"))
-                wsNotInSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
+                wsNotInSF.Range("A2").Formula2 = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
         ' Column A, L, and M then need to be changed to a "Short Date" Type
-            wsMissingSF.Range("A:A,L:L,M:M").NumberFormat = "MM/DD/YYYY"
+            wsNotInSF.Range("A:A,L:L,M:M").NumberFormat = "MM/DD/YYYY"
+
+
+
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
