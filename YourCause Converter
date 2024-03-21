@@ -538,7 +538,6 @@ Public Sub YourCause_AR_Team_Step2()
 
 ' Step : Populate the formulas and Fill Down in all worksheets
     ' Redefine the Sheet's EndRow Variables
-
         LastRowSFReArrange = wsSFReport.Cells(Rows.Count, PaymentIDColumn).End(xlUp).Row
         LastRowSummary = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
         LastRowConsolidated = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
@@ -633,7 +632,7 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
         wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
         wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
-        wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & DepositDateColumn & "2, ""MM/DD/YYYY""))"                              ' "Deposit Date"             (Deposit Date)
+        wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
 
         ' Fill Down
             wsSFReArrange.Range("A2:M" & LastRowSFReArrange).FillDown
