@@ -646,6 +646,14 @@ Public Sub YourCause_AR_Team_Step2()
             ' =XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!F:F,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!G:G,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!D:D,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!C:C,'Salesforce Columns Re-Arranged'!A:A,"Not found by Lookup",2,1),2,1),2,1),2,1)
                 wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&"""*", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)
 
+    ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID)
+        ' In A2
+            ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup")),"",FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup"))
+                wsMissingSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & ConsolidatedSheet & "A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup"")), """", FILTER(" & ConsolidatedSheet & "!A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup""))"
+
+        ' Column A, L, and M then need to be changed to a "Short Date" Type
+
+
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
             ' =FILTER('Salesforce Columns Re-Arranged'!A:N,ISNUMBER(MATCH('Consolidated - YourCause'!AS:AS,'Salesforce Columns Re-Arranged'!A:A,0)),"There are no matching Salesforce transactions.")
                 wsRelevantSF.Range("A2").Formula =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & ConsolidatedSheet & "AS:AS, " & SFReArrange & "A:A,0)),""There are no matching Salesforce transactions."")"
