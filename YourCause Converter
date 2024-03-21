@@ -202,6 +202,7 @@ Public Sub YourCause_AR_Team_Step2()
         Dim wsSFReport As Worksheet
         Dim wsImportFile As Worksheet
         Dim wsRelevantSF As Worksheet
+        Dim wsMissingSF As Worksheet
 
     ' Others
         Dim FolderPath As String
@@ -246,7 +247,7 @@ Public Sub YourCause_AR_Team_Step2()
             Dim EmptyItems As String
             Dim Key As Variant
 
-        ' These are used for naming the Worksheet Names
+        ' These are used for naming the Worksheets
             Dim SFReport As String
             Dim SFReArrange As String
             Dim SummarySheet As String
@@ -254,12 +255,14 @@ Public Sub YourCause_AR_Team_Step2()
             Dim ResetSheet As String
             Dim ImportSheet As String
             Dim RelevantSF As String
+            Dim MissingFromSF As String
 
             SFReport = "'Salesforce Report'!"
             SFReArrange = "'Salesforce Columns Re-Arranged'!"
             SummarySheet = "'Summary Page'!"
             ConsolidatedSheet = "'Consolidated - " & DonationSiteName & "'!"
             RelevantSF = "'Relevant Salesforce'!"
+            MissingFromSF = "'Transactions Missing From SF'!"
             ImportSheet = "'Import File'!"
             SchoolMap = "'School Mapping'!"
             ResetSheet = "'Total Reset'!"
@@ -363,6 +366,7 @@ Public Sub YourCause_AR_Team_Step2()
             ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)                             ' Worksheet: "Summary Page"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)          ' Worksheet: "Consolidated - YourCause"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)                                      ' Worksheet: "Relevant Salesforce"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2)                          ' Worksheet: "Transactions Missing From SF"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)                                  ' Worksheet: "Import File"
             SchoolMapping.School_Map                                                                                                                                                                                                 ' Worksheet: "School Mapping"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)                                      ' Worksheet: "Total Reset"
@@ -372,6 +376,7 @@ Public Sub YourCause_AR_Team_Step2()
             Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))                                                    ' Worksheet: "Summary Page"
             Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))                           ' Worksheet: "Consolidated - YourCause"
             Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                         ' Worksheet: "Relevant Salesforce"
+            Set wsMissingSF = ThisWorkbook.Sheets(Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2))                                              ' Worksheet: "Transactions Missing From SF"
             Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))                                                     ' Worksheet: "Import File"
             Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))                                                              ' Worksheet: "School Mappping"
             Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))                                                              ' Worksheet: "Total Reset"
@@ -400,7 +405,7 @@ Public Sub YourCause_AR_Team_Step2()
         wsSummary.Range("S1").Value = "# of Transactions"
         wsSummary.Range("T1").Value = "Temporary Worksheet Name"
 
-    ' Step : Populate the Headers of the "Counsolidated - YourCause" Worksheet
+    ' Step : Populate the Headers of the "Consolidated - YourCause" Worksheet
         wsConsolidated.Range("A1").Value = "Donation Date"
         wsConsolidated.Range("B1").Value = "Company Name"
         wsConsolidated.Range("C1").Value = "Transaction Id"
@@ -446,6 +451,52 @@ Public Sub YourCause_AR_Team_Step2()
         wsConsolidated.Range("AQ1").Value = "Descriptive File Name"
         wsConsolidated.Range("AR1").Value = "CSV Naming (Worksheet Name)"
         wsConsolidated.Range("AS1").Value = "PMT-ID"
+
+    ' Step : Populate the Headers of the "Transactions Missing from SF" Worksheet
+        wsMissingSF.Range("A1").Value = "Donation Date"
+        wsMissingSF.Range("B1").Value = "Company Name"
+        wsMissingSF.Range("C1").Value = "Transaction Id"
+        wsMissingSF.Range("D1").Value = "Transaction Id [Type]"
+        wsMissingSF.Range("E1").Value = "Transaction Amount"
+        wsMissingSF.Range("F1").Value = "Fee Amount"
+        wsMissingSF.Range("G1").Value = "Disbursement Fee Amount"
+        wsMissingSF.Range("H1").Value = "Received Amount"
+        wsMissingSF.Range("I1").Value = "Is Disbused?"
+        wsMissingSF.Range("J1").Value = "Payment ID"
+        wsMissingSF.Range("K1").Value = "Is Most Recent Payment"
+        wsMissingSF.Range("L1").Value = "Payment Create Date"
+        wsMissingSF.Range("M1").Value = "Payment Status Date"
+        wsMissingSF.Range("N1").Value = "Payment Status"
+        wsMissingSF.Range("O1").Value = "Donor Type"
+        wsMissingSF.Range("P1").Value = "Donor ID"
+        wsMissingSF.Range("Q1").Value = "Donor First Name"
+        wsMissingSF.Range("R1").Value = "Donor Last Name"
+        wsMissingSF.Range("S1").Value = "Donor Full Name"
+        wsMissingSF.Range("T1").Value = "Donor Email Address"
+        wsMissingSF.Range("U1").Value = "Donor Address"
+        wsMissingSF.Range("V1").Value = "Donor Address 2"
+        wsMissingSF.Range("W1").Value = "Donor City"
+        wsMissingSF.Range("X1").Value = "Donor State/Province/Region"
+        wsMissingSF.Range("Y1").Value = "Donor Postal Code"
+        wsMissingSF.Range("Z1").Value = "Donor Country"
+        wsMissingSF.Range("AA1").Value = "Match Donor Id"
+        wsMissingSF.Range("AB1").Value = "Match Donor First Name"
+        wsMissingSF.Range("AC1").Value = "Match Donor Last Name"
+        wsMissingSF.Range("AD1").Value = "Match Donor Email Address"
+        wsMissingSF.Range("AE1").Value = "Dedication Type"
+        wsMissingSF.Range("AF1").Value = "Dedication"
+        wsMissingSF.Range("AG1").Value = "Designation"
+        wsMissingSF.Range("AH1").Value = "Registration Id"
+        wsMissingSF.Range("AI1").Value = "Designated Charity Name"
+        wsMissingSF.Range("AJ1").Value = "Donation Status"
+        wsMissingSF.Range("AK1").Value = "Alternate Recognition Name"
+        wsMissingSF.Range("AL1").Value = "Segment Name"
+        wsMissingSF.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsMissingSF.Range("AN1").Value = "Local Currency Type"
+        wsMissingSF.Range("AO1").Value = "Fundraising ID"
+        wsMissingSF.Range("AP1").Value = "Original File Name"
+        wsMissingSF.Range("AQ1").Value = "Descriptive File Name"
+        wsMissingSF.Range("AR1").Value = "CSV Naming (Worksheet Name)"
 
     ' Step : Populate the Headers of the "Relevant Salesforce" Worksheet
         wsRelevantSF.Range("A1").Value = "
