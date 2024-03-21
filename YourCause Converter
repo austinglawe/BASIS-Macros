@@ -286,17 +286,17 @@ Public Sub YourCause_AR_Team_Step2()
         ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
 
     ' Step 10: Search for the required ("Target") Column Headers
-        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                              ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
-                On Error Resume Next                                                                    ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
-                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                             ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
-                If Not ColumnHeader Is Nothing Then                                                     ' 10c0. If the column header is found, proceed
-                        ColumnIndex = Range(ColumnHeader.Address).Column                                ' 10c1. Get the column index of the ColumnHeader
-                        ColumnIndex = ColumnIndex - 1                                                   ' 10c2. Subtract 1 from the column index
-                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                   ' 10c3. Convert the modified column index back to the column letter
-                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)              ' 10c4. Assign the new column letter to ColumnLetters(i)
-                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                     ' 10c5. Set the Column Letter with its appropriate Column Header
+        For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                                                      ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                On Error Resume Next                                                                                            ' 10a. This will turn off the error prompts (in case there are any column headers that are missing).
+                Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                                                     ' 10b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                If Not ColumnHeader Is Nothing Then                                                                             ' 10c0. If the column header is found, proceed
+                        ColumnIndex = Range(ColumnHeader.Address).Column                                                        ' 10c1. Get the column index of the ColumnHeader
+                        ColumnIndex = ColumnIndex - 1                                                                           ' 10c2. Subtract 1 from the column index
+                        NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                                           ' 10c3. Convert the modified column index back to the column letter
+                        ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)                                      ' 10c4. Assign the new column letter to ColumnLetters(i)
+                        ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                                             ' 10c5. Set the Column Letter with its appropriate Column Header
                 End If
-                On Error GoTo 0                                                                         ' 10d. This will turn error notifications back on.
+                On Error GoTo 0                                                                                                 ' 10d. This will turn error notifications back on.
         Next i
 
     ' Step 11: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
@@ -372,14 +372,14 @@ Public Sub YourCause_AR_Team_Step2()
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)                                      ' Worksheet: "Total Reset"
 
     ' Step : Set the worksheets to variables.
-            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                    ' Worksheet: "Salesforce Columns Re-Arranged"
-            Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))                                                    ' Worksheet: "Summary Page"
-            Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))                           ' Worksheet: "Consolidated - YourCause"
-            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                         ' Worksheet: "Relevant Salesforce"
-            Set wsMissingSF = ThisWorkbook.Sheets(Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2))                                              ' Worksheet: "Transactions Missing From SF"
-            Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))                                                     ' Worksheet: "Import File"
-            Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))                                                              ' Worksheet: "School Mappping"
-            Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))                                                              ' Worksheet: "Total Reset"
+            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                                                ' Worksheet: "Salesforce Columns Re-Arranged"
+            Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))                                                                                ' Worksheet: "Summary Page"
+            Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))                                                       ' Worksheet: "Consolidated - YourCause"
+            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                                                     ' Worksheet: "Relevant Salesforce"
+            Set wsMissingSF = ThisWorkbook.Sheets(Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2))                                                                          ' Worksheet: "Transactions Missing From SF"
+            Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))                                                                                 ' Worksheet: "Import File"
+            Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))                                                                                          ' Worksheet: "School Mappping"
+            Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))                                                                                          ' Worksheet: "Total Reset"
 
 
 
