@@ -615,9 +615,9 @@ Public Sub YourCause_AR_Team_Step2()
 
         ' Fill Down
             ' Column B through Column C
-                wsSummary.Range("B2:C" & EndRowSummary).FillDown
+                wsSummary.Range("B2:C" & LastRowSummary).FillDown
             ' Columns E-S
-                wsSummary.Range("E2:S" & EndRowSummary).FillDown
+                wsSummary.Range("E2:S" & LastRowSummary).FillDown
 
     ' Populate the formulas in the "Salesforce Columns Re-Arranged" Worksheet and then fill the formulas down
         wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                             ' "Payment: Payment Number"  (PMT-ID)
@@ -632,8 +632,8 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFReArrange.Range("J2").Formula = "=IF((" & SFReport & PaymentAmountColumn & "2) = """", """", " & SFReport & PaymentAmountColumn & "2)"                                     ' "Payment Amount"           (Payment Amount)
         wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
         wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
-        wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY"")"            ' "Close Date"               (Transaction Date)
-        wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & DepositDateColumn & "2, ""MM/DD/YYYY"")"                               ' "Deposit Date"             (Deposit Date)
+        wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
+        wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & DepositDateColumn & "2, ""MM/DD/YYYY""))"                              ' "Deposit Date"             (Deposit Date)
 
         ' Fill Down
             wsSFReArrange.Range("A2:M" & LastRowSFReArrange).FillDown
@@ -641,7 +641,7 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
         ' PMT-ID (Column AS)
             ' =XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!F:F,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!G:G,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!D:D,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!C:C,'Salesforce Columns Re-Arranged'!A:A,"Not found by Lookup",2,1),2,1),2,1),2,1)
-                wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&"""*", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)
+                wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)
 
         ' Fill Down
             wsConsolidated.Range("AS2:AS" & LastRowConsolidated).FillDown
@@ -649,7 +649,7 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID)
         ' In A2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup")),"",FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup"))
-                wsMissingSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & ConsolidatedSheet & "A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup"")), """", FILTER(" & ConsolidatedSheet & "!A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup""))"
+                wsMissingSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & ConsolidatedSheet & "A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup"")), """", FILTER(" & ConsolidatedSheet & "A:AR, " & ConsolidatedSheet & "AS:AS=""Not Found by Lookup""))"
 
         ' Column A, L, and M then need to be changed to a "Short Date" Type
 
