@@ -538,14 +538,6 @@ Public Sub YourCause_AR_Team_Step2()
         wsRelevantSF.Range("S1").Value = "YourCause - Transaction Date"
         wsRelevantSF.Range("T1").Value = "YourCause - Deposit Date"
 
-
-    ' Step : Populate the Headers of the "Relevant Salesforce" Worksheet
-        wsRelevantSF.Range("A1").Value = "
-
-    ' Step : Populate the Headers of the "Import File" Worksheet
-        wsImportFile.Range("A1").Value = "
-
-
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
         of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
         The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "Consolidated - YourCause" Worksheet. Once that is completed _
@@ -690,19 +682,25 @@ Public Sub YourCause_AR_Team_Step2()
             wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
 
         ' Fill Down
-            wsSFReArrange.Range("A2:M" & LastRowSFReArrange).FillDown
+            wsSFReArrange.Range("A2:N" & LastRowSFReArrange).FillDown
 
 
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
+        ' Descriptive File Name (Column AQ)
+            '
+                '
+        ' CSV Naming (Worksheet Name)
+            '
+                '
         ' PMT-ID (Column AS)
             ' =XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!F:F,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!G:G,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!D:D,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!C:C,'Salesforce Columns Re-Arranged'!A:A,"Not found by Lookup",2,1),2,1),2,1),2,1)
                 wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)
         ' Finalized PMT-ID (Column AT)
             ' =IF(AS2="Not Found by Lookup",IF(XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)="",AS2,XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)),AS2)
-                wsConsolidated.Range("AT2").Formula = "=IF(AS2=""Not Found by Lookup"", IF(XLOOKUP(C2," & MissingFromSF & "!D:D, "& MissingFromSF & "A:A)="",AS2,XLOOKUP(C2, " & MissingFromSF & "D:D, "& MissingFromSF & "A:A)),AS2)"
+                wsConsolidated.Range("AT2").Formula = "=IF(AS2=""Not Found by Lookup"", IF(XLOOKUP(C2," & MissingFromSF & "D:D, " & MissingFromSF & "A:A)="""", AS2, XLOOKUP(C2, " & MissingFromSF & "D:D, "& MissingFromSF & "A:A)),AS2)"
 
         ' Fill Down
-            wsConsolidated.Range("AS2:AS" & LastRowConsolidated).FillDown
+            wsConsolidated.Range("AQ2:AT" & LastRowConsolidated).FillDown
 
 
     ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID)
