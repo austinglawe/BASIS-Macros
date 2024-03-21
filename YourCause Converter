@@ -630,15 +630,15 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Summary Page" Worksheet
         ' Descriptive Name (Column B)
             '  ="YourCause - "&E2&"_"&F2&" ("&H2&") ["&TEXT(R2,"$#,##0.00")&"]"
-                wsSummary.Range("B2").Formula = """YourCause - ""&E2&""_""&F2&"" (""&H2&"") [""&TEXT(R2,""$#,##0.00")&""]"""
+                wsSummary.Range("B2").Formula = "=""YourCause - ""&E2&""_""&F2&"" (""&H2&"") [""&TEXT(R2,""$#,##0.00"")&""]"""
         ' CSV Naming (Worksheet Name)
             ' =E2&"_"&G2&" ("&H2&")"
                 wsSummary.Range("C2").Formula = "=E2&""_""&G2&"" (""&H2&"")"""
         ' Disbursement Date
-            ''''' =TEXT(XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!M:M), "YYYY.MM.DD")
+            ' =TEXT(XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!M:M), "YYYY.MM.DD")
                 wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "M:M), ""YYYY.MM.DD"")"
         ' School Name
-            ''''' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!AI:AI)
+            ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!AI:AI)
                 wsSummary.Range("F2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "AI:AI)"
         ' Abbreviated School Name
             ' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
@@ -646,7 +646,7 @@ Public Sub YourCause_AR_Team_Step2()
                  wsSummary.Range("G2").Value = "AHW"
 
         ' Disbursement ID
-            ''''' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!J:J)
+            ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!J:J)
                 wsSummary.Range("H2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "J:J)"
         ' Company Match/Employee Giving
             ' =IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))
@@ -757,7 +757,7 @@ Public Sub YourCause_AR_Team_Step2()
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!"))
                 wsNotInSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
         ' Column A, L, and M then need to be changed to a "Short Date" Type
-            wsMissingSF.Range("A:A,L:L,M:M,").NumberFormat = "MM/DD/YYYY"
+            wsMissingSF.Range("A:A,L:L,M:M").NumberFormat = "MM/DD/YYYY"
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
