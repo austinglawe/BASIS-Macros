@@ -178,13 +178,13 @@ Public Sub YourCause_AR_Team_Step2()
     Dim TempFirstRow As Integer
     Dim TempEndRowsToDelete As Integer
 
-    DonationSiteName = "YourCause"
-    HyperlinkColumn = "AP"
-    TempFirstRow = 2
-    TempEndRowsToDelete = 0
+    DonationSiteName = "YourCause"                          ' This is the Donation Site
+    HyperlinkColumn = "AP"                                  ' This is the column of where the hyperlink will be placed when the report is copied over
+    TempFirstRow = 2                                        ' This is the First row the Data Starts on in the Donation Site's Report
+    TempEndRowsToDelete = 0                                 ' This is if there are any rows below the data we want to use in the Donation Site's Report
 
 ' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
-    UserResponse = MsgBox("Are you sure you want to continue to the second step? You will need to select a single folder for the converter to work. Do you have all of the files in one folder? If not, please select 'No'", _
+    UserResponse = MsgBox("Are you sure you want to continue to the second step?" & vbLfYou will need to select a single folder for the converter to work. Do you have all of the files in one folder? If not, please select 'No'", _
           vbYesNo + vbExclamation + vbDefaultButton2, "Proceed to Step 2 of the " & DonationSiteName & " Converter")
 
 ' Step 3: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
@@ -660,23 +660,38 @@ Public Sub YourCause_AR_Team_Step2()
                 wsSummary.Range("E2:S" & LastRowSummary).FillDown
 
     ' Populate the formulas in the "Salesforce Columns Re-Arranged" Worksheet and then fill the formulas down
-        wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                             ' "Payment: Payment Number"  (PMT-ID)
-        wsSFReArrange.Range("B2").Formula = "=IF((" & SFReport & CampaignNameColumn & "2) = """", """", " & SFReport & CampaignNameColumn & "2)"                                       ' "Primary Campaign Source"  (Campaign Name)
-        wsSFReArrange.Range("C2").Formula = "=IF((" & SFReport & OpportunityNameColumn & "2) = """", """", " & SFReport & OpportunityNameColumn & "2)"                                 ' "Opportunity Name"         (Opportunity Name)
-        wsSFReArrange.Range("D2").Formula = "=IF((" & SFReport & CheckNumberColumn & "2) = """", """", " & SFReport & CheckNumberColumn & "2)"                                         ' "Check Number"             (Check Number - if it is a check)
-        wsSFReArrange.Range("E2").Formula = "=IF((" & SFReport & CompanyNameColumn & "2) = """", """", " & SFReport & CompanyNameColumn & "2)"                                         ' "Company Name"             (Company Name)
-        wsSFReArrange.Range("F2").Formula = "=IF((" & SFReport & TransactionIDColumn & "2) = """", """", " & SFReport & TransactionIDColumn & "2)"                                     ' "Check/Reference Number"   (Transaction ID)
-        wsSFReArrange.Range("G2").Formula = "=IF((" & SFReport & DisbursementIDColumn & "2) = """", """", " & SFReport & DisbursementIDColumn & "2)"                                   ' "Disbursement ID"          (Disbursement ID)
-        wsSFReArrange.Range("H2").Formula = "=IF((" & SFReport & FirstNameColumn & "2) = """", """", " & SFReport & FirstNameColumn & "2)"                                             ' "First Name"               (First Name
-        wsSFReArrange.Range("I2").Formula = "=IF((" & SFReport & LastNameColumn & "2) = """", """", " & SFReport & LastNameColumn & "2)"                                               ' "Last Name"                (Last Name)
-        wsSFReArrange.Range("J2").Formula = "=IF((" & SFReport & PaymentAmountColumn & "2) = """", """", " & SFReport & PaymentAmountColumn & "2)"                                     ' "Payment Amount"           (Payment Amount)
-        wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
-        wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
-        wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
-        wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
+        ' In A2 -->
+             wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                             ' "Payment: Payment Number"  (PMT-ID)
+        ' In B2 -->
+            wsSFReArrange.Range("B2").Formula = "=IF((" & SFReport & CampaignNameColumn & "2) = """", """", " & SFReport & CampaignNameColumn & "2)"                                       ' "Primary Campaign Source"  (Campaign Name)
+        ' In C2 -->
+            wsSFReArrange.Range("C2").Formula = "=IF((" & SFReport & OpportunityNameColumn & "2) = """", """", " & SFReport & OpportunityNameColumn & "2)"                                 ' "Opportunity Name"         (Opportunity Name)
+        ' In D2 -->
+            wsSFReArrange.Range("D2").Formula = "=IF((" & SFReport & CheckNumberColumn & "2) = """", """", " & SFReport & CheckNumberColumn & "2)"                                         ' "Check Number"             (Check Number - if it is a check)
+        ' In E2 -->
+            wsSFReArrange.Range("E2").Formula = "=IF((" & SFReport & CompanyNameColumn & "2) = """", """", " & SFReport & CompanyNameColumn & "2)"                                         ' "Company Name"             (Company Name)
+        ' In F2 -->
+            wsSFReArrange.Range("F2").Formula = "=IF((" & SFReport & TransactionIDColumn & "2) = """", """", " & SFReport & TransactionIDColumn & "2)"                                     ' "Check/Reference Number"   (Transaction ID)
+        ' In G2 -->
+            wsSFReArrange.Range("G2").Formula = "=IF((" & SFReport & DisbursementIDColumn & "2) = """", """", " & SFReport & DisbursementIDColumn & "2)"                                   ' "Disbursement ID"          (Disbursement ID)
+        ' In H2 -->
+            wsSFReArrange.Range("H2").Formula = "=IF((" & SFReport & FirstNameColumn & "2) = """", """", " & SFReport & FirstNameColumn & "2)"                                             ' "First Name"               (First Name)
+        ' In I2 -->
+            wsSFReArrange.Range("I2").Formula = "=IF((" & SFReport & LastNameColumn & "2) = """", """", " & SFReport & LastNameColumn & "2)"                                               ' "Last Name"                (Last Name)
+        ' In J2 -->
+            wsSFReArrange.Range("J2").Formula = "=IF((" & SFReport & PaymentAmountColumn & "2) = """", """", " & SFReport & PaymentAmountColumn & "2)"                                     ' "Payment Amount"           (Payment Amount)
+        ' In K2 -->
+            wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
+        ' In L2 -->
+            wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
+        ' In M2 -->
+            wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
+        ' In N2 -->
+            wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
 
         ' Fill Down
             wsSFReArrange.Range("A2:M" & LastRowSFReArrange).FillDown
+
 
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
         ' PMT-ID (Column AS)
@@ -689,19 +704,24 @@ Public Sub YourCause_AR_Team_Step2()
         ' Fill Down
             wsConsolidated.Range("AS2:AS" & LastRowConsolidated).FillDown
 
+
     ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID)
         ' In B2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup")),"",FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup"))
                 wsMissingSF.Range("B2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup""))"
 
-        ' Column A, L, and M then need to be changed to a "Short Date" Type
+        ' Column B, M, and N then need to be changed to a "Short Date" Type
+
 
 
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
+        ' (Column A)
             ' =FILTER('Salesforce Columns Re-Arranged'!A:N,ISNUMBER(MATCH('Consolidated - YourCause'!AT:AT,'Salesforce Columns Re-Arranged'!A:A,0)),"There are no matching Salesforce transactions.")
                 wsRelevantSF.Range("A2").Formula =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & Consolidated & "AT:AT, " & SFReArrange & "A:A,0)),""There are no matching Salesforce transactions."")"
 
+
     ' Populate the formulas in the "Import File" Worksheet
+
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
