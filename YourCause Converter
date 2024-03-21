@@ -203,6 +203,7 @@ Public Sub YourCause_AR_Team_Step2()
         Dim wsImportFile As Worksheet
         Dim wsRelevantSF As Worksheet
         Dim wsMissingSF As Worksheet
+        Dim wsNotInSF As Worksheet
 
     ' Others
         Dim FolderPath As String
@@ -362,26 +363,26 @@ Public Sub YourCause_AR_Team_Step2()
     ' Step : Add the rest of the worksheets that are needed. The variables include the 'WorksheetName'! (the single quotes and exlamation mark in order to use to refer to these sheets later). _
         To add the correct names to the new worksheets though, the first character and the last two need to be taken off of the variables - the LEFT() and RIGHT() functions are used to do this.
 
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2)                                                 ' Worksheet: "Salesforce Columns Re-Arranged"
             ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)                                             ' Worksheet: "Summary Page"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2)                                                  ' Worksheet: "Salesforce Columns Re-Arranged"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(Consolidated, Len(Consolidated) - 1), Len(Right(Consolidated, Len(Consolidated) - 1)) - 2)                                              ' Worksheet: "Consolidated - YourCause"
-            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)                                                      ' Worksheet: "Relevant Salesforce"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2)                                          ' Worksheet: "Transactions Missing From SF"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2)                                                      ' Worksheet: "Relevant Salesforce"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2)                                                  ' Worksheet: "Import File"
+            ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "Still not in SF|SF Report"                                                                                                                        ' Worksheet: "Still not in SF|SF Report"            
             SchoolMapping.School_Map                                                                                                                                                                                                                 ' Worksheet: "School Mapping"
             ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2)                                                      ' Worksheet: "Total Reset"
 
     ' Step : Set the worksheets to variables.
-            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                                                                ' Worksheet: "Salesforce Columns Re-Arranged"
             Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))                                                                                                ' Worksheet: "Summary Page"
+            Set wsSFReArrange = ThisWorkbook.Sheets(Left(Right(SFReArrange, Len(SFReArrange) - 1), Len(Right(SFReArrange, Len(SFReArrange) - 1)) - 2))                                                                                                ' Worksheet: "Salesforce Columns Re-Arranged"
             Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(Consolidated, Len(Consolidated) - 1), Len(Right(Consolidated, Len(Consolidated) - 1)) - 2))                                                                                           ' Worksheet: "Consolidated - YourCause"
-            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                                                                     ' Worksheet: "Relevant Salesforce"
             Set wsMissingSF = ThisWorkbook.Sheets(Left(Right(MissingFromSF, Len(MissingFromSF) - 1), Len(Right(MissingFromSF, Len(MissingFromSF) - 1)) - 2))                                                                                          ' Worksheet: "Transactions Missing From SF"
+            Set wsRelevantSF = ThisWorkbook.Sheets(Left(Right(RelevantSF, Len(RelevantSF) - 1), Len(Right(RelevantSF, Len(RelevantSF) - 1)) - 2))                                                                                                     ' Worksheet: "Relevant Salesforce"
             Set wsImportFile = ThisWorkbook.Sheets(Left(Right(ImportSheet, Len(ImportSheet) - 1), Len(Right(ImportSheet, Len(ImportSheet) - 1)) - 2))                                                                                                 ' Worksheet: "Import File"
+            Set wsNotInSF = ThisWorkbook.Sheets("Still not in SF|SF Report")                                                                                                                                                                          ' Worksheet: "Still not in SF|SF Report"
             Set wsSchoolMap = ThisWorkbook.Sheets(Left(Right(SchoolMap, Len(SchoolMap) - 1), Len(Right(SchoolMap, Len(SchoolMap) - 1)) - 2))                                                                                                          ' Worksheet: "School Mappping"
             Set wsReset = ThisWorkbook.Sheets(Left(Right(ResetSheet, Len(ResetSheet) - 1), Len(Right(ResetSheet, Len(ResetSheet) - 1)) - 2))                                                                                                          ' Worksheet: "Total Reset"
-
-
 
     ' Step : Populate the Headers of the "Summary Page" Worksheet
         wsSummary.Range("A1").Value = "Original File Name"
@@ -404,6 +405,22 @@ Public Sub YourCause_AR_Team_Step2()
         wsSummary.Range("R1").Value = "Total Net Donations"
         wsSummary.Range("S1").Value = "# of Transactions"
         wsSummary.Range("T1").Value = "Temporary Worksheet Name"
+
+    ' Step : Populate the Headers of the "Salesforce Columns Re-Arranged" Worksheet
+        wsSFReArrange.Range("A1").Value = "Payment: Payment Number"
+        wsSFReArrange.Range("B1").Value = "Primary Campaign Source"
+        wsSFReArrange.Range("C1").Value = "Opportunity Name"
+        wsSFReArrange.Range("D1").Value = "Check Number"
+        wsSFReArrange.Range("E1").Value = "Company Name"
+        wsSFReArrange.Range("F1").Value = "Check/Reference Number"
+        wsSFReArrange.Range("G1").Value = "Disbursement ID"
+        wsSFReArrange.Range("H1").Value = "First Name"
+        wsSFReArrange.Range("I1").Value = "Last Name"
+        wsSFReArrange.Range("J1").Value = "Payment Amount"
+        wsSFReArrange.Range("K1").Value = "Description"
+        wsSFReArrange.Range("L1").Value = "School Name"
+        wsSFReArrange.Range("M1").Value = "Close Date"
+        wsSFReArrange.Range("N1").Value = "Deposit Date"
 
     ' Step : Populate the Headers of the "Consolidated - YourCause" Worksheet
         wsConsolidated.Range("A1").Value = "Donation Date"
@@ -500,22 +517,6 @@ Public Sub YourCause_AR_Team_Step2()
         wsMissingSF.Range("AR1").Value = "Descriptive File Name"
         wsMissingSF.Range("AS1").Value = "CSV Naming (Worksheet Name)"
 
-    ' Step : Populate the Headers of the "Salesforce Columns Re-Arranged" Worksheet
-        wsSFReArrange.Range("A1").Value = "Payment: Payment Number"
-        wsSFReArrange.Range("B1").Value = "Primary Campaign Source"
-        wsSFReArrange.Range("C1").Value = "Opportunity Name"
-        wsSFReArrange.Range("D1").Value = "Check Number"
-        wsSFReArrange.Range("E1").Value = "Company Name"
-        wsSFReArrange.Range("F1").Value = "Check/Reference Number"
-        wsSFReArrange.Range("G1").Value = "Disbursement ID"
-        wsSFReArrange.Range("H1").Value = "First Name"
-        wsSFReArrange.Range("I1").Value = "Last Name"
-        wsSFReArrange.Range("J1").Value = "Payment Amount"
-        wsSFReArrange.Range("K1").Value = "Description"
-        wsSFReArrange.Range("L1").Value = "School Name"
-        wsSFReArrange.Range("M1").Value = "Close Date"
-        wsSFReArrange.Range("N1").Value = "Deposit Date"
-
     ' Step : Populate the Headers of the "Relevant Salesforce" Worksheet
         wsRelevantSF.Range("A1").Value = "PMT-ID"
         wsRelevantSF.Range("B1").Value = "Campaign Name"
@@ -538,6 +539,54 @@ Public Sub YourCause_AR_Team_Step2()
         wsRelevantSF.Range("S1").Value = "YourCause - Transaction Date"
         wsRelevantSF.Range("T1").Value = "YourCause - Deposit Date"
 
+    ' Step : Populate the Headers of the "Import File" Worksheet
+
+    ' Step : Populate the Headers of the "Still not in SF|SF Report" Worksheet
+        wsNotInSF.Range("A1").Value = "Donation Date"
+        wsNotInSF.Range("B1").Value = "Company Name"
+        wsNotInSF.Range("C1").Value = "Transaction Id"
+        wsNotInSF.Range("D1").Value = "Transaction Id [Type]"
+        wsNotInSF.Range("E1").Value = "Transaction Amount"
+        wsNotInSF.Range("F1").Value = "Fee Amount"
+        wsNotInSF.Range("G1").Value = "Disbursement Fee Amount"
+        wsNotInSF.Range("H1").Value = "Received Amount"
+        wsNotInSF.Range("I1").Value = "Is Disbused?"
+        wsNotInSF.Range("J1").Value = "Payment ID"
+        wsNotInSF.Range("K1").Value = "Is Most Recent Payment"
+        wsNotInSF.Range("L1").Value = "Payment Create Date"
+        wsNotInSF.Range("M1").Value = "Payment Status Date"
+        wsNotInSF.Range("N1").Value = "Payment Status"
+        wsNotInSF.Range("O1").Value = "Donor Type"
+        wsNotInSF.Range("P1").Value = "Donor ID"
+        wsNotInSF.Range("Q1").Value = "Donor First Name"
+        wsNotInSF.Range("R1").Value = "Donor Last Name"
+        wsNotInSF.Range("S1").Value = "Donor Full Name"
+        wsNotInSF.Range("T1").Value = "Donor Email Address"
+        wsNotInSF.Range("U1").Value = "Donor Address"
+        wsNotInSF.Range("V1").Value = "Donor Address 2"
+        wsNotInSF.Range("W1").Value = "Donor City"
+        wsNotInSF.Range("X1").Value = "Donor State/Province/Region"
+        wsNotInSF.Range("Y1").Value = "Donor Postal Code"
+        wsNotInSF.Range("Z1").Value = "Donor Country"
+        wsNotInSF.Range("AA1").Value = "Match Donor Id"
+        wsNotInSF.Range("AB1").Value = "Match Donor First Name"
+        wsNotInSF.Range("AC1").Value = "Match Donor Last Name"
+        wsNotInSF.Range("AD1").Value = "Match Donor Email Address"
+        wsNotInSF.Range("AE1").Value = "Dedication Type"
+        wsNotInSF.Range("AF1").Value = "Dedication"
+        wsNotInSF.Range("AG1").Value = "Designation"
+        wsNotInSF.Range("AH1").Value = "Registration Id"
+        wsNotInSF.Range("AI1").Value = "Designated Charity Name"
+        wsNotInSF.Range("AJ1").Value = "Donation Status"
+        wsNotInSF.Range("AK1").Value = "Alternate Recognition Name"
+        wsNotInSF.Range("AL1").Value = "Segment Name"
+        wsNotInSF.Range("AM1").Value = "Local Currency Recipt Amount"
+        wsNotInSF.Range("AN1").Value = "Local Currency Type"
+        wsNotInSF.Range("AO1").Value = "Fundraising ID"
+        wsNotInSF.Range("AP1").Value = "Original File Name"
+        wsNotInSF.Range("AQ1").Value = "Descriptive File Name"
+        wsNotInSF.Range("AR1").Value = "CSV Naming (Worksheet Name)"
+
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
         of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
         The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "Consolidated - YourCause" Worksheet. Once that is completed _
@@ -554,12 +603,12 @@ Public Sub YourCause_AR_Team_Step2()
             ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row + 1                                                                                                                ' Find the last row in column A of the "Consolidated - YourCause" Worksheet
             wsSummary.Cells(LastRowSummary, 1).Value = CurrentFile                                                                                                                                       ' Add the file name to column A of the "Summary" Worksheet    
             Set wsTemp = Workbooks.Open(FolderPath & "\" & File).Sheets(1)                                                                                                                               ' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
-            TempEndRow = wsTemp.Cells(Rows.Count, "A").End(xlUp).Row                                                                                                                                     ' Cl
-            wsTemp.Rows(TempFirstRow & ":" & (TempEndRow - TempEndRowsToDelete)).Copy wsConsolidated.Cells(ConsolidatedLastRow, 1)                                                                       ' Cl
+            TempEndRow = wsTemp.Cells(Rows.Count, "A").End(xlUp).Row                                                                                                                                     ' 
+            wsTemp.Rows(TempFirstRow & ":" & (TempEndRow - TempEndRowsToDelete)).Copy wsConsolidated.Cells(ConsolidatedLastRow, 1)                                                                       ' 
             wsConsolidated.Range(HyperlinkColumn & ConsolidatedLastRow & ":" & HyperlinkColumn & ((ConsolidatedLastRow) + (TempEndRow - TempEndRowsToDelete - TempFirstRow))).Value = CurrentFile        ' Put current_file_name in column AN of the "Consolidated Report" Worksheet
             Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))                                                                                                     ' Copy the data to a new worksheet in the Converter's Workbook
-            NewSheet.Name = TempSheetName                                                                                                                                                                ' Use the TempSheetName 
-            ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)                                                                                                                                              ' Cl
+            NewSheet.Name = TempSheetName                                                                                                                                                                ' Use the TempSheetName (1, 2, 3....) - Dependent on the Number in the loop (increases for each loop
+            ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)                                                                                                                                              ' 
             NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn & "1"), Address:="", SubAddress:=SummarySheet & "A1", TextToDisplay:="Return to Summary Page"                                 ' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (to cell A1)
             NewSheet.Cells.EntireColumn.AutoFit                                                                                                                                                          ' Auto-adjust column widths in the new worksheet
             wsTemp.Parent.Close                                                                                                                                                                          ' Close the opened file.
@@ -569,82 +618,69 @@ Public Sub YourCause_AR_Team_Step2()
             File = Dir                                                                                                                                                                                   ' Go to the next file
         Loop
 
+
+' Redefine the Sheet's EndRow Variables
+    LastRowSFReArrange = wsSFReport.Cells(Rows.Count, PaymentIDColumn).End(xlUp).Row
+    LastRowSummary = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
+    LastRowConsolidated = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
+    LastRowRelevantSF = wsRelevantSF.Cells(Rows.Count, "A").End(xlUp).Row
+    LastRowImport = wsImportFile.Cells(Rows.Count, "A").End(xlUp).Row
+
 ' Step : Populate the formulas and Fill Down in all worksheets
-    ' Redefine the Sheet's EndRow Variables
-        LastRowSFReArrange = wsSFReport.Cells(Rows.Count, PaymentIDColumn).End(xlUp).Row
-        LastRowSummary = wsSummary.Cells(Rows.Count, "A").End(xlUp).Row
-        LastRowConsolidated = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row
-        LastRowRelevantSF = wsRelevantSF.Cells(Rows.Count, "A").End(xlUp).Row
-        LastRowImport = wsImportFile.Cells(Rows.Count, "A").End(xlUp).Row
-
     ' Populate the formulas in the "Summary Page" Worksheet
-        ' Descriptive Name
-            ' 
-                wsSummary.Range("B2").Formula = ""
+        ' Descriptive Name (Column B)
+            '  ="YourCause - "&E2&"_"&F2&" ("&H2&") ["&TEXT(R2,"$#,##0.00")&"]"
+                wsSummary.Range("B2").Formula = """YourCause - ""&E2&""_""&F2&"" (""&H2&"") [""&TEXT(R2,""$#,##0.00")&""]"""
         ' CSV Naming (Worksheet Name)
-            ' 
-                wsSummary.Range("C2").Formula = ""
-
+            ' =E2&"_"&G2&" ("&H2&")"
+                wsSummary.Range("C2").Formula = "=E2&""_""&G2&"" (""&H2&"")"""
         ' Disbursement Date
             ''''' =TEXT(XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!M:M), "YYYY.MM.DD")
                 wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "M:M), ""YYYY.MM.DD"")"
-
         ' School Name
             ''''' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!AI:AI)
                 wsSummary.Range("F2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "AI:AI)"
-
         ' Abbreviated School Name
-            ' 
-                wsSummary.Range("G2").Formula = ""
+            ' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
+                'wsSummary.Range("G2").Formula = "=XLOOKUP(F2, " & SchoolMap & "O:O, " & SchoolMap & "C:C)""
+                 wsSummary.Range("G2").Value = "AHW"
 
         ' Disbursement ID
             ''''' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!J:J)
                 wsSummary.Range("H2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "J:J)"
-
         ' Company Match/Employee Giving
             ' =IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))
                 wsSummary.Range("I2").Formula = "=IF(AND(J2<>0,K2<>0),""Company Match and Employee Giving"", IF(J2<>0,""Employee Giving"",IF(K2<>0,""Company Match"",""Did not Function Correctly"")))"
-
         ' Gross Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("J2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
-
         ' Gross Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("K2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
-
         ' Total Gross Donation
             ' =SUMIF('Consolidated - YourCause'!J:J,H2, 'Consolidated - YourCause'!E:E)
                 wsSummary.Range("L2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "E:E)"
-
         ' Total Fees - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("M2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
-
         ' Total Fees - Company Match
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("N2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
-
         ' Total Donation Fees
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!G:G)
                 wsSummary.Range("O2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "G:G)"
-
         ' Net Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("P2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
-
         ' Net Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("Q2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
-
         ' Total Net Donations
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!H:H)
                 wsSummary.Range("R2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "H:H)"
-
         ' # of Transactions
             ' =COUNTIF('Consolidated - YourCause'!J:J,H2)
                 wsSummary.Range("S2").Formula = "=COUNTIF(" & Consolidated & "J:J,H2)"
-
         ' Fill Down
             ' Column B through Column C
                 wsSummary.Range("B2:C" & LastRowSummary).FillDown
@@ -652,65 +688,60 @@ Public Sub YourCause_AR_Team_Step2()
                 wsSummary.Range("E2:S" & LastRowSummary).FillDown
 
     ' Populate the formulas in the "Salesforce Columns Re-Arranged" Worksheet and then fill the formulas down
-        ' In A2 -->
-             wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                             ' "Payment: Payment Number"  (PMT-ID)
-        ' In B2 -->
+        ' In A2 --> =IF(('Salesforce Report'!H2) = "", "", 'Salesforce Report'!H2)
+             wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                            ' "Payment: Payment Number"  (PMT-ID)
+        ' In B2 --> =IF(('Salesforce Report'!P2) = "", "", 'Salesforce Report'!P2)
             wsSFReArrange.Range("B2").Formula = "=IF((" & SFReport & CampaignNameColumn & "2) = """", """", " & SFReport & CampaignNameColumn & "2)"                                       ' "Primary Campaign Source"  (Campaign Name)
-        ' In C2 -->
+        ' In C2 --> =IF(('Salesforce Report'!O2) = "", "", 'Salesforce Report'!O2)
             wsSFReArrange.Range("C2").Formula = "=IF((" & SFReport & OpportunityNameColumn & "2) = """", """", " & SFReport & OpportunityNameColumn & "2)"                                 ' "Opportunity Name"         (Opportunity Name)
-        ' In D2 -->
+        ' In D2 --> =IF(('Salesforce Report'!J2) = "", "", 'Salesforce Report'!J2)
             wsSFReArrange.Range("D2").Formula = "=IF((" & SFReport & CheckNumberColumn & "2) = """", """", " & SFReport & CheckNumberColumn & "2)"                                         ' "Check Number"             (Check Number - if it is a check)
-        ' In E2 -->
+        ' In E2 --> =IF(('Salesforce Report'!N2) = "", "", 'Salesforce Report'!N2)
             wsSFReArrange.Range("E2").Formula = "=IF((" & SFReport & CompanyNameColumn & "2) = """", """", " & SFReport & CompanyNameColumn & "2)"                                         ' "Company Name"             (Company Name)
-        ' In F2 -->
+        ' In F2 --> =IF(('Salesforce Report'!K2) = "", "", 'Salesforce Report'!K2)
             wsSFReArrange.Range("F2").Formula = "=IF((" & SFReport & TransactionIDColumn & "2) = """", """", " & SFReport & TransactionIDColumn & "2)"                                     ' "Check/Reference Number"   (Transaction ID)
-        ' In G2 -->
+        ' In G2 --> =IF(('Salesforce Report'!L2) = "", "", 'Salesforce Report'!L2)
             wsSFReArrange.Range("G2").Formula = "=IF((" & SFReport & DisbursementIDColumn & "2) = """", """", " & SFReport & DisbursementIDColumn & "2)"                                   ' "Disbursement ID"          (Disbursement ID)
-        ' In H2 -->
+        ' In H2 --> =IF(('Salesforce Report'!E2) = "", "", 'Salesforce Report'!E2)
             wsSFReArrange.Range("H2").Formula = "=IF((" & SFReport & FirstNameColumn & "2) = """", """", " & SFReport & FirstNameColumn & "2)"                                             ' "First Name"               (First Name)
-        ' In I2 -->
+        ' In I2 --> =IF(('Salesforce Report'!F2) = "", "", 'Salesforce Report'!F2)
             wsSFReArrange.Range("I2").Formula = "=IF((" & SFReport & LastNameColumn & "2) = """", """", " & SFReport & LastNameColumn & "2)"                                               ' "Last Name"                (Last Name)
-        ' In J2 -->
+        ' In J2 --> =IF(('Salesforce Report'!G2) = "", "", 'Salesforce Report'!G2)
             wsSFReArrange.Range("J2").Formula = "=IF((" & SFReport & PaymentAmountColumn & "2) = """", """", " & SFReport & PaymentAmountColumn & "2)"                                     ' "Payment Amount"           (Payment Amount)
-        ' In K2 -->
+        ' In K2 --> =IF(('Salesforce Report'!M2) = "", "", 'Salesforce Report'!M2)
             wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
-        ' In L2 -->
+        ' In L2 --> =IF(('Salesforce Report'!A2) = "", "", 'Salesforce Report'!A2)
             wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
-        ' In M2 -->
+        ' In M2 --> =IF(('Salesforce Report'!C2) = "", "", TEXT('Salesforce Report'!C2, "MM/DD/YYYY"))
             wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
-        ' In N2 -->
+        ' In N2 --> =IF(('Salesforce Report'!D2) = "", "", TEXT('Salesforce Report'!D2, "MM/DD/YYYY"))
             wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
-
         ' Fill Down
             wsSFReArrange.Range("A2:N" & LastRowSFReArrange).FillDown
 
-
     ' Populate the formulas in the "Consolidated - YourCause" Worksheet
-        ' Descriptive File Name (Column AQ)
-            '
-                '
-        ' CSV Naming (Worksheet Name)
-            '
-                '
-        ' PMT-ID (Column AS)
+        ' Descriptive File Name - (Column AQ)
+            ' =IF(XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!B:B)="", "", XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!B:B))
+                wsConsolidated.Range("AQ2").Formula = "=IF(XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "B:B)="""", """", XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "B:B))"
+        ' CSV Naming (Worksheet Name) - (Column AR)
+            ' =IF(XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!C:C)="", "", XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!C:C))
+                wsConsolidated.Range("AR2").Formula = "=IF(XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "C:C)="""", """", XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "C:C))"
+        ' PMT-ID - (Column AS)
             ' =XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!F:F,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!G:G,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!D:D,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!C:C,'Salesforce Columns Re-Arranged'!A:A,"Not found by Lookup",2,1),2,1),2,1),2,1)
                 wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)
-        ' Finalized PMT-ID (Column AT)
+        ' Finalized PMT-ID - (Column AT)
             ' =IF(AS2="Not Found by Lookup",IF(XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)="",AS2,XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)),AS2)
                 wsConsolidated.Range("AT2").Formula = "=IF(AS2=""Not Found by Lookup"", IF(XLOOKUP(C2," & MissingFromSF & "D:D, " & MissingFromSF & "A:A)="""", AS2, XLOOKUP(C2, " & MissingFromSF & "D:D, "& MissingFromSF & "A:A)),AS2)"
-
         ' Fill Down
             wsConsolidated.Range("AQ2:AT" & LastRowConsolidated).FillDown
 
 
-    ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID)
+    ' Populate the formulas in the "Transactions Missing From SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID) - From Column AS
         ' In B2
-            ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup")),"",FILTER('Consolidated - YourCause'!A:AR,'Consolidated - YourCause'!AS:AS="Not Found by Lookup"))
-                wsMissingSF.Range("B2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup""))"
-
+            ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!"))
+                wsMissingSF.Range("B2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
         ' Column B, M, and N then need to be changed to a "Short Date" Type
-
-
+            wsMissingSF.Range("B:B,M:M,N:N").NumberFormat = "MM/DD/YYYY"
 
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
         ' (Column A)
@@ -720,6 +751,13 @@ Public Sub YourCause_AR_Team_Step2()
 
     ' Populate the formulas in the "Import File" Worksheet
 
+
+    ' Populate the formulas in the "Still not in SF Report|SF" Worksheet (A Filter from the "Consolidated - YourCause" Worksheet for those not identified in Salesforce based off of a lookup with of the Transaction ID) - From column AT
+        ' In A2
+            ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!"))
+                wsNotInSF.Range("A2").Formula = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
+        ' Column A, L, and M then need to be changed to a "Short Date" Type
+            wsMissingSF.Range("A:A,L:L,M:M,").NumberFormat = "MM/DD/YYYY"
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
