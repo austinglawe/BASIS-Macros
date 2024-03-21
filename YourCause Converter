@@ -542,47 +542,47 @@ Public Sub YourCause_AR_Team_Step2()
 
         ' Company Match/Employee Giving
             ' =IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))
-                wsSummary.Range("I2").Formula = "=IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))"
+                wsSummary.Range("I2").Formula = "=IF(AND(J2<>0,K2<>0),""Company Match and Employee Giving"", IF(J2<>0,""Employee Giving"",IF(K2<>0,""Company Match"",""Did not Function Correctly"")))"
 
         ' Gross Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("J2").Formula = "=SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")"
+                wsSummary.Range("J2").Formula = "=SUMIFS(" & ConsolidatedSheet & "E:E, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Individual"")"
 
         ' Gross Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("K2").Formula = "=SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")"
+                wsSummary.Range("K2").Formula = "=SUMIFS(" & ConsolidatedSheet & "E:E, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Company"")"
 
         ' Total Gross Donation
             ' =SUMIF('Consolidated - YourCause'!J:J,H2, 'Consolidated - YourCause'!E:E)
-                wsSummary.Range("L2").Formula = "=SUMIF('Consolidated - YourCause'!J:J,H2, 'Consolidated - YourCause'!E:E)"
+                wsSummary.Range("L2").Formula = "=SUMIF(" & ConsolidatedSheet & "J:J,H2, " & ConsolidatedSheet & "E:E)"
 
         ' Total Fees - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("M2").Formula = "=SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")"
+                wsSummary.Range("M2").Formula = "=SUMIFS(" & ConsolidatedSheet & "F:F, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Individual"") + SUMIFS(" & ConsolidatedSheet & "G:G, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Individual"")"
 
         ' Total Fees - Company Match
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("N2").Formula = "=SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")"
+                wsSummary.Range("N2").Formula = "=SUMIFS(" & ConsolidatedSheet & "F:F, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Company"") + SUMIFS(" & ConsolidatedSheet & "G:G, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Company"")"
 
         ' Total Donation Fees
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!G:G)
-                wsSummary.Range("O2").Formula = "=SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!G:G)"
+                wsSummary.Range("O2").Formula = "=SUMIF(" & ConsolidatedSheet & "J:J,H2, " & ConsolidatedSheet & "F:F) + SUMIF(" & ConsolidatedSheet & "J:J,H2, " & ConsolidatedSheet & "G:G)"
 
         ' Net Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("P2").Formula = "=SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")"
+                wsSummary.Range("P2").Formula = "=SUMIFS(" & ConsolidatedSheet & "H:H, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Individual"")"
 
         ' Net Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("Q2").Formula = "=SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")"
+                wsSummary.Range("Q2").Formula = "=SUMIFS(" & ConsolidatedSheet & "H:H, " & ConsolidatedSheet & "J:J, H2, " & ConsolidatedSheet & "O:O, ""Company"")"
 
         ' Total Net Donations
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!H:H)
-                wsSummary.Range("R2").Formula = "=SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!H:H)"
+                wsSummary.Range("R2").Formula = "=SUMIF(" & ConsolidatedSheet & "J:J,H2, " & ConsolidatedSheet & "H:H)"
 
         ' # of Transactions
             ' =COUNTIF('Consolidated - YourCause'!J:J,H2)
-                wsSummary.Range("S2").Formula = "=COUNTIF('Consolidated - YourCause'!J:J,H2)"
+                wsSummary.Range("S2").Formula = "=COUNTIF(" & ConsolidatedSheet & "J:J,H2)"
 
         ' Fill Down
             ' Column B through Column C
