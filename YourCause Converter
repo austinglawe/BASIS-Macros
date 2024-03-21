@@ -184,7 +184,7 @@ Public Sub YourCause_AR_Team_Step2()
     TempEndRowsToDelete = 0                                 ' This is if there are any rows below the data we want to use in the Donation Site's Report
 
 ' Step 2: Prompt user if they are ready to continue to the second step of the YourCause Converter.
-    UserResponse = MsgBox("Are you sure you want to continue to the second step?" & vbLfYou will need to select a single folder for the converter to work. Do you have all of the files in one folder? If not, please select 'No'", _
+    UserResponse = MsgBox("Are you sure you want to continue to the second step?" & vbCrLf & vbCrLf & "You will need to select a single folder for the converter to work." & vbCrLf & vbCrLf &  "Do you have all of the files in one folder?" & vbCrLf & vbCrLf & "If not, please select 'No'", _
           vbYesNo + vbExclamation + vbDefaultButton2, "Proceed to Step 2 of the " & DonationSiteName & " Converter")
 
 ' Step 3: Check the User's Repsonse (if they select no, end the macro, otherwise continue to the next steps).
