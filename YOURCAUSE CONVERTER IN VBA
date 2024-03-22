@@ -889,7 +889,7 @@ Public Sub YourCause_AR_Team_Step2()
 
         ' YourCause - Last Name (Column S)
             ' =IF(A2="", "", IF(X2="Individual",IF(XLOOKUP(A2, 'Consolidated - YourCause'!AT:AT, 'Consolidated - YourCause'!R:R)="", "Anonymous", XLOOKUP(A2, 'Consolidated - YourCause'!AT:AT, 'Consolidated - YourCause'!R:R)),IF(X2="Company",IF(XLOOKUP(A2, 'Consolidated - YourCause'!AT:AT, 'Consolidated - YourCause'!AC:AC)="", "Anonymous", XLOOKUP(A2, 'Consolidated - YourCause'!AT:AT, 'Consolidated - YourCause'!AC:AC)),"Anonymous")))
-                wsRelevantSF.Range("S2").Formula = "=IF(A2="""", """", IF(X2=""Individual"", IF(XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "R:R)="""", ""Anonymous"", XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "R:R)), IF(X2=""Company"", IF(XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "AC:AC)="""", ""Anonymous", XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "AC:AC)),""Anonymous"")))"
+                wsRelevantSF.Range("S2").Formula = "=IF(A2="""", """", IF(X2=""Individual"", IF(XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "R:R)="""", ""Anonymous"", XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "R:R)), IF(X2=""Company"", IF(XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "AC:AC)="""", ""Anonymous"", XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "AC:AC)),""Anonymous"")))"
 
         ' YourCause - (Gross) Payment Amount (Column T)
             ' =IF(A2="","",TEXT(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!E:E),"#,##0.00"))
