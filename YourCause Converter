@@ -825,40 +825,156 @@ wsRelevantSF.Range("AE1").Value = "DONOTIMPORT"
         ' (A2) - Filter of Salesforce Transactions that match to YourCause Transactions
             ' =FILTER('Salesforce Columns Re-Arranged'!A:N, ISNUMBER(MATCH('Salesforce Columns Re-Arranged'!A:A, 'Consolidated - YourCause'!AT:AT, 0)), "There are no matching Salesforce transactions.")
                 wsRelevantSF.Range("A2").Formula2 =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & SFReArrange & "A:A, " & Consolidated & "AT:AT,0)),""There are no matching Salesforce transactions."")"
-        ' YourCause - Company Name (Column O)
-            ' 
-                '
-        ' YourCause - Transaction ID (Column P)
+        ' YourCause - Company Name (O2)
             '
                 '
-        ' YourCause - Disbursement ID (Column Q)
+        ' YourCause - Transaction ID (Column )
             '
                 '
-        ' YourCause - First Name (Column R)
+        ' YourCause - Disbursement ID (Column )
             '
                 '
-        ' YourCause - Last Name (Column S)
+        ' YourCause - First Name (Column )
             '
                 '
-        ' Payment Amount (Column T)
+        ' YourCause - Last Name (Column )
             '
                 '
-        ' Payment Amount (Column U)
+        ' YourCause - Payment Amount (Column )
             '
                 '
-        ' Payment Amount (Column V)
+        ' YourCause - School Name (Column )
             '
                 '
-        ' Payment Amount (Column )
+        ' YourCause - Transaction Date (Column )
             '
                 '
-        ' Payment Amount (Column )
+        ' YourCause - Deposit Date (Column )
             '
                 '
-        ' Payment Amount (Column )
+        ' YourCause - Check Number (If Applicable) (Column )
             '
                 '
-
+        ' YourCause - Total Fees (Column )
+            '
+                '
+        ' YourCause - Transaction Number Count (Column )
+            '
+                '
+        ' YourCause - Total Transactions (Column )
+            '
+                '
+        ' Memo (Column )
+            '
+                '
+        ' Checker (Column )
+            '
+                '
+        ' Intacct Import (Column )
+            '
+                '
+        ' DONOTIMPORT (Column )
+            '
+                '
+        ' RECEIPT_DATE (Column )
+            '
+                '
+        ' PAYMETHOD (Column )
+            '
+                '
+        ' DOCDATE (Column )
+            '
+                '
+        ' DOCNUMBER (Column )
+            '
+                '
+        ' DESCRIPTION (Column )
+            '
+                '
+        ' Description (Column )
+            '
+                '
+        ' DEPOSITTO (Column )
+            '
+                '
+        ' BANKACCOUNTID (Column )
+            '
+                '
+        ' DEPOSITDATE (Column )
+            '
+                '
+        ' UNDEPACCTNO (Column )
+            '
+                '
+        ' CURRENCY (Column )
+            '
+                '
+        ' EXCH_RATE_DATE (Column )
+            '
+                '
+        ' EXCH_RATE_TYPE_ID (Column )
+            '
+                '
+        ' EXCH_RATE_DATE (Column )
+            '
+                '
+        ' LINE_NO (Column )
+            '
+                '
+        ' ACCT_NO (Column )
+            '
+                '
+        ' ACCOUNTLABEL (Column )
+            '
+                '
+        ' TRX_AMOUNT (Column )
+            '
+                '
+        ' AMOUNT (Column )
+            '
+                '
+        ' DEPT_ID (Column )
+            '
+                '
+        ' LOCATION_ID (Column )
+            '
+                '
+        ' ITEM_MEMO (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_PROJECTID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_ITEMID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_VENDORID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_CLASSID (Column )
+            '
+                '
+        ' PAYER_NAME (Column )
+            '
+                '
+        ' SUPDOCID (Column )
+            '
+                '
+        ' EXCHANGE_RATE (Column )
+            '
+                '
+        ' OR_TRANSACTION_DATE (Column )
+            '
+                '
+        ' GLDIMFUNDING_SOURCE (Column )
+            '
+                '
 
     ' Populate the formulas in the "Import File" Worksheet
 
@@ -923,3 +1039,119 @@ End Sub
         .Range("Q2").Formula = ""
         .Range("R2").Formula = ""
         .Range("S2").Formula = ""
+
+        ' Memo (Column )
+            '
+                '
+        ' Checker (Column )
+            '
+                '
+        ' Intacct Import (Column )
+            '
+                '
+        ' DONOTIMPORT (Column )
+            '
+                '
+        ' RECEIPT_DATE (Column )
+            '
+                '
+        ' PAYMETHOD (Column )
+            '
+                '
+        ' DOCDATE (Column )
+            '
+                '
+        ' DOCNUMBER (Column )
+            '
+                '
+        ' DESCRIPTION (Column )
+            '
+                '
+        ' Description (Column )
+            '
+                '
+        ' DEPOSITTO (Column )
+            '
+                '
+        ' BANKACCOUNTID (Column )
+            '
+                '
+        ' DEPOSITDATE (Column )
+            '
+                '
+        ' UNDEPACCTNO (Column )
+            '
+                '
+        ' CURRENCY (Column )
+            '
+                '
+        ' EXCH_RATE_DATE (Column )
+            '
+                '
+        ' EXCH_RATE_TYPE_ID (Column )
+            '
+                '
+        ' EXCH_RATE_DATE (Column )
+            '
+                '
+        ' LINE_NO (Column )
+            '
+                '
+        ' ACCT_NO (Column )
+            '
+                '
+        ' ACCOUNTLABEL (Column )
+            '
+                '
+        ' TRX_AMOUNT (Column )
+            '
+                '
+        ' AMOUNT (Column )
+            '
+                '
+        ' DEPT_ID (Column )
+            '
+                '
+        ' LOCATION_ID (Column )
+            '
+                '
+        ' ITEM_MEMO (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_PROJECTID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_ITEMID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_VENDORID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column )
+            '
+                '
+        ' OTHERRECEIPTSENTRY_CLASSID (Column )
+            '
+                '
+        ' PAYER_NAME (Column )
+            '
+                '
+        ' SUPDOCID (Column )
+            '
+                '
+        ' EXCHANGE_RATE (Column )
+            '
+                '
+        ' OR_TRANSACTION_DATE (Column )
+            '
+                '
+        ' GLDIMFUNDING_SOURCE (Column )
+            '
+                '
+
+
+
+
