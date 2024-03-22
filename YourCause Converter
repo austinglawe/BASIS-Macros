@@ -745,10 +745,10 @@ Public Sub YourCause_AR_Team_Step2()
 
     ' Populate the formulas in the "Relevant Salesforce" Worksheet
         ' (A2) - Filter of Salesforce Transactions that match to YourCause Transactions
-            ' =FILTER('Salesforce Columns Re-Arranged'!A:N,ISNUMBER(MATCH('Consolidated - YourCause'!AT:AT,'Salesforce Columns Re-Arranged'!A:A,0)),"There are no matching Salesforce transactions.")
-                wsRelevantSF.Range("A2").Formula2 =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & Consolidated & "AT:AT, " & SFReArrange & "A:A,0)),""There are no matching Salesforce transactions."")"
+            ' =FILTER('Salesforce Columns Re-Arranged'!A:N, ISNUMBER(MATCH('Salesforce Columns Re-Arranged'!A:A, 'Consolidated - YourCause'!AT:AT, 0)), "There are no matching Salesforce transactions.")
+                wsRelevantSF.Range("A2").Formula2 =  "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & SFReArrange & "A:A, " & Consolidated & "AT:AT,0)),""There are no matching Salesforce transactions."")"
         ' YourCause - Company Name (Column O)
-            '
+            ' 
                 '
         ' YourCause - Transaction ID (Column P)
             '
@@ -756,13 +756,28 @@ Public Sub YourCause_AR_Team_Step2()
         ' YourCause - Disbursement ID (Column Q)
             '
                 '
-        ' YourCause - School Name (Column R)
+        ' YourCause - First Name (Column R)
             '
                 '
-        ' YourCause - Transaction Date (Column S)
+        ' YourCause - Last Name (Column S)
             '
                 '
-        ' YourCause - Deposit Date (Column T)
+        ' Payment Amount (Column T)
+            '
+                '
+        ' Payment Amount (Column U)
+            '
+                '
+        ' Payment Amount (Column V)
+            '
+                '
+        ' Payment Amount (Column )
+            '
+                '
+        ' Payment Amount (Column )
+            '
+                '
+        ' Payment Amount (Column )
             '
                 '
 
