@@ -554,6 +554,8 @@ Public Sub YourCause_AR_Team_Step2()
         wsRelevantSF.Range("W1").Value = "YourCause - Deposit Date"
         wsRelevantSF.Range("X1").Value = "YourCause - Donor Type"
         wsRelevantSF.Range("Y1").Value = "YourCause - Total Fees"
+        wsSFSorted.Range("Z1").Value = "YourCause - Transaction Number Count"
+        wsSFSorted.Range("AA1").Value = "YourCause - Total Transactions"
         
      ' Step : Populate the Headers of the "Relevant Salesforce Sorted" Worksheet
         wsSFSorted.Range("A1").Value = "PMT-ID"
@@ -806,7 +808,7 @@ Public Sub YourCause_AR_Team_Step2()
             ' Column B through Column C
                 wsSummary.Range("B2:C" & LastRowSummary).FillDown
             ' Columns E-T
-                wsSummary.Range("E2:S" & LastRowSummary).FillDown
+                wsSummary.Range("E2:T" & LastRowSummary).FillDown
 
     ' Populate the formulas in the "Salesforce Columns Re-Arranged" Worksheet and then fill the formulas down
         ' In A2 --> =IF(('Salesforce Report'!H2) = "", "", 'Salesforce Report'!H2)
@@ -912,9 +914,16 @@ Public Sub YourCause_AR_Team_Step2()
         ' YourCause - Total Fees (Column Y)
             ' =IF(A2="","",IF((SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))=0,0,(SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))/AA2))
                 wsRelevantSF.Range("Y2").Formula = "=IF(A2="""", """", IF((SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))=0, 0, (SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))/AA2))"
+        ' YourCause - Transaction Number Count (Column Z)
+            ' Empty (="")
+                wsSFSorted.Range("Z2").Formula = "="""""
+        ' YourCause - Total Transactions (Column AA)
+            ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
+                wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
+
 
         ' Fill Down (Columns O-Y)
-            wsRelevantSF.Range("O2:Y" & LastRowConsolidated).FillDown
+            wsRelevantSF.Range("O2:AA" & LastRowConsolidated).FillDown
 
     ' Populate the formulas in the "Relevant Salesforce Sorted" Worksheet
         ' (A2)
@@ -925,7 +934,7 @@ Public Sub YourCause_AR_Team_Step2()
                 wsSFSorted.Range("Z2").Formula = "=IF(P2=P1,1+Z1,1)"
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
-                wsSFSorted.Range("AA2").Formula = "=IF(A2="","",COUNTIF(" & Consolidated & "J:J, Q2))"
+                wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
         ' Memo (Column AB)
             ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Txn ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
             ' 
