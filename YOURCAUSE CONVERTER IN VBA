@@ -912,8 +912,8 @@ Public Sub YourCause_AR_Team_Step2()
                 wsRelevantSF.Range("X2").Formula = "=IF(A2="""", """", XLOOKUP(A2, " & Consolidated & "AT:AT, " & Consolidated & "O:O))"
 
         ' YourCause - Total Fees (Column Y)
-            ' =IF(A2="","",IF((SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))=0,0,(SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))/AA2))
-                wsRelevantSF.Range("Y2").Formula = "=IF(A2="""", """", IF((SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))=0, 0, (SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))/AA2))"
+            ' =IF(A2="","",IF((SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!G:G))=0,0,(SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!G:G))/AA2))
+                wsRelevantSF.Range("Y2").Formula = "=IF(A2="""", """", IF((SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "G:G))=0, 0, (SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "G:G))/AA2))"
         ' YourCause - Transaction Number Count (Column Z)
             ' Empty (="")
                 wsRelevantSF.Range("Z2").Formula = "="""""
