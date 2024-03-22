@@ -908,13 +908,14 @@ Public Sub YourCause_AR_Team_Step2()
             ' =SORT(SORT(FILTER('Relevant Salesforce'!A:Y,('Relevant Salesforce'!A:A<>"") * ('Relevant Salesforce'!A:A<>"PMT-ID"), "There are no matching Salesforce transactions…"),16),17)
                 '
         ' YourCause - Transaction Number Count (Column Z)
-            '
+            ' =IF(Q2=Q1,1+Z1,1)
                 '
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
                 '
         ' Memo (Column AB)
-            '
+            ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Txn ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Type: (YourCause Donation Type, Employee Giving/Company Match)} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
+            ' 
                 '
         ' Checker (Column AC)
             '
