@@ -866,154 +866,165 @@ Public Sub YourCause_AR_Team_Step2()
         ' (A2) - Filter of Salesforce Transactions that match to YourCause Transactions
             ' =FILTER('Salesforce Columns Re-Arranged'!A:N, ISNUMBER(MATCH('Salesforce Columns Re-Arranged'!A:A, 'Consolidated - YourCause'!AT:AT, 0)), "There are no matching Salesforce transactions.")
                 wsRelevantSF.Range("A2").Formula2 = "=FILTER(" & SFReArrange & "A:N, ISNUMBER(MATCH(" & SFReArrange & "A:A, " & Consolidated & "AT:AT,0)),""There are no matching Salesforce transactions."")"
-        ' YourCause - Company Name (O2)
+        ' YourCause - Company Name (Column O)
+            ' =IF(A2="","",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!B:B))
+                '
+        ' YourCause - Transaction ID (Column P)
+            ' =IF(A2="","",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!C:C))
+                '
+        ' YourCause - Disbursement ID (Column Q)
+            ' =IF(A2="","",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!J:J))
+                '
+        ' YourCause - First Name (Column R)
+            ' =IF(A2="","",IF(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!Q:Q)="","Anonymous",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!Q:Q)))
+                '
+        ' YourCause - Last Name (Column S)
+            ' =IF(A2="","",IF(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!R:R)="","Anonymous",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!R:R)))
+                '
+        ' YourCause - (Gross) Payment Amount (Column T)
+            ' =IF(A2="","",TEXT(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!E:E),"#,##0.00"))
+                '
+        ' YourCause - School Name (Column U)
+            ' =IF(A2="","",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!AI:AI))
+                '
+        ' YourCause - Transaction Date (Column V)
+            ' =IF(A2="","",TEXT(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!A:A),"MM/DD/YYYY"))
+                '
+        ' YourCause - Deposit Date (Column W)
+            ' =IF(A2="","",TEXT(XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!M:M),"MM/DD/YYYY"))
+                '
+        ' YourCause - Donor Type (Column X)
+            ' =IF(A2="","",XLOOKUP(A2,'Consolidated - YourCause'!AT:AT,'Consolidated - YourCause'!O:O))
+                '
+        ' YourCause - Total Fees (Column Y)
+            ' =IF(A2="","",IF((SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))=0,0,(SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!E:E))/AA2))
+                '
+        ' Fill Down
             '
                 '
-        ' YourCause - Transaction ID (Column )
+
+    ' Populate the formulas in the "Relevant Salesforce Sorted" Worksheet
+        ' (A2)
+            ' =SORT(SORT(FILTER('Relevant Salesforce'!A:Y,('Relevant Salesforce'!A:A<>"") * ('Relevant Salesforce'!A:A<>"PMT-ID"), "There are no matching Salesforce transactions…"),16),17)
+                '
+        ' YourCause - Transaction Number Count (Column Z)
             '
                 '
-        ' YourCause - Disbursement ID (Column )
+        ' YourCause - Total Transactions (Column AA)
+            ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
+                '
+        ' Memo (Column AB)
             '
                 '
-        ' YourCause - First Name (Column )
+        ' Checker (Column AC)
             '
                 '
-        ' YourCause - Last Name (Column )
+        ' Intacct Import (Column AD)
+            ' ="................."
+                '
+        ' DONOTIMPORT (Column AE)
             '
                 '
-        ' YourCause - Payment Amount (Column )
+        ' RECEIPT_DATE (Column AF)
             '
                 '
-        ' YourCause - School Name (Column )
+        ' PAYMETHOD (Column AG)
             '
                 '
-        ' YourCause - Transaction Date (Column )
+        ' DOCDATE (Column AH)
             '
                 '
-        ' YourCause - Deposit Date (Column )
+        ' DOCNUMBER (Column AI)
             '
                 '
-        ' YourCause - Check Number (If Applicable) (Column )
+        ' DESCRIPTION (Column AJ)
             '
                 '
-        ' YourCause - Total Fees (Column )
+        ' Description (Column AK)
             '
                 '
-        ' YourCause - Transaction Number Count (Column )
+        ' DEPOSITTO (Column AL)
             '
                 '
-        ' YourCause - Total Transactions (Column )
+        ' BANKACCOUNTID (Column AM)
             '
                 '
-        ' Memo (Column )
+        ' DEPOSITDATE (Column AN)
             '
                 '
-        ' Checker (Column )
+        ' UNDEPACCTNO (Column AO)
             '
                 '
-        ' Intacct Import (Column )
+        ' CURRENCY (Column AP)
             '
                 '
-        ' DONOTIMPORT (Column )
+        ' EXCH_RATE_DATE (Column AQ)
             '
                 '
-        ' RECEIPT_DATE (Column )
+        ' EXCH_RATE_TYPE_ID (Column AR)
             '
                 '
-        ' PAYMETHOD (Column )
+        ' EXCH_RATE_DATE (Column AS)
             '
                 '
-        ' DOCDATE (Column )
+        ' LINE_NO (Column AT)
             '
                 '
-        ' DOCNUMBER (Column )
+        ' ACCT_NO (Column AU)
             '
                 '
-        ' DESCRIPTION (Column )
+        ' ACCOUNTLABEL (Column AV)
             '
                 '
-        ' Description (Column )
+        ' TRX_AMOUNT (Column AW)
             '
                 '
-        ' DEPOSITTO (Column )
+        ' AMOUNT (Column AX)
             '
                 '
-        ' BANKACCOUNTID (Column )
+        ' DEPT_ID (Column AY)
             '
                 '
-        ' DEPOSITDATE (Column )
+        ' LOCATION_ID (Column AZ)
             '
                 '
-        ' UNDEPACCTNO (Column )
+        ' ITEM_MEMO (Column BA)
             '
                 '
-        ' CURRENCY (Column )
+        ' OTHERRECEIPTSENTRY_PROJECTID (Column BB)
             '
                 '
-        ' EXCH_RATE_DATE (Column )
+        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column BC)
             '
                 '
-        ' EXCH_RATE_TYPE_ID (Column )
+        ' OTHERRECEIPTSENTRY_ITEMID (Column BD)
             '
                 '
-        ' EXCH_RATE_DATE (Column )
+        ' OTHERRECEIPTSENTRY_VENDORID (Column BE)
             '
                 '
-        ' LINE_NO (Column )
+        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column BF)
             '
                 '
-        ' ACCT_NO (Column )
+        ' OTHERRECEIPTSENTRY_CLASSID (Column BG)
             '
                 '
-        ' ACCOUNTLABEL (Column )
+        ' PAYER_NAME (Column BH)
             '
                 '
-        ' TRX_AMOUNT (Column )
+        ' SUPDOCID (Column BI)
             '
                 '
-        ' AMOUNT (Column )
+        ' EXCHANGE_RATE (Column BJ)
             '
                 '
-        ' DEPT_ID (Column )
+        ' OR_TRANSACTION_DATE (Column BK)
             '
                 '
-        ' LOCATION_ID (Column )
+        ' GLDIMFUNDING_SOURCE (Column BL)
             '
                 '
-        ' ITEM_MEMO (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_PROJECTID (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_ITEMID (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_VENDORID (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column )
-            '
-                '
-        ' OTHERRECEIPTSENTRY_CLASSID (Column )
-            '
-                '
-        ' PAYER_NAME (Column )
-            '
-                '
-        ' SUPDOCID (Column )
-            '
-                '
-        ' EXCHANGE_RATE (Column )
-            '
-                '
-        ' OR_TRANSACTION_DATE (Column )
-            '
-                '
-        ' GLDIMFUNDING_SOURCE (Column )
+        ' Fill Down
             '
                 '
 
