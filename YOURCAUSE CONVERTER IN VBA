@@ -10,7 +10,7 @@
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 Public Sub YourCause_AR_Team_Step1()
-    ' Last Updated 03.19.2024
+    ' Last Updated 03.22.2024
     
     ' Step 1: Dim the variables that will be used.
         Dim DonationSiteName As String
@@ -175,7 +175,7 @@ End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
 '------------------------------------------------------------------------------------------------------------------------------------------
 Public Sub YourCause_AR_Team_Step2()
-' Last Updated 03.20.2024
+' Last Updated 03.22.2024
 
 ' Step 1: Define and Set the value of DonationSiteName based on the Donation site used in this converter.
     Dim DonationSiteName As String
