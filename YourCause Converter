@@ -64,6 +64,7 @@ Public Sub YourCause_AR_Team_Step1()
         Dim SFReportName As String
         Dim DateTime As String
         Dim wsSFReport As Worksheet
+        Dim wsReset As Worksheet
     
     ' Step 2: Set the value of the DonationSiteName and SFReportName (based on the report to be used).
         DonationSiteName = "YourCause"
@@ -153,8 +154,57 @@ Public Sub YourCause_AR_Team_Step1()
                 AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
                 AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
 
-    ' Step 15: Select B1 of the "Salesforce Report" Worksheet
+    ' Step 15: Create a "TOTAL RESET" Worksheet, if user wants to go back to the beginning of the Converters list
+        ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = "TOTAL RESET"
+
+    ' Step 16: Set the "wsReset" Variable to the value of the "TOTAL RESET" Worksheet
+        Set wsReset = ThisWorkbook.Sheets("TOTAL RESET")
+
+    ' Step 17: Change the entire background to black in the "TOTAL RESET" Worksheet
+        wsReset.Range("A1:XFD1048576").Interior.Color = RGB(0, 0, 0) 
+        wsReset.Range("A1").Select
+
+    ' Step 18: Create a button in the "TOTAL RESET" Worksheet to return to the Converter Selection Page
+        ' 18a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+            Set ButtonShape = wsReset.Shapes.AddShape(msoShapeRectangle, 100, 100, 1000, 400)
+    
+        ' 18b: Format the Text on the Button
+            ButtonText = "CLICK HERE to go back to the donation converter selection page."                              ' Value of the text within the button
+            With ButtonShape
+                .OnAction = "Total_Reset"                                                                               ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = ButtonText
+                .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 70                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 0, 0)                                                       ' Red Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+            End With
+
+    ' Step 19: Put informative text to help instruct the user on the use of the button
+        With wsReset.Range("C2:Q5")
+            .Merge
+            .VerticalAlignment = xlCenter
+            .HorizontalAlignment = xlCenter
+            .Font.Size = 20
+            .Font.Color = RGB(255, 0, 0)
+            .Value = "Click this button below to return to the Converter Selection Page"
+        End With
+
+    ' Step 20: Protect the "TOTAL RESET" Worksheet
+        wsReset.Protect _
+                DrawingObjects:=False, Contents:=True, Scenarios:= False, AllowFormattingCells:=True, _
+                AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+                AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+                AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+
+    ' Step 21: Hide the "TOTAL RESET" Worksheet
+        wsReset.Visible = xlSheetHidden
+
+    ' Step 22: Select B1 of the "Salesforce Report" Worksheet
         wsSFReport.Range("B1").Select
+
+
 
 End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
