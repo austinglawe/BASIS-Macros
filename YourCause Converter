@@ -68,7 +68,7 @@ Public Sub YourCause_AR_Team_Step1()
     
     ' Step 2: Set the value of the DonationSiteName and SFReportName (based on the report to be used).
         DonationSiteName = "YourCause"
-        SFReportName = "1.1d_Propay"
+        SFReportName = "Manual Imports"
     
     ' Step 3: Prompt the user for confirmation of Reset and to start the macro
         UserResponse = MsgBox("Are you sure you want to start the " & DonationSiteName & " Macro? Doing so, will reset all worksheets in this file.", _
@@ -77,10 +77,10 @@ Public Sub YourCause_AR_Team_Step1()
     ' Step 4: Check User's Response (if user clicks No, then end the macro, otherwise proceed to next steps)
         If UserResponse = vbNo Then
           Exit Sub
-        End if
+        End If
     
     ' Step 5: Assign a value to the DateTime Variable (ZYXWVUT Year.Month.Day - Hour.Minute.Second) - This will allow it to be a new unique variable any given second.
-        DateTime = "ZYXWVUT" & Format(Now()," YYYY.MM.DD - HH.MM.SS")
+        DateTime = "ZYXWVUT" & Format(Now(), " YYYY.MM.DD - HH.MM.SS")
     
     ' Step 6: Create a new Worksheet using the "DateTime" variable name.
         ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)).Name = DateTime
@@ -132,7 +132,7 @@ Public Sub YourCause_AR_Team_Step1()
             ' Step 13: Add a button for the user to easily click when they are ready for the next step.
 
                 ' 13a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
-                    Set ButtonShape = wsSFReport.Shapes.AddShape(msoShapeRectangle, 0, 59, 209, 301)
+                    Set ButtonShape = wsSFReport.Shapes.AddShape(msoShapeRectangle, 0, 59, 210, 301)
     
                 ' 13b: Format the Text on the Button
                     ButtonText = "CLICK HERE to go to the second step of the " & DonationSiteName & " Converter."               ' Value of the text within the button
@@ -142,14 +142,14 @@ Public Sub YourCause_AR_Team_Step1()
                         .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
                         .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
                         .TextFrame.Characters.Font.Size = 35                                                                    ' Button Font Size
-                        .TextFrame.Characters.Font.Color = RGB(0, 0, 0)                                                         ' Black Font Color
+                        .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                     ' Yellow Font Color
                         .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
                         .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
                     End With
     
         ' Step 14: Protect the "Salesforce Report" Worksheet.
             wsSFReport.Protect _
-                DrawingObjects:=False, Contents:=True, Scenarios:= False, AllowFormattingCells:=True, _
+                DrawingObjects:=False, Contents:=True, Scenarios:=False, AllowFormattingCells:=True, _
                 AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
                 AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
                 AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
@@ -161,50 +161,50 @@ Public Sub YourCause_AR_Team_Step1()
         Set wsReset = ThisWorkbook.Sheets("TOTAL RESET")
 
     ' Step 17: Change the entire background to black in the "TOTAL RESET" Worksheet
-        wsReset.Range("A1:XFD1048576").Interior.Color = RGB(0, 0, 0) 
+        wsReset.Range("A1:XFD1048576").Interior.Color = RGB(0, 0, 0)
         wsReset.Range("A1").Select
 
     ' Step 18: Create a button in the "TOTAL RESET" Worksheet to return to the Converter Selection Page
         ' 18a: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
-            Set ButtonShape = wsReset.Shapes.AddShape(msoShapeRectangle, 100, 100, 1000, 400)
+            Set ButtonShape = wsReset.Shapes.AddShape(msoShapeRectangle, 50, 60, 1000, 300)
     
         ' 18b: Format the Text on the Button
-            ButtonText = "CLICK HERE to go back to the donation converter selection page."                              ' Value of the text within the button
+            ButtonText = "CLICK HERE to reset this converter or to select a new converter to use."                      ' Value of the text within the button
             With ButtonShape
                 .OnAction = "Total_Reset"                                                                               ' Embedding the Specific Converter Macro to the button
                 .TextFrame.Characters.Text = ButtonText
                 .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
                 .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
                 .TextFrame.Characters.Font.Size = 70                                                                    ' Button Font Size
-                .TextFrame.Characters.Font.Color = RGB(255, 0, 0)                                                       ' Red Font Color
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                     ' Yellow Font Color
                 .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
                 .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
             End With
 
     ' Step 19: Put informative text to help instruct the user on the use of the button
-        With wsReset.Range("C2:Q5")
+        With wsReset.Range("C2:U5")
             .Merge
             .VerticalAlignment = xlCenter
             .HorizontalAlignment = xlCenter
             .Font.Size = 20
             .Font.Color = RGB(255, 0, 0)
-            .Value = "Click this button below to return to the Converter Selection Page"
+            .Value = "Click the button below to return to the Converter Selection Page"
+            .Font.Underline = True
         End With
 
     ' Step 20: Protect the "TOTAL RESET" Worksheet
         wsReset.Protect _
-                DrawingObjects:=False, Contents:=True, Scenarios:= False, AllowFormattingCells:=True, _
-                AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
-                AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
-                AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+            DrawingObjects:=False, Contents:=True, Scenarios:=False, AllowFormattingCells:=True, _
+            AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+            AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+            AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
 
     ' Step 21: Hide the "TOTAL RESET" Worksheet
         wsReset.Visible = xlSheetHidden
 
     ' Step 22: Select B1 of the "Salesforce Report" Worksheet
+        wsSFReport.Activate
         wsSFReport.Range("B1").Select
-
-
 
 End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
