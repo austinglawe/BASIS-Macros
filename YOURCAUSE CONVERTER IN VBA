@@ -585,14 +585,16 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFSorted.Range("AA1").Value = "YourCause - Total Transactions"
         wsSFSorted.Range("AB1").Value = "Memo"
         wsSFSorted.Range("AC1").Value = "Checker"
-        wsSFSorted.Range("AD1").Value = "Intacct Import"
-        wsSFSorted.Range("AE1").Value = "DONOTIMPORT"
-        wsSFSorted.Range("AF1").Value = "RECEIPT_DATE"
-        wsSFSorted.Range("AG1").Value = "PAYMETHOD"
-        wsSFSorted.Range("AH1").Value = "DOCDATE"
-        wsSFSorted.Range("AI1").Value = "DOCNUMBER"
-        wsSFSorted.Range("AJ1").Value = "DESCRIPTION"
-        wsSFSorted.Range("AK1").Value = "Description"
+
+        wsSFSorted.Range("AD1").Value = ""
+
+        wsSFSorted.Range("AE1").Value = "Intacct Import"
+        wsSFSorted.Range("AF1").Value = "DONOTIMPORT"
+        wsSFSorted.Range("AG1").Value = "RECEIPT_DATE"
+        wsSFSorted.Range("AH1").Value = "PAYMETHOD"
+        wsSFSorted.Range("AI1").Value = "DOCDATE"
+        wsSFSorted.Range("AJ1").Value = "DOCNUMBER"
+        wsSFSorted.Range("AK1").Value = "DESCRIPTION"
         wsSFSorted.Range("AL1").Value = "DEPOSITTO"
         wsSFSorted.Range("AM1").Value = "BANKACCOUNTID"
         wsSFSorted.Range("AN1").Value = "DEPOSITDATE"
@@ -908,7 +910,7 @@ Public Sub YourCause_AR_Team_Step2()
             ' =SORT(SORT(FILTER('Relevant Salesforce'!A:Y,('Relevant Salesforce'!A:A<>"") * ('Relevant Salesforce'!A:A<>"PMT-ID"), "There are no matching Salesforce transactions…"),16),17)
                 '
         ' YourCause - Transaction Number Count (Column Z)
-            ' =IF(Q2=Q1,1+Z1,1)
+            ' =IF(P2=P1,1+Z1,1)
                 '
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
@@ -920,28 +922,25 @@ Public Sub YourCause_AR_Team_Step2()
         ' Checker (Column AC)
             '
                 '
-        ' Intacct Import (Column AD)
+        ' Intacct Import (Column AE)
             ' ="................."
                 '
-        ' DONOTIMPORT (Column AE)
+        ' DONOTIMPORT (Column AF)
             '
                 '
-        ' RECEIPT_DATE (Column AF)
+        ' RECEIPT_DATE (Column AG)
             '
                 '
-        ' PAYMETHOD (Column AG)
+        ' PAYMETHOD (Column AH)
             '
                 '
-        ' DOCDATE (Column AH)
+        ' DOCDATE (Column AI)
             '
                 '
-        ' DOCNUMBER (Column AI)
+        ' DOCNUMBER (Column AJ)
             '
                 '
-        ' DESCRIPTION (Column AJ)
-            '
-                '
-        ' Description (Column AK)
+        ' DESCRIPTION (Column AK)
             '
                 '
         ' DEPOSITTO (Column AL)
