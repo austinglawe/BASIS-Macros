@@ -554,8 +554,8 @@ Public Sub YourCause_AR_Team_Step2()
         wsRelevantSF.Range("W1").Value = "YourCause - Deposit Date"
         wsRelevantSF.Range("X1").Value = "YourCause - Donor Type"
         wsRelevantSF.Range("Y1").Value = "YourCause - Total Fees"
-        wsSFSorted.Range("Z1").Value = "YourCause - Transaction Number Count"
-        wsSFSorted.Range("AA1").Value = "YourCause - Total Transactions"
+        wsRelevantSF.Range("Z1").Value = "YourCause - Transaction Number Count"
+        wsRelevantSF.Range("AA1").Value = "YourCause - Total Transactions"
         
      ' Step : Populate the Headers of the "Relevant Salesforce Sorted" Worksheet
         wsSFSorted.Range("A1").Value = "PMT-ID"
@@ -916,10 +916,10 @@ Public Sub YourCause_AR_Team_Step2()
                 wsRelevantSF.Range("Y2").Formula = "=IF(A2="""", """", IF((SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))=0, 0, (SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "E:E))/AA2))"
         ' YourCause - Transaction Number Count (Column Z)
             ' Empty (="")
-                wsSFSorted.Range("Z2").Formula = "="""""
+                wsRelevantSF.Range("Z2").Formula = "="""""
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
-                wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
+                wsRelevantSF.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
 
 
         ' Fill Down (Columns O-Y)
