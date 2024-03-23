@@ -397,22 +397,22 @@ Public Sub YourCause_AR_Team_Step2()
         wsSummary.Range("B1").Value = "Descriptive Name"
         wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
         wsSummary.Range("D1").Value = "Completed"
-        wsSummary.Range("E1").Value = "Disbursement Date"
-        wsSummary.Range("F1").Value = "School Name"
-        wsSummary.Range("G1").Value = "Abbreviated School Name"
-        wsSummary.Range("H1").Value = "Disbursement ID"
-        wsSummary.Range("I1").Value = "Company Match/Employee Giving"
-        wsSummary.Range("J1").Value = "Gross Total - Employee Giving"
-        wsSummary.Range("K1").Value = "Gross Total - Company Match"
-        wsSummary.Range("L1").Value = "Total Gross Donations"
-        wsSummary.Range("M1").Value = "Total Fees - Employee Giving"
-        wsSummary.Range("N1").Value = "Total Fees - Company Match"
-        wsSummary.Range("O1").Value = "Total Donation Fees"
-        wsSummary.Range("P1").Value = "Net Total - Employee Giving"
-        wsSummary.Range("Q1").Value = "Net Total - Company Match"
-        wsSummary.Range("R1").Value = "Total Net Donations"
-        wsSummary.Range("S1").Value = "# of Transactions"
-        wsSummary.Range("T1").Value = "Company Name"
+        wsSummary.Range("E1").Value = "Company Name"
+        wsSummary.Range("F1").Value = "Disbursement Date"
+        wsSummary.Range("G1").Value = "School Name"
+        wsSummary.Range("H1").Value = "Abbreviated School Name"
+        wsSummary.Range("I1").Value = "Disbursement ID"
+        wsSummary.Range("J1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("L1").Value = "Gross Total - Company Match"
+        wsSummary.Range("M1").Value = "Total Gross Donations"
+        wsSummary.Range("N1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("O1").Value = "Total Fees - Company Match"
+        wsSummary.Range("P1").Value = "Total Donation Fees"
+        wsSummary.Range("Q1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("R1").Value = "Net Total - Company Match"
+        wsSummary.Range("S1").Value = "Total Net Donations"
+        wsSummary.Range("T1").Value = "# of Transactions"
         wsSummary.Range("U1").Value = "Temporary Worksheet Name"
 
     ' Step : Populate the Headers of the "Salesforce Columns Re-Arranged" Worksheet
@@ -583,7 +583,7 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFSorted.Range("Y1").Value = "YourCause - Total Fees"
         wsSFSorted.Range("Z1").Value = "YourCause - Transaction Number Count"
         wsSFSorted.Range("AA1").Value = "YourCause - Total Transactions"
-        wsSFSorted.Range("AB1").Value = "SF - School Abbreviation"
+        wsSFSorted.Range("AB1").Value = "SF - (Campaign Name) School Abbreviation"
         wsSFSorted.Range("AC1").Value = "YourCause - School Abbreviation"
         wsSFSorted.Range("AD1").Value = "School Abbreviation Checker"
         wsSFSorted.Range("AE1").Value = "Finalized - School Abbreviation"
@@ -746,79 +746,100 @@ Public Sub YourCause_AR_Team_Step2()
     LastRowImport = wsImportFile.Cells(Rows.Count, "A").End(xlUp).Row
 
 ' Step : Populate the formulas and Fill Down in all worksheets
+        wsSummary.Range("A1").Value = "Original File Name"
+        wsSummary.Range("B1").Value = "Descriptive Name"
+        wsSummary.Range("C1").Value = "CSV Naming (Worksheet Name)"
+        wsSummary.Range("D1").Value = "Completed"
+        wsSummary.Range("E1").Value = "Company Name"
+        wsSummary.Range("F1").Value = "Disbursement Date"
+        wsSummary.Range("G1").Value = "School Name"
+        wsSummary.Range("H1").Value = "Abbreviated School Name"
+        wsSummary.Range("I1").Value = "Disbursement ID"
+        wsSummary.Range("J1").Value = "Company Match/Employee Giving"
+        wsSummary.Range("K1").Value = "Gross Total - Employee Giving"
+        wsSummary.Range("L1").Value = "Gross Total - Company Match"
+        wsSummary.Range("M1").Value = "Total Gross Donations"
+        wsSummary.Range("N1").Value = "Total Fees - Employee Giving"
+        wsSummary.Range("O1").Value = "Total Fees - Company Match"
+        wsSummary.Range("P1").Value = "Total Donation Fees"
+        wsSummary.Range("Q1").Value = "Net Total - Employee Giving"
+        wsSummary.Range("R1").Value = "Net Total - Company Match"
+        wsSummary.Range("S1").Value = "Total Net Donations"
+        wsSummary.Range("T1").Value = "# of Transactions"
+        wsSummary.Range("U1").Value = "Temporary Worksheet Name"
     ' Populate the formulas in the "Summary Page" Worksheet
         ' Descriptive Name (Column B)
-            '  ="YourCause - "&E2&"_"&F2&" ("&H2&") ["&TEXT(R2,"$#,##0.00")&"] {"&T2&"} !"&G2&"!"
-                wsSummary.Range("B2").Formula = "=""YourCause - ""&E2&""_""&F2&"" (""&H2&"") [""&TEXT(R2,""$#,##0.00"")&""] {""&T2&""} !""&G2&""!"""
+            '  ="YourCause - "&F2&"_"&G2&" ("&I2&") ["&TEXT(S2,"$#,##0.00")&"] {"&F2&"} !"&H2&"!"
+                wsSummary.Range("B2").Formula = "=""YourCause - ""&F2&""_""&G2&"" (""&I2&"") [""&TEXT(S2,""$#,##0.00"")&""] {""&E2&""} !""&H2&""!"""
 
-        ' CSV Naming (Worksheet Name)
-            ' =E2&"_"&G2&" ("&H2&")"
-                wsSummary.Range("C2").Formula = "=E2&""_""&G2&"" (""&H2&"")"""
+        ' CSV Naming (Worksheet Name) (Column C)
+            ' =F2&"_"&H2&" ("&I2&")"
+                wsSummary.Range("C2").Formula = "=F2&""_""&H2&"" (""&I2&"")"""
 
-        ' Disbursement Date
+        ' Company Name (Column E)
+            ' =XLOOKUP(I2,'Consolidated - YourCause'!J:J,'Consolidated - YourCause'!B:B)
+                wsSummary.Range("E2").Formula = "=XLOOKUP(I2, " & Consolidated & "J:J, " & Consolidated & "B:B)"
+
+        ' Disbursement Date (Column F)
             ' =TEXT(XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!M:M), "YYYY.MM.DD")
-                wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "M:M), ""YYYY.MM.DD"")"
+                wsSummary.Range("F2").Formula = "=TEXT(XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "M:M), ""YYYY.MM.DD"")"
 
-        ' School Name
+        ' School Name (Column G)
             ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!AI:AI)
-                wsSummary.Range("F2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "AI:AI)"
+                wsSummary.Range("G2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "AI:AI)"
 
-        ' Abbreviated School Name
-            ' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
-                'wsSummary.Range("G2").Formula = "=XLOOKUP(F2, " & SchoolMap & "O:O, " & SchoolMap & "C:C)""
-                 wsSummary.Range("G2").Value = "AHW"
+        ' Abbreviated School Name (Column H)
+            ' =XLOOKUP(G2,'School Mapping'!O:O,'School Mapping'!C:C)
+                'wsSummary.Range("H2").Formula = "=XLOOKUP(G2, " & SchoolMap & "O:O, " & SchoolMap & "C:C)""
+                 wsSummary.Range("H2").Value = "AHW"
 
-        ' Disbursement ID
+        ' Disbursement ID (Column I)
             ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!J:J)
-                wsSummary.Range("H2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "J:J)"
+                wsSummary.Range("I2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "J:J)"
 
-        ' Company Match/Employee Giving
-            ' =IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))
-                wsSummary.Range("I2").Formula = "=IF(AND(J2<>0,K2<>0),""Company Match and Employee Giving"", IF(J2<>0,""Employee Giving"",IF(K2<>0,""Company Match"",""Did not Function Correctly"")))"
+        ' Company Match/Employee Giving (Column J)
+            ' =IF(AND(K2<>0,L2<>0),"Company Match and Employee Giving", IF(K2<>0,"Employee Giving",IF(L2<>0,"Company Match","Did not Function Correctly")))
+                wsSummary.Range("J2").Formula = "=IF(AND(K2<>0,L2<>0),""Company Match and Employee Giving"", IF(K2<>0,""Employee Giving"",IF(L2<>0,""Company Match"",""Did not Function Correctly"")))"
 
-        ' Gross Total - Employee Giving
-            ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("J2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+        ' Gross Total - Employee Giving (Column K)
+            ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Individual")
+                wsSummary.Range("K2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Individual"")"
 
-        ' Gross Total - Company Match
-            ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("K2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+        ' Gross Total - Company Match (Column L)
+            ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Company")
+                wsSummary.Range("L2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Company"")"
 
-        ' Total Gross Donation
-            ' =SUMIF('Consolidated - YourCause'!J:J,H2, 'Consolidated - YourCause'!E:E)
-                wsSummary.Range("L2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "E:E)"
+        ' Total Gross Donation (Column M)
+            ' =SUMIF('Consolidated - YourCause'!J:J,I2, 'Consolidated - YourCause'!E:E)
+                wsSummary.Range("M2").Formula = "=SUMIF(" & Consolidated & "J:J,I2, " & Consolidated & "E:E)"
 
-        ' Total Fees - Employee Giving
-            ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("M2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+        ' Total Fees - Employee Giving (Column N)
+            ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Individual")
+                wsSummary.Range("M2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Individual"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Individual"")"
 
-        ' Total Fees - Company Match
-            ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("N2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+        ' Total Fees - Company Match (Column O)
+            ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Company")
+                wsSummary.Range("N2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Company"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Company"")"
 
-        ' Total Donation Fees
-            ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!G:G)
-                wsSummary.Range("O2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "G:G)"
+        ' Total Donation Fees (Column P)
+            ' =SUMIF('Consolidated - YourCause'!J:J,I2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,I2,'Consolidated - YourCause'!G:G)
+                wsSummary.Range("O2").Formula = "=SUMIF(" & Consolidated & "J:J, I2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, I2, " & Consolidated & "G:G)"
 
-        ' Net Total - Employee Giving
-            ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
-                wsSummary.Range("P2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+        ' Net Total - Employee Giving (Column Q)
+            ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Individual")
+                wsSummary.Range("Q2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Individual"")"
 
-        ' Net Total - Company Match
-            ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
-                wsSummary.Range("Q2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+        ' Net Total - Company Match (Column R)
+            ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, I2, 'Consolidated - YourCause'!O:O, "Company")
+                wsSummary.Range("R2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, I2, " & Consolidated & "O:O, ""Company"")"
 
-        ' Total Net Donations
-            ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!H:H)
-                wsSummary.Range("R2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "H:H)"
+        ' Total Net Donations (Column S)
+            ' =SUMIF('Consolidated - YourCause'!J:J, I2,'Consolidated - YourCause'!H:H)
+                wsSummary.Range("S2").Formula = "=SUMIF(" & Consolidated & "J:J, I2, " & Consolidated & "H:H)"
 
-        ' # of Transactions
-            ' =COUNTIF('Consolidated - YourCause'!J:J,H2)
-                wsSummary.Range("S2").Formula = "=COUNTIF(" & Consolidated & "J:J,H2)"
-
-        ' Company Name
-            ' =XLOOKUP(H2,'Consolidated - YourCause'!J:J,'Consolidated - YourCause'!B:B)
-                wsSummary.Range("T2").Formula = "=XLOOKUP(H2, " & Consolidated & "J:J, " & Consolidated & "B:B)"
+        ' # of Transactions (Column T)
+            ' =COUNTIF('Consolidated - YourCause'!J:J, I2)
+                wsSummary.Range("T2").Formula = "=COUNTIF(" & Consolidated & "J:J, I2)"
 
         ' Fill Down
             ' Column B through Column C
@@ -966,126 +987,168 @@ Public Sub YourCause_AR_Team_Step2()
         ' (A2)
             ' =SORT(SORT(FILTER('Relevant Salesforce'!A:Y,('Relevant Salesforce'!A:A<>"") * ('Relevant Salesforce'!A:A<>"PMT-ID"), "There are no matching Salesforce transactions…"),16),17)
                 wsSFSorted.Range("A2").Formula2 = "=SORT(SORT(FILTER(" & RelevantSF & "A:Y, (" & RelevantSF &"A:A<>"""") * (" & RelevantSF & "A:A<>""PMT-ID""), ""There are no matching Salesforce transactions…""),16),17)"
+
         ' YourCause - Transaction Number Count (Column Z)
             ' =IF(P2=P1,1+Z1,1)
                 wsSFSorted.Range("Z2").Formula = "=IF(P2=P1,1+Z1,1)"
+
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
                 wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
+
         ' School Abbreviation (Column AB)
             '
                 '
-        ' Memo (Column AC)
+
+        wsSFSorted.Range("AB1").Value = "SF - (Campaign Name) School Abbreviation"
+        wsSFSorted.Range("AC1").Value = "YourCause - School Abbreviation"
+        wsSFSorted.Range("AD1").Value = "School Abbreviation Checker"
+        wsSFSorted.Range("AE1").Value = "Finalized - School Abbreviation"
+
+        wsSFSorted.Range("AF1").Value = "Memo"
+        wsSFSorted.Range("AG1").Value = "Intacct Import"
+        wsSFSorted.Range("AH1").Value = "DONOTIMPORT"
+        wsSFSorted.Range("AI1").Value = "RECEIPT_DATE"
+        wsSFSorted.Range("AJ1").Value = "PAYMETHOD"
+        wsSFSorted.Range("AK1").Value = "DOCDATE"
+        wsSFSorted.Range("AL1").Value = "DOCNUMBER"
+        wsSFSorted.Range("AM1").Value = "DESCRIPTION"
+        wsSFSorted.Range("AN1").Value = "DEPOSITTO"
+        wsSFSorted.Range("AO1").Value = "BANKACCOUNTID"
+        wsSFSorted.Range("AP1").Value = "DEPOSITDATE"
+        wsSFSorted.Range("AQ1").Value = "UNDEPACCTNO"
+        wsSFSorted.Range("AR1").Value = "CURRENCY"
+        wsSFSorted.Range("AS1").Value = "EXCH_RATE_DATE"
+        wsSFSorted.Range("AT1").Value = "EXCH_RATE_TYPE_ID"
+        wsSFSorted.Range("AU1").Value = "EXCH_RATE_DATE"
+        wsSFSorted.Range("AV1").Value = "LINE_NO"
+        wsSFSorted.Range("AW1").Value = "ACCT_NO"
+        wsSFSorted.Range("AX1").Value = "ACCOUNTLABEL"
+        wsSFSorted.Range("AY1").Value = "TRX_AMOUNT"
+        wsSFSorted.Range("AZ1").Value = "AMOUNT"
+        wsSFSorted.Range("BA1").Value = "DEPT_ID"
+        wsSFSorted.Range("BB1").Value = "LOCATION_ID"
+        wsSFSorted.Range("BC1").Value = "ITEM_MEMO"
+        wsSFSorted.Range("BD1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+        wsSFSorted.Range("BE1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+        wsSFSorted.Range("BF1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+        wsSFSorted.Range("BG1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+        wsSFSorted.Range("BH1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+        wsSFSorted.Range("BI1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+        wsSFSorted.Range("BJ1").Value = "PAYER_NAME"
+        wsSFSorted.Range("BI1").Value = "SUPDOCID"
+        wsSFSorted.Range("BK1").Value = "EXCHANGE_RATE"
+        wsSFSorted.Range("BL1").Value = "OR_TRANSACTION_DATE"
+        wsSFSorted.Range("BM1").Value = "GLDIMFUNDING_SOURCE"
+        ' Memo (Column AF)
             ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Txn ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
             ' 
                 '
-        ' Checker (Column AD)
-            '
-                '
-        ' Intacct Import (Column AE)
+        ' Intacct Import (Column AG)
             ' ="................."
-                wsSFSorted.Range("AE2").Formula = "=""................."""
-        ' DONOTIMPORT (Column AF)
+                wsSFSorted.Range("AG2").Formula = "=""................."""
+        ' DONOTIMPORT (Column AH)
             '
                 '
-        ' RECEIPT_DATE (Column AG)
+        ' RECEIPT_DATE (Column AI)
             '
                 '
-        ' PAYMETHOD (Column AH)
+        ' PAYMETHOD (Column AJ)
             '
                 '
-        ' DOCDATE (Column AI)
+        ' DOCDATE (Column AK)
             '
                 '
-        ' DOCNUMBER (Column AJ)
+        ' DOCNUMBER (Column AL)
             '
                 '
-        ' DESCRIPTION (Column AK)
+        ' DESCRIPTION (Column AM)
             '
                 '
-        ' DEPOSITTO (Column AL)
+        ' DEPOSITTO (Column AN)
             '
                 '
-        ' BANKACCOUNTID (Column AM)
+        ' BANKACCOUNTID (Column AO)
             '
                 '
-        ' DEPOSITDATE (Column AN)
+        ' DEPOSITDATE (Column AP)
             '
                 '
-        ' UNDEPACCTNO (Column AO)
+        ' UNDEPACCTNO (Column AQ)
             '
                 '
-        ' CURRENCY (Column AP)
-            '
-                '
-        ' EXCH_RATE_DATE (Column AQ)
-            '
-                '
-        ' EXCH_RATE_TYPE_ID (Column AR)
+        ' CURRENCY (Column AR)
             '
                 '
         ' EXCH_RATE_DATE (Column AS)
             '
                 '
-        ' LINE_NO (Column AT)
+        ' EXCH_RATE_TYPE_ID (Column AT)
             '
                 '
-        ' ACCT_NO (Column AU)
+        ' EXCH_RATE_DATE (Column AU)
             '
                 '
-        ' ACCOUNTLABEL (Column AV)
+        ' LINE_NO (Column AV)
             '
                 '
-        ' TRX_AMOUNT (Column AW)
+        ' ACCT_NO (Column AW)
             '
                 '
-        ' AMOUNT (Column AX)
+        ' ACCOUNTLABEL (Column AX)
             '
                 '
-        ' DEPT_ID (Column AY)
+        ' TRX_AMOUNT (Column AY)
             '
                 '
-        ' LOCATION_ID (Column AZ)
+        ' AMOUNT (Column AZ)
             '
                 '
-        ' ITEM_MEMO (Column BA)
+        ' DEPT_ID (Column BA)
             '
                 '
-        ' OTHERRECEIPTSENTRY_PROJECTID (Column BB)
+        ' LOCATION_ID (Column BB)
             '
                 '
-        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column BC)
+        ' ITEM_MEMO (Column BC)
             '
                 '
-        ' OTHERRECEIPTSENTRY_ITEMID (Column BD)
+        ' OTHERRECEIPTSENTRY_PROJECTID (Column BD)
             '
                 '
-        ' OTHERRECEIPTSENTRY_VENDORID (Column BE)
+        ' OTHERRECEIPTSENTRY_CUSTOMERID (Column BE)
             '
                 '
-        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column BF)
+        ' OTHERRECEIPTSENTRY_ITEMID (Column BF)
             '
                 '
-        ' OTHERRECEIPTSENTRY_CLASSID (Column BG)
+        ' OTHERRECEIPTSENTRY_VENDORID (Column BG)
             '
                 '
-        ' PAYER_NAME (Column BH)
+        ' OTHERRECEIPTSENTRY_EMPLOYEEID (Column BH)
             '
                 '
-        ' SUPDOCID (Column BI)
+        ' OTHERRECEIPTSENTRY_CLASSID (Column BI)
             '
                 '
-        ' EXCHANGE_RATE (Column BJ)
+        ' PAYER_NAME (Column BJ)
             '
                 '
-        ' OR_TRANSACTION_DATE (Column BK)
+        ' SUPDOCID (Column BK)
             '
                 '
-        ' GLDIMFUNDING_SOURCE (Column BL)
+        ' EXCHANGE_RATE (Column BL)
             '
                 '
-        ' Fill Down (Columns Z-BL)
-            wsSFSorted.Range("O2:AA" & LastRowConsolidated).FillDown
+        ' OR_TRANSACTION_DATE (Column BM)
+            '
+                '
+        ' GLDIMFUNDING_SOURCE (Column BN)
+            '
+                '
+        ' Fill Down (Columns Z-BN)
+            wsSFSorted.Range("Z2:BN" & LastRowConsolidated).FillDown
+
 
     ' Populate the formulas in the "Import File" Worksheet
 
@@ -1094,11 +1157,9 @@ Public Sub YourCause_AR_Team_Step2()
         ' In A2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AT:AT="Not Found by Lookup", "All Transactions Accounted for!"))
                 wsNotInSF.Range("A2").Formula2 = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AT:AT=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
+
         ' Column A, L, and M then need to be changed to a "Short Date" Type
             wsNotInSF.Range("A:A,L:L,M:M").NumberFormat = "MM/DD/YYYY"
-
-
-
 
 ' Rename the Temporary Worksheet Names to CSV Naming Convention
 
