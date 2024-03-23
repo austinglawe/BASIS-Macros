@@ -996,63 +996,34 @@ Public Sub YourCause_AR_Team_Step2()
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
                 wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
 
-        ' School Abbreviation (Column AB)
+        ' (Column AB)
             '
                 '
-
-        wsSFSorted.Range("AB1").Value = "SF - (Campaign Name) School Abbreviation"
-        wsSFSorted.Range("AC1").Value = "YourCause - School Abbreviation"
-        wsSFSorted.Range("AD1").Value = "School Abbreviation Checker"
-        wsSFSorted.Range("AE1").Value = "Finalized - School Abbreviation"
-
-        wsSFSorted.Range("AF1").Value = "Memo"
-        wsSFSorted.Range("AG1").Value = "Intacct Import"
-        wsSFSorted.Range("AH1").Value = "DONOTIMPORT"
-        wsSFSorted.Range("AI1").Value = "RECEIPT_DATE"
-        wsSFSorted.Range("AJ1").Value = "PAYMETHOD"
-        wsSFSorted.Range("AK1").Value = "DOCDATE"
-        wsSFSorted.Range("AL1").Value = "DOCNUMBER"
-        wsSFSorted.Range("AM1").Value = "DESCRIPTION"
-        wsSFSorted.Range("AN1").Value = "DEPOSITTO"
-        wsSFSorted.Range("AO1").Value = "BANKACCOUNTID"
-        wsSFSorted.Range("AP1").Value = "DEPOSITDATE"
-        wsSFSorted.Range("AQ1").Value = "UNDEPACCTNO"
-        wsSFSorted.Range("AR1").Value = "CURRENCY"
-        wsSFSorted.Range("AS1").Value = "EXCH_RATE_DATE"
-        wsSFSorted.Range("AT1").Value = "EXCH_RATE_TYPE_ID"
-        wsSFSorted.Range("AU1").Value = "EXCH_RATE_DATE"
-        wsSFSorted.Range("AV1").Value = "LINE_NO"
-        wsSFSorted.Range("AW1").Value = "ACCT_NO"
-        wsSFSorted.Range("AX1").Value = "ACCOUNTLABEL"
-        wsSFSorted.Range("AY1").Value = "TRX_AMOUNT"
-        wsSFSorted.Range("AZ1").Value = "AMOUNT"
-        wsSFSorted.Range("BA1").Value = "DEPT_ID"
-        wsSFSorted.Range("BB1").Value = "LOCATION_ID"
-        wsSFSorted.Range("BC1").Value = "ITEM_MEMO"
-        wsSFSorted.Range("BD1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
-        wsSFSorted.Range("BE1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
-        wsSFSorted.Range("BF1").Value = "OTHERRECEIPTSENTRY_ITEMID"
-        wsSFSorted.Range("BG1").Value = "OTHERRECEIPTSENTRY_VENDORID"
-        wsSFSorted.Range("BH1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
-        wsSFSorted.Range("BI1").Value = "OTHERRECEIPTSENTRY_CLASSID"
-        wsSFSorted.Range("BJ1").Value = "PAYER_NAME"
-        wsSFSorted.Range("BI1").Value = "SUPDOCID"
-        wsSFSorted.Range("BK1").Value = "EXCHANGE_RATE"
-        wsSFSorted.Range("BL1").Value = "OR_TRANSACTION_DATE"
-        wsSFSorted.Range("BM1").Value = "GLDIMFUNDING_SOURCE"
+        ' (Column AC)
+            '
+                '
+        ' (Column AD)
+            '
+                '
+        ' (Column AE)
+            '
+                '
         ' (Column AF)
+            '
+                '
 
         ' Memo (Column AG)
             ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Transaction ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Donation Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
             ' =IF(A2="","",AE2&" - "&B2&" | "&C2&" | Site: YourCause | "&A2&" | Transaction ID: "&P2& " | Disbursement ID: "&Q2&" | Payment Type: "&AF2&" | Company Name: "&O2&" | Type: "&IF(X2="Individual", "Employee Giving", "Company Match")&" | Txn#: "&Z2&" of "&AA2&" | ~Txn-Date: "&TEXT(V2, "MM.DD.YYYY")&" | *"&I2&", "&H2)
-                wsSFSorted.Range("AH2").Formula = "=IF(A2="""", """", AE2 & "" - "" & B2 & "" | "" & C2 & "" | Site: YourCause | "" & A2 & "" | Transaction ID: "" & P2 & "" | Disbursement ID: "" & Q2 & "" | Payment Type: "" & AF2 & "" | Company Name: "" & O2 & "" | Donation Type: "" & IF(X2=""Individual"", ""Employee Giving"", ""Company Match"") & "" | Txn#: "" & Z2 & "" of "" & AA2 & "" | ~Txn-Date: "" & TEXT(V2, ""MM.DD.YYYY"") & "" | *"" & I2 & "", "" & H2)"
+                wsSFSorted.Range("AG2").Formula = "=IF(A2="""", """", AE2 & "" - "" & B2 & "" | "" & C2 & "" | Site: YourCause | "" & A2 & "" | Transaction ID: "" & P2 & "" | Disbursement ID: "" & Q2 & "" | Payment Type: "" & AF2 & "" | Company Name: "" & O2 & "" | Donation Type: "" & IF(X2=""Individual"", ""Employee Giving"", ""Company Match"") & "" | Txn#: "" & Z2 & "" of "" & AA2 & "" | ~Txn-Date: "" & TEXT(V2, ""MM.DD.YYYY"") & "" | *"" & I2 & "", "" & H2)"
+
         ' Intacct Import (Column AH)
             ' =IF(A2="","","…................")
                 wsSFSorted.Range("AH2").Formula = "=IF(A2="""", """", ""…................"")"
 //////////////////////////////////////////////////////
 ///////////////////////////////////////////////////
 //////////////////////////////////////////////
-        ' DONOTIMPORT (Column AH)
+        ' DONOTIMPORT (Column AI)
             '
                 '
         ' RECEIPT_DATE (Column AI)
