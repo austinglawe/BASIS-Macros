@@ -583,45 +583,46 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFSorted.Range("Y1").Value = "YourCause - Total Fees"
         wsSFSorted.Range("Z1").Value = "YourCause - Transaction Number Count"
         wsSFSorted.Range("AA1").Value = "YourCause - Total Transactions"
-        wsSFSorted.Range("AB1").Value = "Memo"
-        wsSFSorted.Range("AC1").Value = "Checker"
+        wsSFSorted.Range("AB1").Value = "SF - School Abbreviation"
+        wsSFSorted.Range("AC1").Value = "YourCause - School Abbreviation"
+        wsSFSorted.Range("AD1").Value = "School Abbreviation Checker"
+        wsSFSorted.Range("AE1").Value = "Finalized - School Abbreviation"
 
-        wsSFSorted.Range("AD1").Value = ""
-
-        wsSFSorted.Range("AE1").Value = "Intacct Import"
-        wsSFSorted.Range("AF1").Value = "DONOTIMPORT"
-        wsSFSorted.Range("AG1").Value = "RECEIPT_DATE"
-        wsSFSorted.Range("AH1").Value = "PAYMETHOD"
-        wsSFSorted.Range("AI1").Value = "DOCDATE"
-        wsSFSorted.Range("AJ1").Value = "DOCNUMBER"
-        wsSFSorted.Range("AK1").Value = "DESCRIPTION"
-        wsSFSorted.Range("AL1").Value = "DEPOSITTO"
-        wsSFSorted.Range("AM1").Value = "BANKACCOUNTID"
-        wsSFSorted.Range("AN1").Value = "DEPOSITDATE"
-        wsSFSorted.Range("AO1").Value = "UNDEPACCTNO"
-        wsSFSorted.Range("AP1").Value = "CURRENCY"
-        wsSFSorted.Range("AQ1").Value = "EXCH_RATE_DATE"
-        wsSFSorted.Range("AR1").Value = "EXCH_RATE_TYPE_ID"
+        wsSFSorted.Range("AF1").Value = "Memo"
+        wsSFSorted.Range("AG1").Value = "Intacct Import"
+        wsSFSorted.Range("AH1").Value = "DONOTIMPORT"
+        wsSFSorted.Range("AI1").Value = "RECEIPT_DATE"
+        wsSFSorted.Range("AJ1").Value = "PAYMETHOD"
+        wsSFSorted.Range("AK1").Value = "DOCDATE"
+        wsSFSorted.Range("AL1").Value = "DOCNUMBER"
+        wsSFSorted.Range("AM1").Value = "DESCRIPTION"
+        wsSFSorted.Range("AN1").Value = "DEPOSITTO"
+        wsSFSorted.Range("AO1").Value = "BANKACCOUNTID"
+        wsSFSorted.Range("AP1").Value = "DEPOSITDATE"
+        wsSFSorted.Range("AQ1").Value = "UNDEPACCTNO"
+        wsSFSorted.Range("AR1").Value = "CURRENCY"
         wsSFSorted.Range("AS1").Value = "EXCH_RATE_DATE"
-        wsSFSorted.Range("AT1").Value = "LINE_NO"
-        wsSFSorted.Range("AU1").Value = "ACCT_NO"
-        wsSFSorted.Range("AV1").Value = "ACCOUNTLABEL"
-        wsSFSorted.Range("AW1").Value = "TRX_AMOUNT"
-        wsSFSorted.Range("AX1").Value = "AMOUNT"
-        wsSFSorted.Range("AY1").Value = "DEPT_ID"
-        wsSFSorted.Range("AZ1").Value = "LOCATION_ID"
-        wsSFSorted.Range("BA1").Value = "ITEM_MEMO"
-        wsSFSorted.Range("BB1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
-        wsSFSorted.Range("BC1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
-        wsSFSorted.Range("BD1").Value = "OTHERRECEIPTSENTRY_ITEMID"
-        wsSFSorted.Range("BE1").Value = "OTHERRECEIPTSENTRY_VENDORID"
-        wsSFSorted.Range("BF1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
-        wsSFSorted.Range("BG1").Value = "OTHERRECEIPTSENTRY_CLASSID"
-        wsSFSorted.Range("BH1").Value = "PAYER_NAME"
+        wsSFSorted.Range("AT1").Value = "EXCH_RATE_TYPE_ID"
+        wsSFSorted.Range("AU1").Value = "EXCH_RATE_DATE"
+        wsSFSorted.Range("AV1").Value = "LINE_NO"
+        wsSFSorted.Range("AW1").Value = "ACCT_NO"
+        wsSFSorted.Range("AX1").Value = "ACCOUNTLABEL"
+        wsSFSorted.Range("AY1").Value = "TRX_AMOUNT"
+        wsSFSorted.Range("AZ1").Value = "AMOUNT"
+        wsSFSorted.Range("BA1").Value = "DEPT_ID"
+        wsSFSorted.Range("BB1").Value = "LOCATION_ID"
+        wsSFSorted.Range("BC1").Value = "ITEM_MEMO"
+        wsSFSorted.Range("BD1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+        wsSFSorted.Range("BE1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+        wsSFSorted.Range("BF1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+        wsSFSorted.Range("BG1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+        wsSFSorted.Range("BH1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+        wsSFSorted.Range("BI1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+        wsSFSorted.Range("BJ1").Value = "PAYER_NAME"
         wsSFSorted.Range("BI1").Value = "SUPDOCID"
-        wsSFSorted.Range("BJ1").Value = "EXCHANGE_RATE"
-        wsSFSorted.Range("BK1").Value = "OR_TRANSACTION_DATE"
-        wsSFSorted.Range("BL1").Value = "GLDIMFUNDING_SOURCE"
+        wsSFSorted.Range("BK1").Value = "EXCHANGE_RATE"
+        wsSFSorted.Range("BL1").Value = "OR_TRANSACTION_DATE"
+        wsSFSorted.Range("BM1").Value = "GLDIMFUNDING_SOURCE"
 
     ' Step : Populate the Headers of the "Import File" Worksheet
         wsImportFile.Range("A1").Value = "DONOTIMPORT"
@@ -971,11 +972,14 @@ Public Sub YourCause_AR_Team_Step2()
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
                 wsSFSorted.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
-        ' Memo (Column AB)
+        ' School Abbreviation (Column AB)
+            '
+                '
+        ' Memo (Column AC)
             ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Txn ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
             ' 
                 '
-        ' Checker (Column AC)
+        ' Checker (Column AD)
             '
                 '
         ' Intacct Import (Column AE)
