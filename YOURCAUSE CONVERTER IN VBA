@@ -1040,13 +1040,18 @@ Public Sub YourCause_AR_Team_Step2()
         wsSFSorted.Range("BK1").Value = "EXCHANGE_RATE"
         wsSFSorted.Range("BL1").Value = "OR_TRANSACTION_DATE"
         wsSFSorted.Range("BM1").Value = "GLDIMFUNDING_SOURCE"
-        ' Memo (Column AF)
-            ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Txn ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
-            ' 
-                '
-        ' Intacct Import (Column AG)
-            ' ="................."
-                wsSFSorted.Range("AG2").Formula = "=""................."""
+        ' (Column AF)
+
+        ' Memo (Column AG)
+            ' = {YourCause School Abbrev.} - {Campaign Name} | {Opportunity Name} | {Site: YourCause} | {PMT-ID} | {Transaction ID: } | {Disbursement ID: } | {{Payment Type: (ACH/Check)} | {Company Name: } | {Donation Type: (YourCause Donation Type, Employee Giving/Company Match)} | {Txn#: _ of _} | {~Txn-Date: MM.DD.YYYY} | *{Donor Last Name, Donor First Name}
+            ' =IF(A2="","",AE2&" - "&B2&" | "&C2&" | Site: YourCause | "&A2&" | Transaction ID: "&P2& " | Disbursement ID: "&Q2&" | Payment Type: "&AF2&" | Company Name: "&O2&" | Type: "&IF(X2="Individual", "Employee Giving", "Company Match")&" | Txn#: "&Z2&" of "&AA2&" | ~Txn-Date: "&TEXT(V2, "MM.DD.YYYY")&" | *"&I2&", "&H2)
+                wsSFSorted.Range("AH2").Formula = "=IF(A2="""", """", AE2 & "" - "" & B2 & "" | "" & C2 & "" | Site: YourCause | "" & A2 & "" | Transaction ID: "" & P2 & "" | Disbursement ID: "" & Q2 & "" | Payment Type: "" & AF2 & "" | Company Name: "" & O2 & "" | Donation Type: "" & IF(X2=""Individual"", ""Employee Giving"", ""Company Match"") & "" | Txn#: "" & Z2 & "" of "" & AA2 & "" | ~Txn-Date: "" & TEXT(V2, ""MM.DD.YYYY"") & "" | *"" & I2 & "", "" & H2)"
+        ' Intacct Import (Column AH)
+            ' =IF(A2="","","…................")
+                wsSFSorted.Range("AH2").Formula = "=IF(A2="""", """", ""…................"")"
+//////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+//////////////////////////////////////////////
         ' DONOTIMPORT (Column AH)
             '
                 '
@@ -1146,8 +1151,8 @@ Public Sub YourCause_AR_Team_Step2()
         ' GLDIMFUNDING_SOURCE (Column BN)
             '
                 '
-        ' Fill Down (Columns Z-BN)
-            wsSFSorted.Range("Z2:BN" & LastRowConsolidated).FillDown
+        ' Fill Down (Columns Z-BO)
+            wsSFSorted.Range("Z2:BO" & LastRowConsolidated).FillDown
 
 
     ' Populate the formulas in the "Import File" Worksheet
