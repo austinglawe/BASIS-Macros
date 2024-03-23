@@ -159,8 +159,6 @@ Public Sub YourCause_AR_Team_Step1()
         wsSFReport.Activate
         wsSFReport.Range("B1").Select
 
-
-
 End Sub
 '------------------------------------------------------------------------------------------------------------------------------------------
 '------------------------------------------------------------------------------------------------------------------------------------------
@@ -751,15 +749,19 @@ Public Sub YourCause_AR_Team_Step2()
         ' Descriptive Name (Column B)
             '  ="YourCause - "&E2&"_"&F2&" ("&H2&") ["&TEXT(R2,"$#,##0.00")&"] {"&T2&"} !"&G2&"!"
                 wsSummary.Range("B2").Formula = "=""YourCause - ""&E2&""_""&F2&"" (""&H2&"") [""&TEXT(R2,""$#,##0.00"")&""] {""&T2&""} !""&G2&""!"""
+
         ' CSV Naming (Worksheet Name)
             ' =E2&"_"&G2&" ("&H2&")"
                 wsSummary.Range("C2").Formula = "=E2&""_""&G2&"" (""&H2&"")"""
+
         ' Disbursement Date
             ' =TEXT(XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!M:M), "YYYY.MM.DD")
                 wsSummary.Range("E2").Formula = "=TEXT(XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "M:M), ""YYYY.MM.DD"")"
+
         ' School Name
             ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!AI:AI)
                 wsSummary.Range("F2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "AI:AI)"
+
         ' Abbreviated School Name
             ' =XLOOKUP(F2,'School Mapping'!O:O,'School Mapping'!C:C)
                 'wsSummary.Range("G2").Formula = "=XLOOKUP(F2, " & SchoolMap & "O:O, " & SchoolMap & "C:C)""
@@ -768,42 +770,55 @@ Public Sub YourCause_AR_Team_Step2()
         ' Disbursement ID
             ' =XLOOKUP(A2, 'Consolidated - YourCause'!AP:AP, 'Consolidated - YourCause'!J:J)
                 wsSummary.Range("H2").Formula = "=XLOOKUP(A2, " & Consolidated & "AP:AP, " & Consolidated & "J:J)"
+
         ' Company Match/Employee Giving
             ' =IF(AND(J2<>0,K2<>0),"Company Match and Employee Giving", IF(J2<>0,"Employee Giving",IF(K2<>0,"Company Match","Did not Function Correctly")))
                 wsSummary.Range("I2").Formula = "=IF(AND(J2<>0,K2<>0),""Company Match and Employee Giving"", IF(J2<>0,""Employee Giving"",IF(K2<>0,""Company Match"",""Did not Function Correctly"")))"
+
         ' Gross Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("J2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+
         ' Gross Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!E:E, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("K2").Formula = "=SUMIFS(" & Consolidated & "E:E, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+
         ' Total Gross Donation
             ' =SUMIF('Consolidated - YourCause'!J:J,H2, 'Consolidated - YourCause'!E:E)
                 wsSummary.Range("L2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "E:E)"
+
         ' Total Fees - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("M2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+
         ' Total Fees - Company Match
             ' =SUMIFS('Consolidated - YourCause'!F:F, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company") + SUMIFS('Consolidated - YourCause'!G:G, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("N2").Formula = "=SUMIFS(" & Consolidated & "F:F, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"") + SUMIFS(" & Consolidated & "G:G, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+
         ' Total Donation Fees
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!F:F) + SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!G:G)
                 wsSummary.Range("O2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "G:G)"
+
         ' Net Total - Employee Giving
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Individual")
                 wsSummary.Range("P2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Individual"")"
+
         ' Net Total - Company Match
             ' =SUMIFS('Consolidated - YourCause'!H:H, 'Consolidated - YourCause'!J:J, H2, 'Consolidated - YourCause'!O:O, "Company")
                 wsSummary.Range("Q2").Formula = "=SUMIFS(" & Consolidated & "H:H, " & Consolidated & "J:J, H2, " & Consolidated & "O:O, ""Company"")"
+
         ' Total Net Donations
             ' =SUMIF('Consolidated - YourCause'!J:J,H2,'Consolidated - YourCause'!H:H)
                 wsSummary.Range("R2").Formula = "=SUMIF(" & Consolidated & "J:J,H2, " & Consolidated & "H:H)"
+
         ' # of Transactions
             ' =COUNTIF('Consolidated - YourCause'!J:J,H2)
                 wsSummary.Range("S2").Formula = "=COUNTIF(" & Consolidated & "J:J,H2)"
+
         ' Company Name
             ' =XLOOKUP(H2,'Consolidated - YourCause'!J:J,'Consolidated - YourCause'!B:B)
                 wsSummary.Range("T2").Formula = "=XLOOKUP(H2, " & Consolidated & "J:J, " & Consolidated & "B:B)"
+
         ' Fill Down
             ' Column B through Column C
                 wsSummary.Range("B2:C" & LastRowSummary).FillDown
@@ -813,32 +828,46 @@ Public Sub YourCause_AR_Team_Step2()
     ' Populate the formulas in the "Salesforce Columns Re-Arranged" Worksheet and then fill the formulas down
         ' In A2 --> =IF(('Salesforce Report'!H2) = "", "", 'Salesforce Report'!H2)
              wsSFReArrange.Range("A2").Formula = "=IF((" & SFReport & PaymentIDColumn & "2) = """", """", " & SFReport & PaymentIDColumn & "2)"                                            ' "Payment: Payment Number"  (PMT-ID)
+
         ' In B2 --> =IF(('Salesforce Report'!P2) = "", "", 'Salesforce Report'!P2)
             wsSFReArrange.Range("B2").Formula = "=IF((" & SFReport & CampaignNameColumn & "2) = """", """", " & SFReport & CampaignNameColumn & "2)"                                       ' "Primary Campaign Source"  (Campaign Name)
+
         ' In C2 --> =IF(('Salesforce Report'!O2) = "", "", 'Salesforce Report'!O2)
             wsSFReArrange.Range("C2").Formula = "=IF((" & SFReport & OpportunityNameColumn & "2) = """", """", " & SFReport & OpportunityNameColumn & "2)"                                 ' "Opportunity Name"         (Opportunity Name)
+
         ' In D2 --> =IF(('Salesforce Report'!J2) = "", "", 'Salesforce Report'!J2)
-            wsSFReArrange.Range("D2").Formula = "=IF((" & SFReport & CheckNumberColumn & "2) = """", """", " & SFReport & CheckNumberColumn & "2)"                                         ' "Check Number"             (Check Number - if it is a check)
+            wsSFReArrange.Range("D2").Formula = "=IF((" & SFReport & CheckNumberColumn & "2) = """", """", " & SFReport & CheckNumberColumn & "2)"                                         ' "YourCause - Donor Type"   (Type of Donation)
+
         ' In E2 --> =IF(('Salesforce Report'!N2) = "", "", 'Salesforce Report'!N2)
             wsSFReArrange.Range("E2").Formula = "=IF((" & SFReport & CompanyNameColumn & "2) = """", """", " & SFReport & CompanyNameColumn & "2)"                                         ' "Company Name"             (Company Name)
+
         ' In F2 --> =IF(('Salesforce Report'!K2) = "", "", 'Salesforce Report'!K2)
             wsSFReArrange.Range("F2").Formula = "=IF((" & SFReport & TransactionIDColumn & "2) = """", """", " & SFReport & TransactionIDColumn & "2)"                                     ' "Check/Reference Number"   (Transaction ID)
+
         ' In G2 --> =IF(('Salesforce Report'!L2) = "", "", 'Salesforce Report'!L2)
             wsSFReArrange.Range("G2").Formula = "=IF((" & SFReport & DisbursementIDColumn & "2) = """", """", " & SFReport & DisbursementIDColumn & "2)"                                   ' "Disbursement ID"          (Disbursement ID)
+
         ' In H2 --> =IF(('Salesforce Report'!E2) = "", "", 'Salesforce Report'!E2)
             wsSFReArrange.Range("H2").Formula = "=IF((" & SFReport & FirstNameColumn & "2) = """", """", " & SFReport & FirstNameColumn & "2)"                                             ' "First Name"               (First Name)
+
         ' In I2 --> =IF(('Salesforce Report'!F2) = "", "", 'Salesforce Report'!F2)
             wsSFReArrange.Range("I2").Formula = "=IF((" & SFReport & LastNameColumn & "2) = """", """", " & SFReport & LastNameColumn & "2)"                                               ' "Last Name"                (Last Name)
+
         ' In J2 --> =IF(('Salesforce Report'!G2) = "", "", 'Salesforce Report'!G2)
             wsSFReArrange.Range("J2").Formula = "=IF((" & SFReport & PaymentAmountColumn & "2) = """", """", " & SFReport & PaymentAmountColumn & "2)"                                     ' "Payment Amount"           (Payment Amount)
+
         ' In K2 --> =IF(('Salesforce Report'!M2) = "", "", 'Salesforce Report'!M2)
             wsSFReArrange.Range("K2").Formula = "=IF((" & SFReport & DescriptionColumn & "2) = """", """", " & SFReport & DescriptionColumn & "2)"                                         ' "Description"              (Description)
+
         ' In L2 --> =IF(('Salesforce Report'!A2) = "", "", 'Salesforce Report'!A2)
             wsSFReArrange.Range("L2").Formula = "=IF((" & SFReport & SchoolNameColumn & "2) = """", """", " & SFReport & SchoolNameColumn & "2)"                                           ' "School Name"              (School Name)
+
         ' In M2 --> =IF(('Salesforce Report'!C2) = "", "", TEXT('Salesforce Report'!C2, "MM/DD/YYYY"))
             wsSFReArrange.Range("M2").Formula = "=IF((" & SFReport & TransactionDateColumn & "2) = """", """", TEXT(" & SFReport & TransactionDateColumn & "2, ""MM/DD/YYYY""))"           ' "Close Date"               (Transaction Date)
+
         ' In N2 --> =IF(('Salesforce Report'!D2) = "", "", TEXT('Salesforce Report'!D2, "MM/DD/YYYY"))
             wsSFReArrange.Range("N2").Formula = "=IF((" & SFReport & DepositDateColumn & "2) = """", """", TEXT(" & SFReport & DepositDateColumn & "2, ""MM/DD/YYYY""))"                   ' "Deposit Date"             (Deposit Date)
+
         ' Fill Down
             wsSFReArrange.Range("A2:N" & LastRowSFReArrange).FillDown
 
@@ -846,15 +875,19 @@ Public Sub YourCause_AR_Team_Step2()
         ' Descriptive File Name - (Column AQ)
             ' =IF(XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!B:B)="", "", XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!B:B))
                 wsConsolidated.Range("AQ2").Formula = "=IF(XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "B:B)="""", """", XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "B:B))"
+
         ' CSV Naming (Worksheet Name) - (Column AR)
             ' =IF(XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!C:C)="", "", XLOOKUP(AP2,'Summary Page'!A:A,'Summary Page'!C:C))
                 wsConsolidated.Range("AR2").Formula = "=IF(XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "C:C)="""", """", XLOOKUP(AP2, " & SummarySheet & "A:A, " & SummarySheet & "C:C))"
+
         ' PMT-ID - (Column AS)
             ' =XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!F:F,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!G:G,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!D:D,'Salesforce Columns Re-Arranged'!A:A,XLOOKUP("*"&C2&"*",'Salesforce Columns Re-Arranged'!C:C,'Salesforce Columns Re-Arranged'!A:A,"Not found by Lookup",2,1),2,1),2,1),2,1)
                 wsConsolidated.Range("AS2").Formula = "=XLOOKUP(""*""&C2&""*"", " & SFReArrange & "F:F, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "G:G, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "D:D, " & SFReArrange & "A:A,XLOOKUP(""*""&C2&""*"", " & SFReArrange & "C:C, " & SFReArrange & "A:A,""Not found by Lookup"",2,1),2,1),2,1),2,1)"
+
         ' Finalized PMT-ID - (Column AT)
             ' =IF(AS2="Not Found by Lookup",IF(XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)="",AS2,XLOOKUP(C2,'Transactions Missing From SF'!D:D,'Transactions Missing From SF'!A:A)),AS2)
                 wsConsolidated.Range("AT2").Formula = "=IF(AS2=""Not Found by Lookup"", IF(XLOOKUP(C2," & MissingFromSF & "D:D, " & MissingFromSF & "A:A)="""", AS2, XLOOKUP(C2, " & MissingFromSF & "D:D, " & MissingFromSF & "A:A)),AS2)"
+
         ' Fill Down
             wsConsolidated.Range("AQ2:AT" & LastRowConsolidated).FillDown
 
@@ -863,6 +896,7 @@ Public Sub YourCause_AR_Team_Step2()
         ' In B2
             ' =IF(ISBLANK(FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!")), "", FILTER('Consolidated - YourCause'!A:AR, 'Consolidated - YourCause'!AS:AS="Not Found by Lookup", "All Transactions Accounted for!"))
                 wsMissingSF.Range("B2").Formula2 = "=IF(ISBLANK(FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!"")), """", FILTER(" & Consolidated & "A:AR, " & Consolidated & "AS:AS=""Not Found by Lookup"", ""All Transactions Accounted for!""))"
+
         ' Column B, M, and N then need to be changed to a "Short Date" Type
             wsMissingSF.Range("B:B,M:M,N:N").NumberFormat = "MM/DD/YYYY"
 
@@ -914,9 +948,11 @@ Public Sub YourCause_AR_Team_Step2()
         ' YourCause - Total Fees (Column Y)
             ' =IF(A2="","",IF((SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!G:G))=0,0,(SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!F:F)+SUMIF('Consolidated - YourCause'!J:J,Q2,'Consolidated - YourCause'!G:G))/AA2))
                 wsRelevantSF.Range("Y2").Formula = "=IF(A2="""", """", IF((SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "G:G))=0, 0, (SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "F:F) + SUMIF(" & Consolidated & "J:J, Q2, " & Consolidated & "G:G))/AA2))"
+
         ' YourCause - Transaction Number Count (Column Z)
             ' Empty (="")
                 wsRelevantSF.Range("Z2").Formula = "="""""
+
         ' YourCause - Total Transactions (Column AA)
             ' =IF(A2="","",COUNTIF('Consolidated - YourCause'!J:J, Q2))
                 wsRelevantSF.Range("AA2").Formula = "=IF(A2="""","""",COUNTIF(" & Consolidated & "J:J, Q2))"
@@ -944,7 +980,7 @@ Public Sub YourCause_AR_Team_Step2()
                 '
         ' Intacct Import (Column AE)
             ' ="................."
-                '
+                wsSFSorted.Range("AE2").Formula = "=""................."""
         ' DONOTIMPORT (Column AF)
             '
                 '
@@ -1044,9 +1080,8 @@ Public Sub YourCause_AR_Team_Step2()
         ' GLDIMFUNDING_SOURCE (Column BL)
             '
                 '
-        ' Fill Down
-            '
-                '
+        ' Fill Down (Columns Z-BL)
+            wsSFSorted.Range("O2:AA" & LastRowConsolidated).FillDown
 
     ' Populate the formulas in the "Import File" Worksheet
 
