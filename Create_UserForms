@@ -1,4 +1,4 @@
-Sub Create_New_UserForm()
+Public Sub Create_Loading_UserForms()
     Dim existingForm1 As Object
     Dim existingForm2 As Object
     Dim existingForm3 As Object
@@ -7,10 +7,10 @@ Sub Create_New_UserForm()
     
     On Error Resume Next
     Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading1")
-    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading2")
-    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading3")
-    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading4")
-    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading5")
+    Set existingForm2 = ThisWorkbook.VBProject.VBComponents("Loading2")
+    Set existingForm3 = ThisWorkbook.VBProject.VBComponents("Loading3")
+    Set existingForm4 = ThisWorkbook.VBProject.VBComponents("Loading4")
+    Set existingForm5 = ThisWorkbook.VBProject.VBComponents("Loading5")
     On Error GoTo 0
     
     If existingForm1 Is Nothing Then
@@ -35,29 +35,213 @@ Sub Create_New_UserForm()
     
 End Sub
 
-Sub Loading1()
-    MsgBox "Doesn't Exist"
-
+Public Sub Loading1()
+    Dim NewForm As Object
+    Dim lblPrompt As MSForms.Label
+    
+    ' Create the "Loading1" UserForm
+    Set NewForm = ThisWorkbook.VBProject.VBComponents.Add(3)
+    NewForm.Name = "Loading1"
+    With NewForm
+        .Properties("Top") = 100
+        .Properties("Left") = 200
+        .Properties("Height") = 400
+        .Properties("Width") = 800
+        .Properties("BackColor") = RGB(154, 194, 230)
+        
+        
+        ' Add text (label) to the UserForm
+        Set lblPrompt = .Designer.Controls.Add("Forms.Label.1", "lblPrompt", True)
+        With lblPrompt
+            .Top = 100
+            .Left = 100
+            .Height = 150
+            .Width = 600
+            .Caption = "The Macro is consolidating the reports." & vbCrLf & vbCrLf & "Please wait!"
+            .Font.Size = 30
+            .Font.Bold = True
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+        End With
+    End With
+        
 End Sub
 
-Sub Loading2()
-    MsgBox "Doesn't Exist"
-
+Public Sub Loading2()
+    Dim NewForm As Object
+    Dim lblPrompt As MSForms.Label
+    Dim lblPrompt2 As MSForms.Label
+    
+    ' Create the "Loading2" UserForm
+    Set NewForm = ThisWorkbook.VBProject.VBComponents.Add(3)
+    NewForm.Name = "Loading2"
+    With NewForm
+        .Properties("Height") = 400
+        .Properties("Width") = 800
+        .Properties("BackColor") = RGB(154, 194, 230)
+        
+        ' Add text (label) to the UserForm
+        Set lblPrompt = .Designer.Controls.Add("Forms.Label.1", "lblPrompt", True)
+        With lblPrompt
+            .Top = 100
+            .Left = 100
+            .Height = 150
+            .Width = 600
+            .Caption = "The Macro is consolidating the reports." & vbCrLf & vbCrLf & "Please wait!"
+            .Font.Size = 30
+            .Font.Bold = True
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+        End With
+        
+        ' Add the second label (lblPrompt2) with adjusted width
+        Set lblPrompt2 = .Designer.Controls.Add("Forms.Label.1", "lblPrompt2", True)
+        With lblPrompt2
+            .Top = 300
+            .Left = 300
+            .Height = 50
+            .Width = 200
+            .Caption = "."
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+            .Font.Size = 50
+            .Font.Bold = True
+        End With
+    End With
 End Sub
-Sub Loading3()
-    MsgBox "Doesn't Exist"
 
+
+Public Sub Loading3()
+    Dim NewForm As Object
+    Dim lblPrompt As MSForms.Label
+    Dim lblPrompt2 As MSForms.Label
+    
+    ' Create the "Loading3" UserForm
+    Set NewForm = ThisWorkbook.VBProject.VBComponents.Add(3)
+    NewForm.Name = "Loading3"
+    With NewForm
+        .Properties("Top") = 100
+        .Properties("Left") = 200
+        .Properties("Height") = 400
+        .Properties("Width") = 800
+        .Properties("BackColor") = RGB(154, 194, 230)
+        
+        
+        ' Add text (label) to the UserForm
+        Set lblPrompt = .Designer.Controls.Add("Forms.Label.1", "lblPrompt", True)
+        With lblPrompt
+            .Top = 100
+            .Left = 100
+            .Height = 150
+            .Width = 600
+            .Caption = "The Macro is consolidating the reports." & vbCrLf & vbCrLf & "Please wait!"
+            .Font.Size = 30
+            .Font.Bold = True
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+        End With
+        
+        Set lblPrompt2 = .Designer.Controls.Add("Forms.Label.1", "lblPrompt2", True)
+        With lblPrompt2
+            .Top = 300
+            .Left = 300
+            .Height = 50
+            .Width = 400
+            .Caption = ".."
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+            .Font.Size = 50
+            .Font.Bold = True
+        End With
+    End With
 End Sub
-Sub Loading4()
-    MsgBox "Doesn't Exist"
 
+Public Sub Loading4()
+    Dim NewForm As Object
+    Dim lblPrompt As MSForms.Label
+    Dim lblPrompt2 As MSForms.Label
+    
+    ' Create the "Loading4" UserForm
+    Set NewForm = ThisWorkbook.VBProject.VBComponents.Add(3)
+    NewForm.Name = "Loading4"
+    With NewForm
+        .Properties("Top") = 100
+        .Properties("Left") = 200
+        .Properties("Height") = 400
+        .Properties("Width") = 800
+        .Properties("BackColor") = RGB(154, 194, 230)
+        
+        
+        ' Add text (label) to the UserForm
+        Set lblPrompt = .Designer.Controls.Add("Forms.Label.1", "lblPrompt", True)
+        With lblPrompt
+            .Top = 100
+            .Left = 100
+            .Height = 150
+            .Width = 600
+            .Caption = "The Macro is consolidating the reports." & vbCrLf & vbCrLf & "Please wait!"
+            .Font.Size = 30
+            .Font.Bold = True
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+        End With
+        
+        Set lblPrompt2 = .Designer.Controls.Add("Forms.Label.1", "lblPrompt2", True)
+        With lblPrompt2
+            .Top = 300
+            .Left = 300
+            .Height = 50
+            .Width = 400
+            .Caption = "..."
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+            .Font.Size = 50
+            .Font.Bold = True
+        End With
+    End With
 End Sub
-Sub Loading5()
-    MsgBox "Doesn't Exist"
 
+Public Sub Loading5()
+    Dim NewForm As Object
+    Dim lblPrompt As MSForms.Label
+    Dim lblPrompt2 As MSForms.Label
+    
+    ' Create the "Loading5" UserForm
+    Set NewForm = ThisWorkbook.VBProject.VBComponents.Add(3)
+    NewForm.Name = "Loading5"
+    With NewForm
+        .Properties("Top") = 100
+        .Properties("Left") = 200
+        .Properties("Height") = 400
+        .Properties("Width") = 800
+        .Properties("BackColor") = RGB(154, 194, 230)
+        
+        
+        ' Add text (label) to the UserForm
+        Set lblPrompt = .Designer.Controls.Add("Forms.Label.1", "lblPrompt", True)
+        With lblPrompt
+            .Top = 100
+            .Left = 100
+            .Height = 150
+            .Width = 600
+            .Caption = "The Macro is consolidating the reports." & vbCrLf & vbCrLf & "Please wait!"
+            .Font.Size = 30
+            .Font.Bold = True
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+        End With
+        
+        Set lblPrompt2 = .Designer.Controls.Add("Forms.Label.1", "lblPrompt2", True)
+        With lblPrompt2
+            .Top = 300
+            .Left = 300
+            .Height = 50
+            .Width = 400
+            .Caption = "...."
+            .BackColor = RGB(154, 194, 230)
+            .TextAlign = fmTextAlignCenter
+            .Font.Size = 50
+            .Font.Bold = True
+        End With
+    End With
 End Sub
-
-
-
-
-
