@@ -1,0 +1,67 @@
+Sub Benevity_Consolidator()
+
+
+' Steps : Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
+    ' Step : Ask User for a FolderPath (if the user cancels, end the Sub).
+        With Application.FileDialog(msoFileDialogFolderPicker)
+            .Title = "Select a folder"
+            .AllowMultiSelect = False
+            If .Show = -1 Then
+                FolderPath = .SelectedItems(1)
+            Else
+                MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use."
+                Exit Sub
+            End If
+        End With
+
+    ' Step : Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+        If Dir(FolderPath & "\*.csv") = "" Then
+            MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
+            Exit Sub
+        End If
+
+
+' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
+        of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
+        The original file name will be placed in the "Summary Page" Worksheet in column A, as well as in Column AP of the "Consolidated - YourCause" Worksheet. Once that is completed _
+        A checkmark will be made in the "Summary Page" in column D. Then the original file will be closed and it will continue onto the next file until it finishes.
+
+    ' Step : Define the Files to be pulled from the FolderPath and set the variable "TempSheetName" to 1
+        File = Dir(FolderPath & "\*.csv*")
+        TempSheetName = 1
+        NoData = ""
+
+    ' Start the loop to accomplish the goals above
+        Do While File <> ""
+            CurrentFile = Left(File, Len(File) - 4)                                                                                                                                                      ' Create a variable to hold the name of the current file (Taking off the extensions CSV).
+            LastRowSummary = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row + 1                                                                                                                  ' Find the last row in column A of the "Summary" Worksheet
+            ConsolidatedLastRow = wsConsolidated.Cells(Rows.Count, "A").End(xlUp).Row + 1                                                                                                                ' Find the last row in column A of the "Consolidated - YourCause" Worksheet
+            wsSummary.Cells(LastRowSummary, 1).Value = CurrentFile                                                                                                                                       ' Add the file name to column A of the "Summary" Worksheet
+            Set wsTemp = Workbooks.Open(FolderPath & "\" & File).Sheets(1)                                                                                                                               ' Open the CSV file and Copy row 2 to the end of the data and Paste it in "Consolidated Report" Worksheet below all it's other data
+            TempEndRow = wsTemp.Cells(Rows.Count, "A").End(xlUp).Row                                                                                                                                     '
+            
+            If TempEndRow <> 1 Then
+                wsTemp.Rows(TempFirstRow & ":" & (TempEndRow - TempEndRowsToDelete)).Copy wsConsolidated.Cells(ConsolidatedLastRow, 1)                                                                   '
+                wsConsolidated.Range(HyperlinkColumn & ConsolidatedLastRow & ":" & HyperlinkColumn & ((ConsolidatedLastRow) + (TempEndRow - TempEndRowsToDelete - TempFirstRow))).Value = CurrentFile    ' Put current_file_name in column AN of the "Consolidated Report" Worksheet
+            Else
+                NoData = "Empty"
+            End If
+
+            Set NewSheet = ThisWorkbook.Sheets.Add(, ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))                                                                                                     ' Copy the data to a new worksheet in the Converter's Workbook
+            NewSheet.Name = TempSheetName                                                                                                                                                                ' Use the TempSheetName (1, 2, 3....) - Dependent on the Number in the loop (increases for each loop
+            ActiveSheet.UsedRange.Copy NewSheet.Cells(1, 1)                                                                                                                                              '
+            NewSheet.Hyperlinks.Add Anchor:=NewSheet.Range(HyperlinkColumn & "1"), Address:="", SubAddress:=SummarySheet & "A1", TextToDisplay:="Return to Summary Page"                                 ' Add a hyperlink in the new worksheet to the "Summary Page" Worksheet (to cell A1)
+            NewSheet.Cells.EntireColumn.AutoFit                                                                                                                                                          ' Auto-adjust column widths in the new worksheet
+            wsTemp.Parent.Close                                                                                                                                                                          ' Close the opened file.
+            
+            If NoData = "" Then
+                wsSummary.Cells(LastRowSummary, "D").Value = "x"                                                                                                                                             ' Place an "x" in the "Summary Page" to show that file is completed.
+            Else
+                wsSummary.Cells(LastRowSummary, "D").Value = "No Data"
+            End If
+
+            wsSummary.Cells(LastRowSummary, "U").Value = TempSheetName                                                                                                                                   ' Add the Temporary Sheet Name to the Summary Page with the corresponding File
+            TempSheetName = TempSheetName + 1                                                                                                                                                            ' Add 1 to the TempSheetName count (Temporarily Naming the next sheet 1 + the sheet name just name)
+            NoData = ""
+            File = Dir                                                                                                                                                                                   ' Go to the next file
+        Loop
