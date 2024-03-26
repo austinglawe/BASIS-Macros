@@ -1,5 +1,28 @@
 Sub Benevity_Consolidator()
 
+Dim NoData As String
+Dim CurrentFile As String
+Dim HyperlinkColumn As String
+Dim File As 
+
+Dim wsConsolidated As Worksheet
+Dim ConsolidatedLastRow As Long
+
+Dim wsSummary As Worksheet
+Dim LastRowSummary As Long
+Dim SummarySheet As String
+
+Dim wsTemp As Worksheet
+Dim TempEndRow As Long
+
+Dim NewSheet As Worksheet
+Dim TempSheetName As Long
+Dim TempFirstRow As Long
+Dim TempEndRowsToDelete As Long
+
+
+
+
 
 ' Steps : Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
     ' Step : Ask User for a FolderPath (if the user cancels, end the Sub).
@@ -19,7 +42,6 @@ Sub Benevity_Consolidator()
             MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
             Exit Sub
         End If
-
 
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
         of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
