@@ -1,0 +1,63 @@
+Sub Create_New_UserForm()
+    Dim existingForm1 As Object
+    Dim existingForm2 As Object
+    Dim existingForm3 As Object
+    Dim existingForm4 As Object
+    Dim existingForm5 As Object
+    
+    On Error Resume Next
+    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading1")
+    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading2")
+    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading3")
+    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading4")
+    Set existingForm1 = ThisWorkbook.VBProject.VBComponents("Loading5")
+    On Error GoTo 0
+    
+    If existingForm1 Is Nothing Then
+        Loading1
+    End If
+    
+    If existingForm2 Is Nothing Then
+        Loading2
+    End If
+    
+    If existingForm3 Is Nothing Then
+        Loading3
+    End If
+    
+    If existingForm4 Is Nothing Then
+        Loading4
+    End If
+    
+    If existingForm5 Is Nothing Then
+        Loading5
+    End If
+    
+End Sub
+
+Sub Loading1()
+    MsgBox "Doesn't Exist"
+
+End Sub
+
+Sub Loading2()
+    MsgBox "Doesn't Exist"
+
+End Sub
+Sub Loading3()
+    MsgBox "Doesn't Exist"
+
+End Sub
+Sub Loading4()
+    MsgBox "Doesn't Exist"
+
+End Sub
+Sub Loading5()
+    MsgBox "Doesn't Exist"
+
+End Sub
+
+
+
+
+
