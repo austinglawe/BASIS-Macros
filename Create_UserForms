@@ -1,4 +1,37 @@
+Public Sub EnsureFormsLibraryEnabled()
+    Dim ref As Object
+    Dim libraryName As String
+    Dim libraryFound As Boolean
+    
+    libraryName = "Microsoft Forms 2.0 Object Library"
+    libraryFound = False
+    
+    ' Check if the reference is already enabled
+    For Each ref In ThisWorkbook.VBProject.References
+        If ref.Name = libraryName Then
+            libraryFound = True
+            Exit For
+        End If
+    Next ref
+    
+    ' If the reference is not found, enable it
+    If Not libraryFound Then
+        ' Add the reference
+        ThisWorkbook.VBProject.References.AddFromGuid _
+            "{0D452EE1-E08F-101A-852E-02608C4D0BB4}", 1, 0
+        MsgBox libraryName & " reference has been enabled.", vbInformation
+        ' Call the code you want to execute after enabling the library
+        ' For example, you can call a subroutine or function here
+        ' SubroutineExample
+    Else
+        MsgBox libraryName & " reference is already enabled.", vbInformation
+        ' If the reference is already enabled, you can choose to skip further actions
+    End If
+End Sub
+
+
 Public Sub Create_Loading_UserForms()
+    
     Dim existingForm1 As Object
     Dim existingForm2 As Object
     Dim existingForm3 As Object
@@ -146,7 +179,7 @@ Public Sub Loading3()
             .Top = 300
             .Left = 300
             .Height = 50
-            .Width = 400
+            .Width = 200
             .Caption = ".."
             .BackColor = RGB(154, 194, 230)
             .TextAlign = fmTextAlignCenter
@@ -191,7 +224,7 @@ Public Sub Loading4()
             .Top = 300
             .Left = 300
             .Height = 50
-            .Width = 400
+            .Width = 200
             .Caption = "..."
             .BackColor = RGB(154, 194, 230)
             .TextAlign = fmTextAlignCenter
@@ -236,7 +269,7 @@ Public Sub Loading5()
             .Top = 300
             .Left = 300
             .Height = 50
-            .Width = 400
+            .Width = 200
             .Caption = "...."
             .BackColor = RGB(154, 194, 230)
             .TextAlign = fmTextAlignCenter
