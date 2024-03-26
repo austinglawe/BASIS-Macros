@@ -1,16 +1,18 @@
 Sub Benevity_Consolidator()
 
-Dim NoData As String
+
 Dim CurrentFile As String
-Dim HyperlinkColumn As String
 Dim File As String
+Dim HyperlinkColumn As String
+Dim NoData As String
 
-Dim wsConsolidated As Worksheet
 Dim ConsolidatedLastRow As Long
+Dim ConsolidatedSheet As String
+Dim wsConsolidated As Worksheet
 
-Dim wsSummary As Worksheet
 Dim LastRowSummary As Long
 Dim SummarySheet As String
+Dim wsSummary As Worksheet
 
 Dim wsTemp As Worksheet
 Dim TempEndRow As Long
@@ -21,6 +23,36 @@ Dim TempFirstRow As Long
 Dim TempEndRowsToDelete As Long
 
 
+Dim wsConsolidatedCheck As Worksheet
+
+    ConsolidatedSheet = "'Consolidated Reports'!"
+    
+    On Error Resume Next
+    Set wsConsolidatedCheck = ThisWorkbook.Worksheets(LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1) -2 )))
+    On Error GoTo 0
+    
+    ' If worksheet doesn't exist, add a new one
+    If wsCheck Is Nothing Then
+        Set wsConsolidatedCheck = ThisWorkbook.Worksheets.Add
+        wsConsolidatedCheck.Name = LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1) -2 ))
+    End If
+
+Dim wsSummaryCheck As Worksheet
+
+    wsSummarySheet = "'Summary Page'!"
+    
+    On Error Resume Next
+    Set wsSummaryCheck = ThisWorkbook.Worksheets(LEFT(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1), LEN(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1) -2 )))
+    On Error GoTo 0
+    
+    ' If worksheet doesn't exist, add a new one
+    If wsSummaryCheck Is Nothing Then
+        Set wsSummary = ThisWorkbook.Worksheets.Add
+        wsSummary.Name = LEFT(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1), LEN(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1) -2 ))
+    End If
+
+NoData = ""
+TempSheetName = 1
 
 
 
@@ -50,8 +82,7 @@ Dim TempEndRowsToDelete As Long
 
     ' Step : Define the Files to be pulled from the FolderPath and set the variable "TempSheetName" to 1
         File = Dir(FolderPath & "\*.csv*")
-        TempSheetName = 1
-        NoData = ""
+
 
     ' Start the loop to accomplish the goals above
         Do While File <> ""
