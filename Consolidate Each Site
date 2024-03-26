@@ -3,7 +3,7 @@ Sub Benevity_Consolidator()
 Dim NoData As String
 Dim CurrentFile As String
 Dim HyperlinkColumn As String
-Dim File As 
+Dim File As String
 
 Dim wsConsolidated As Worksheet
 Dim ConsolidatedLastRow As Long
