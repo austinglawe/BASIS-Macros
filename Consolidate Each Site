@@ -22,38 +22,44 @@ Dim TempSheetName As Long
 Dim TempFirstRow As Long
 Dim TempEndRowsToDelete As Long
 
+TempFirstRow = 13
+TempEndRowsToDelete = 4
+HyperlinkColumn = "X"
+
 
 Dim wsConsolidatedCheck As Worksheet
 
     ConsolidatedSheet = "'Consolidated Reports'!"
     
     On Error Resume Next
-    Set wsConsolidatedCheck = ThisWorkbook.Worksheets(LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1) -2 )))
+    Set wsConsolidatedCheck = ThisWorkbook.Worksheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))
     On Error GoTo 0
     
     ' If worksheet doesn't exist, add a new one
-    If wsCheck Is Nothing Then
-        Set wsConsolidatedCheck = ThisWorkbook.Worksheets.Add
-        wsConsolidatedCheck.Name = LEFT(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1), LEN(RIGHT(ConsolidatedSheet, LEN(ConsolidatedSheet)-1) -2 ))
+    If wsConsolidatedCheck Is Nothing Then
+        Set wsConsolidated = ThisWorkbook.Worksheets.Add
+        wsConsolidated.Name = Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2)
     End If
 
 Dim wsSummaryCheck As Worksheet
 
-    wsSummarySheet = "'Summary Page'!"
+    SummarySheet = "'Summary Page'!"
     
     On Error Resume Next
-    Set wsSummaryCheck = ThisWorkbook.Worksheets(LEFT(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1), LEN(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1) -2 )))
+    Set wsSummaryCheck = ThisWorkbook.Worksheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))
     On Error GoTo 0
     
     ' If worksheet doesn't exist, add a new one
     If wsSummaryCheck Is Nothing Then
         Set wsSummary = ThisWorkbook.Worksheets.Add
-        wsSummary.Name = LEFT(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1), LEN(RIGHT(wsSummarySheet, LEN(wsSummarySheet)-1) -2 ))
+        wsSummary.Name = Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2)
     End If
 
 NoData = ""
 TempSheetName = 1
 
+Set wsConsolidated = ThisWorkbook.Sheets(Left(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1), Len(Right(ConsolidatedSheet, Len(ConsolidatedSheet) - 1)) - 2))
+Set wsSummary = ThisWorkbook.Sheets(Left(Right(SummarySheet, Len(SummarySheet) - 1), Len(Right(SummarySheet, Len(SummarySheet) - 1)) - 2))
 
 
 ' Steps : Ask User to choose a Folder Path. If they cancel, end the Sub. If the folder is empty, end the Sub. Otherwise, proceed to the next steps.
@@ -74,6 +80,87 @@ TempSheetName = 1
             MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again."
             Exit Sub
         End If
+
+wsSummary.Range("A1").Value = "Initial Report Name"
+wsSummary.Range("B1").Value = "Descriptive Report Name"
+wsSummary.Range("C1").Value = "CSV Report (Worksheet) Name"
+wsSummary.Range("D1").Value = "Completed"
+wsSummary.Range("E1").Value = "School Umbrella"
+wsSummary.Range("F1").Value = "Disbursement Date"
+wsSummary.Range("G1").Value = "Disbursement ID"
+wsSummary.Range("H1").Value = "Line Items"
+wsSummary.Range("I1").Value = "Report Line Items"
+wsSummary.Range("J1").Value = "Transactions - Employee Giving"
+wsSummary.Range("K1").Value = "Transactions - Company Match"
+wsSummary.Range("L1").Value = "Transactions - Total"
+wsSummary.Range("M1").Value = "Gross Amount - Employee Giving"
+wsSummary.Range("N1").Value = "Gross Amount - Company Match"
+wsSummary.Range("O1").Value = "Gross Amount - Total"
+wsSummary.Range("P1").Value = "Gross Amount - Report Total"
+wsSummary.Range("Q1").Value = "Total Fees"
+wsSummary.Range("R1").Value = "Net Total"
+wsSummary.Range("S1").Value = "Net Total - Report"
+wsSummary.Range("T1").Value = "Charity Name"
+wsSummary.Range("U1").Value = "Charity ID"
+wsSummary.Range("V1").Value = "Period Ending"
+wsSummary.Range("W1").Value = "Currency"
+wsSummary.Range("X1").Value = "Payment Method"
+wsSummary.Range("Y1").Value = "Temporary Worksheet Name"
+
+wsConsolidated.Range("A1").Value = "Company"
+wsConsolidated.Range("B1").Value = "Project"
+wsConsolidated.Range("C1").Value = "Donation Date"
+wsConsolidated.Range("D1").Value = "Donor First Name"
+wsConsolidated.Range("E1").Value = "Donor Last Name"
+wsConsolidated.Range("F1").Value = "Email"
+wsConsolidated.Range("G1").Value = "Address"
+wsConsolidated.Range("H1").Value = "City"
+wsConsolidated.Range("I1").Value = "State/Province"
+wsConsolidated.Range("J1").Value = "Postal Code"
+wsConsolidated.Range("K1").Value = "Activity"
+wsConsolidated.Range("L1").Value = "Comment"
+wsConsolidated.Range("M1").Value = "Transaction ID"
+wsConsolidated.Range("N1").Value = "Donation Frequency"
+wsConsolidated.Range("O1").Value = "Currency"
+wsConsolidated.Range("P1").Value = "Project Remote ID"
+wsConsolidated.Range("Q1").Value = "Source"
+wsConsolidated.Range("R1").Value = "Reason"
+wsConsolidated.Range("S1").Value = "Total Donation to be Acknowledged"
+wsConsolidated.Range("T1").Value = "Match Amount"
+wsConsolidated.Range("U1").Value = "Cause Support Fee"
+wsConsolidated.Range("V1").Value = "Merchant Fee"
+wsConsolidated.Range("W1").Value = "Fee Comment"
+
+
+' Formulas for Summary Page
+wsSummary.Range("B2").Formula = ""
+wsSummary.Range("C2").Formula = ""
+wsSummary.Range("D2").Formula = ""
+wsSummary.Range("E2").Formula = ""
+wsSummary.Range("F2").Formula = ""
+wsSummary.Range("G2").Formula = "=INDIRECT(""'"" & C2 & ""'!B8"")"
+wsSummary.Range("H2").Formula = "=COUNTIF('Consolidated Reports'!X:X,'Summary Page'!A2)"
+wsSummary.Range("I2").Formula = "=COUNTA(INDIRECT(""'"" & C2 & ""'!A:A""))-11-4"
+wsSummary.Range("J2").Formula = "=COUNTIFS('Consolidated Reports'!S:S, ""<>0"", 'Consolidated Reports'!X:X, A2)"
+wsSummary.Range("K2").Formula = "=COUNTIFS('Consolidated Reports'!T:T, ""<>0"", 'Consolidated Reports'!X:X, A2)"
+wsSummary.Range("L2").Formula = "=J2+K2"
+wsSummary.Range("M2").Formula = "=SUMIF('Consolidated Reports'!X:X, A2, 'Consolidated Reports'!S:S)"
+wsSummary.Range("N2").Formula = "=SUMIF('Consolidated Reports'!X:X, A2, 'Consolidated Reports'!T:T)"
+wsSummary.Range("O2").Formula = "=M2+N2"
+wsSummary.Range("P2").Formula = "=INDIRECT(""'"" & C2 & ""'!B"" & (I2+10+4))"
+wsSummary.Range("Q2").Formula = "=SUMIF('Consolidated Reports'!X:X, A2, 'Consolidated Reports'!U:U) + SUMIF('Consolidated Reports'!X:X, A2, 'Consolidated Reports'!V:V)"
+wsSummary.Range("R2").Formula = "=O2-Q2"
+wsSummary.Range("S2").Formula = "=INDIRECT(""'"" & C2 & ""'!B"" & (I2+12+4))"
+wsSummary.Range("T2").Formula = "=INDIRECT(""'"" & C2 & ""'!B3"")"
+wsSummary.Range("U2").Formula = "=INDIRECT(""'"" & C2 & ""'!B4"")"
+wsSummary.Range("V2").Formula = "=INDIRECT(""'"" & C2 & ""'!B5"")"
+wsSummary.Range("W2").Formula = "=INDIRECT(""'"" & C2 & ""'!B6"")"
+wsSummary.Range("X2").Formula = "=INDIRECT(""'"" & C2 & ""'!B7"")"
+wsSummary.Range("Y2").Formula = ""
+
+
+
+
 
 ' Steps : Create a loop (going back to the original FolderPath). The loop will open each file one by one, copy the report as a new worksheet in the workbook, placing it at the end _
         of all other workbooks. It will be renamed based off of its loop number. Then the report information will be copied and pasted into the "Consolidated - YourCause" Worksheet. _
@@ -113,8 +200,9 @@ TempSheetName = 1
                 wsSummary.Cells(LastRowSummary, "D").Value = "No Data"
             End If
 
-            wsSummary.Cells(LastRowSummary, "U").Value = TempSheetName                                                                                                                                   ' Add the Temporary Sheet Name to the Summary Page with the corresponding File
+            wsSummary.Cells(LastRowSummary, "Y").Value = TempSheetName                                                                                                                                   ' Add the Temporary Sheet Name to the Summary Page with the corresponding File
             TempSheetName = TempSheetName + 1                                                                                                                                                            ' Add 1 to the TempSheetName count (Temporarily Naming the next sheet 1 + the sheet name just name)
             NoData = ""
             File = Dir                                                                                                                                                                                   ' Go to the next file
         Loop
+End Sub
