@@ -134,8 +134,8 @@ wsConsolidated.Range("W1").Value = "Fee Comment"
 
 ' Formulas for Summary Page
 wsSummary.Range("B2").Formula = ""
-wsSummary.Range("C2").Formula = ""
-wsSummary.Range("D2").Formula = ""
+wsSummary.Range("C2").Formula = "=Y2"
+
 wsSummary.Range("E2").Formula = ""
 wsSummary.Range("F2").Formula = ""
 wsSummary.Range("G2").Formula = "=INDIRECT(""'"" & C2 & ""'!B8"")"
