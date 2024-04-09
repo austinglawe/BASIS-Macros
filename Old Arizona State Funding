@@ -1,0 +1,246 @@
+Sub FillUpload()
+
+Dim clearRows As Long
+Dim clearRowss As Long
+Dim clearRowsss As Long
+Dim clearRowssss As Long
+Dim clearloadRows As Long
+Dim myRows As Long
+Dim uploadRows As Long
+Dim uploadRows2 As Long
+Dim uploadRows3 As Long
+Dim uploadRows4 As Long
+Dim deleteRows As Long
+Dim consolidRows As Long
+Dim okRows As Long
+Dim nextRows As Long
+Dim countRows As Long
+Dim asfRows As Long
+Dim j As Long
+Dim i As Long
+
+clearRows = Sheets("Import Formulas").Range("B" & Rows.Count).End(xlUp).Row
+clearRowss = Sheets("Import Formulas2").Range("B" & Rows.Count).End(xlUp).Row
+clearRowsss = Sheets("Import Formulas3").Range("B" & Rows.Count).End(xlUp).Row
+clearRowssss = Sheets("Import Formulas4").Range("B" & Rows.Count).End(xlUp).Row
+clearloadRows = Sheets("Import Data").Range("B" & Rows.Count).End(xlUp).Row
+consolidRows = Sheets("Consolidated Data").Range("A" & Rows.Count).End(xlUp).Row
+asfRows = Sheets("Other ASF").Range("A" & Rows.Count).End(xlUp).Row
+
+'Clear Contents of Previous File
+If clearRows > 2 Then Sheets("Import Formulas").Range("B3:AG" & clearRows).Clear
+If clearloadRows > 1 Then Sheets("Import Data").Range("B2:AG" & clearloadRows).Clear
+If clearRowss > 2 Then Sheets("Import Formulas2").Range("B3:AG" & clearRowss).Clear
+If clearRowsss > 2 Then Sheets("Import Formulas3").Range("B3:AG" & clearRowsss).Clear
+If clearRowssss > 2 Then Sheets("Import Formulas4").Range("B3:AG" & clearRowssss).Clear
+
+'Fill Import Data Row 3 with Formulas
+Sheets("Import Formulas").Range("B3").Formula = "=TEXT('Consolidated Data'!G3,""MM/DD/YYYY"")"
+Sheets("Import Formulas").Range("C3").Value = "EFT"
+Sheets("Import Formulas").Range("D3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas").Range("E3").Formula = "='Consolidated Data'!J3&"" * ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas").Range("F3").Formula = "='Consolidated Data'!E3&"" ""&'Consolidated Data'!I3&""* ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas").Range("G3").Value = "=""Bank account"""
+Sheets("Import Formulas").Range("H3").Formula = "=VLOOKUP('Consolidated Data'!B3,'Import Keys'!W:Y,3,0)"
+Sheets("Import Formulas").Range("I3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas").Range("O3").Value = "=""1"""
+Sheets("Import Formulas").Range("P3").Value = "=""71010"""
+Sheets("Import Formulas").Range("R3").Formula = "=ROUND('Consolidated Data'!F3*0.2,2)"
+Sheets("Import Formulas").Range("S3").Formula = "=ROUND('Consolidated Data'!F3*0.2,2)"
+Sheets("Import Formulas").Range("T3").Value = "=""2036"""
+Sheets("Import Formulas").Range("U3").Formula = "='Consolidated Data'!B3"
+Sheets("Import Formulas").Range("V3").Formula = "='Consolidated Data'!E3&"" Arizona CSF 20%"""
+Sheets("Import Formulas").Range("X3").Value = "=""7740"""
+Sheets("Import Formulas").Range("AB3").Value = "=""000"""
+Sheets("Import Formulas").Range("AC3").Value = "=""Arizona State"""
+Sheets("Import Formulas").Range("AF3").Formula = "=""7101-CSF-311 20%"""
+
+'Drop down formula from B3 Through AH3 for number of Rows counted in Column B of Consolidated Data tab
+Sheets("Import Formulas").Select
+Sheets("Import Formulas").Range("B3:AF3").Select
+Selection.AutoFill Destination:=Sheets("Import Formulas").Range("B3:AF" & consolidRows)
+
+deleteRows = Sheets("Import Formulas").Range("C" & Rows.Count).End(xlUp).Row
+
+'Delete Blank Rows from Import Formulas Tab
+With Sheets("Import Formulas")
+For i = deleteRows To 3 Step (-1)
+With .Range("S" & i)
+If .Value = 0 Then .EntireRow.Delete
+End With
+Next i
+End With
+
+uploadRows = Sheets("Import Formulas").Range("B" & Rows.Count).End(xlUp).Row
+
+'Copy Data from Import Formulas
+If uploadRows > 2 Then
+Sheets("Import Formulas").Range("A3:AF" & uploadRows).Copy
+
+'Paste Values Only on Load File
+Sheets("Import Data").Range("A2:AF" & uploadRows - 1).PasteSpecial xlPasteValues
+Application.CutCopyMode = False
+End If
+
+'Set next Row for Paste
+nextRows = Sheets("Import Data").Range("B" & Rows.Count).End(xlUp).Row
+
+Sheets("Import Formulas2").Select
+'Fill Import Data Row 3 with Formulas
+Sheets("Import Formulas2").Range("B3").Formula = "=TEXT('Consolidated Data'!G3,""MM/DD/YYYY"")"
+Sheets("Import Formulas2").Range("C3").Value = "EFT"
+Sheets("Import Formulas2").Range("D3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas2").Range("E3").Formula = "='Consolidated Data'!J3&"" * ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas2").Range("F3").Formula = "='Consolidated Data'!E3&"" ""&'Consolidated Data'!I3&""* ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas2").Range("G3").Value = "=""Bank account"""
+Sheets("Import Formulas2").Range("H3").Formula = "=VLOOKUP('Consolidated Data'!B3,'Import Keys'!W:Y,3,0)"
+Sheets("Import Formulas2").Range("I3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas2").Range("O3").Value = "=""2"""
+Sheets("Import Formulas2").Range("P3").Value = "=""71010"""
+Sheets("Import Formulas2").Range("S3").Formula = "=ROUNDUP(ROUND('Consolidated Data'!F3*0.8,2)/2,2)"
+Sheets("Import Formulas2").Range("T3").Value = "=""2036"""
+Sheets("Import Formulas2").Range("U3").Formula = "='Consolidated Data'!B3"
+Sheets("Import Formulas2").Range("V3").Formula = "='Consolidated Data'!E3&"" Arizona CSF 40%"""
+Sheets("Import Formulas2").Range("X3").Value = "=""7740"""
+Sheets("Import Formulas2").Range("AB3").Value = "=""000"""
+Sheets("Import Formulas2").Range("AC3").Value = "=""Arizona State"""
+Sheets("Import Formulas2").Range("AF3").Formula = "=""7102-CSF-312 40%"""
+
+'Drop down formula from B3 Through AG3 for number of Rows counted in Column B of SMART tab for Formulas2
+Sheets("Import Formulas2").Select
+Sheets("Import Formulas2").Range("B3:AF3").Select
+Selection.AutoFill Destination:=Sheets("Import Formulas2").Range("B3:AF" & consolidRows)
+
+deleteRows = Sheets("Import Formulas2").Range("C" & Rows.Count).End(xlUp).Row
+'Delete Blank Rows from Import Formulas2 Tab
+With Sheets("Import Formulas2")
+For i = deleteRows To 3 Step (-1)
+With .Range("S" & i)
+If .Value = 0 Then .EntireRow.Delete
+End With
+Next i
+End With
+
+uploadRows2 = Sheets("Import Formulas2").Range("B" & Rows.Count).End(xlUp).Row
+
+'Copy Data from Import Formulas2
+If uploadRows2 > 2 Then
+Sheets("Import Formulas2").Range("A3:AF" & uploadRows2).Copy
+'Paste Values Only on Load File
+Sheets("Import Data").Range("A" & nextRows + 1).PasteSpecial xlPasteValues
+Application.CutCopyMode = False
+End If
+
+'Set next Row for Paste
+nextRows = Sheets("Import Data").Range("B" & Rows.Count).End(xlUp).Row
+
+'Fill Import Data Row 3 with Formulas
+Sheets("Import Formulas3").Select
+Sheets("Import Formulas3").Range("B3").Formula = "=TEXT('Consolidated Data'!G3,""MM/DD/YYYY"")"
+Sheets("Import Formulas3").Range("C3").Value = "EFT"
+Sheets("Import Formulas3").Range("D3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas3").Range("E3").Formula = "='Consolidated Data'!J3&"" * ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas3").Range("F3").Formula = "='Consolidated Data'!E3&"" ""&'Consolidated Data'!I3&""* ""&TEXT('Consolidated Data'!H3,""MMM-YY"")"
+Sheets("Import Formulas3").Range("G3").Value = "=""Bank account"""
+Sheets("Import Formulas3").Range("H3").Formula = "=VLOOKUP('Consolidated Data'!B3,'Import Keys'!W:Y,3,0)"
+Sheets("Import Formulas3").Range("I3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas3").Range("O3").Value = "=""3"""
+Sheets("Import Formulas3").Range("P3").Value = "=""71010"""
+Sheets("Import Formulas3").Range("S3").Formula = "=ROUNDDOWN(ROUND('Consolidated Data'!F3*0.8,2)/2,2)"
+Sheets("Import Formulas3").Range("T3").Value = "=""2036"""
+Sheets("Import Formulas3").Range("U3").Formula = "='Consolidated Data'!B3"
+Sheets("Import Formulas3").Range("V3").Formula = "='Consolidated Data'!E3&"" Arizona CSF -40%"""
+Sheets("Import Formulas3").Range("X3").Value = "=""7740"""
+Sheets("Import Formulas3").Range("AB3").Value = "=""000"""
+Sheets("Import Formulas3").Range("AC3").Value = "=""Arizona State"""
+Sheets("Import Formulas3").Range("AF3").Value = "=""7103-CSF-313 40%"""
+
+'Drop down formula from B3 Through AG3 for number of Rows counted in Column B of SMART tab for Formulas3
+Sheets("Import Formulas3").Select
+Sheets("Import Formulas3").Range("B3:AF3").Select
+Selection.AutoFill Destination:=Sheets("Import Formulas3").Range("B3:AF" & consolidRows)
+
+deleteRows = Sheets("Import Formulas3").Range("C" & Rows.Count).End(xlUp).Row
+
+'Delete Blank Rows from Import Formulas3 Tab
+With Sheets("Import Formulas3")
+For i = deleteRows To 3 Step (-1)
+With .Range("S" & i)
+If .Value = 0 Then .EntireRow.Delete
+End With
+Next i
+End With
+
+uploadRows3 = Sheets("Import Formulas3").Range("B" & Rows.Count).End(xlUp).Row
+
+'Copy Data from Import Formulas3
+If uploadRows3 > 2 Then
+Sheets("Import Formulas3").Range("A3:AF" & uploadRows3).Copy
+'Paste Values Only on Load File
+Sheets("Import Data").Range("A" & nextRows + 1).PasteSpecial xlPasteValues
+Application.CutCopyMode = False
+End If
+
+'Set next Row for Paste
+nextRows = Sheets("Import Data").Range("B" & Rows.Count).End(xlUp).Row
+
+'Fill Import Data Row 3 with Formulas
+Sheets("Import Formulas4").Select
+Sheets("Import Formulas4").Range("B3").Formula = "=TEXT('Other ASF'!G2,""MM/DD/YYYY"")"
+Sheets("Import Formulas4").Range("C3").Value = "EFT"
+Sheets("Import Formulas4").Range("D3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas4").Range("E3").Formula = "='Other ASF'!J2&"" * ""&TEXT('Other ASF'!H2,""MMM-YY"")"
+Sheets("Import Formulas4").Range("F3").Formula = "='Other ASF'!E2&"" ""&'Other ASF'!I2&""* ""&TEXT('Other ASF'!H2,""MMM-YY"")"
+Sheets("Import Formulas4").Range("G3").Value = "=""Bank account"""
+Sheets("Import Formulas4").Range("H3").Formula = "=VLOOKUP('Other ASF'!B2,'Import Keys'!W:Y,3,0)"
+Sheets("Import Formulas4").Range("I3").Formula = "=TEXT(B3,""MM/DD/YYYY"")"
+Sheets("Import Formulas4").Range("O3").Value = "=""1"""
+Sheets("Import Formulas4").Range("P3").Value = "=""71010"""
+Sheets("Import Formulas4").Range("R3").Formula = "=ROUND('Other ASF'!F2,2)"
+Sheets("Import Formulas4").Range("S3").Formula = "=ROUND('Other ASF'!F2,2)"
+Sheets("Import Formulas4").Range("T3").Formula = "=VLOOKUP('Other ASF'!J2,'Import Keys'!A:R,18,0)"
+Sheets("Import Formulas4").Range("U3").Formula = "='Other ASF'!B2"
+Sheets("Import Formulas4").Range("V3").Formula = "='Other ASF'!E2&"" ""&'Other ASF'!J2"
+Sheets("Import Formulas4").Range("X3").Formula = "=VLOOKUP('Other ASF'!J2,'Import Keys'!A:R,17,0)"
+Sheets("Import Formulas4").Range("AB3").Value = "=""000"""
+Sheets("Import Formulas4").Range("AC3").Value = "=""Arizona State"""
+Sheets("Import Formulas4").Range("AF3").Formula = "=VLOOKUP('Other ASF'!J2,'Import Keys'!A:R,15,0)"
+
+'Drop down formula from B3 Through AG3 for number of Rows counted in Column B of SMART tab for Formulas4
+Sheets("Import Formulas4").Select
+Sheets("Import Formulas4").Range("B3:AF3").Select
+Selection.AutoFill Destination:=Sheets("Import Formulas4").Range("B3:AF" & asfRows)
+
+deleteRows = Sheets("Import Formulas4").Range("C" & Rows.Count).End(xlUp).Row
+
+'Delete Blank Rows from Import Formulas4 Tab
+With Sheets("Import Formulas4")
+For i = deleteRows To 3 Step (-1)
+With .Range("S" & i)
+If .Value = 0 Then .EntireRow.Delete
+End With
+Next i
+End With
+
+uploadRows4 = Sheets("Import Formulas4").Range("B" & Rows.Count).End(xlUp).Row
+
+'Copy Data from Import Formulas4
+If uploadRows4 > 2 Then
+Sheets("Import Formulas4").Range("A3:AF" & uploadRows4).Copy
+'Paste Values Only on Load File
+Sheets("Import Data").Range("A" & nextRows + 1).PasteSpecial xlPasteValues
+Application.CutCopyMode = False
+End If
+
+countRows = Sheets("Import Data").Range("B" & Rows.Count).End(xlUp).Row
+
+'Sort Import File based on column F and O
+With Sheets("Import Data").Sort
+.SortFields.Add Key:=Range("F1"), Order:=xlAscending
+.SortFields.Add Key:=Range("O1"), Order:=xlAscending
+.SetRange Range("A2:AF" & countRows)
+Header = xlYes
+.Apply
+End With
+
+End Sub
