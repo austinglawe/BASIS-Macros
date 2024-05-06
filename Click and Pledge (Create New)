@@ -1,0 +1,152 @@
+Worksheet 1 (Home Page)
+  A1 - Original File Name
+  B1 - New File Name/Worksheet Name
+  C1 - Completed
+  D1 - Transaction for the Month
+  E1 - Positive Transactions for the Month
+  F1 - Negative Transactions for the Month
+  G1 - Sweeps for the Month
+  H1 - Positive Sweeps for the Month
+  I1 - Negative Sweeps for the Month
+  H1 - Monthly - Gross Amount
+  I1 - Monthly - Per Transaction Fees
+  J1 - Monthly - Discount Fees
+  K1 - Monthly - Bank Fees
+  L1 - Monthly - Net Amount (without Bank Fees)
+  M1 - Monthly - Net Amount (with Bank Fees)
+  N1 - ****For more information, unhide hidden worksheets.
+
+Worksheet 2 (Reports Consolidated)
+  A1 - Sweep_ID
+  B1 - Order_Number
+  C1 - C&P_Transaction_Date
+  D1 - C&P_Fund_Date
+  E1 - First_Name
+  F1 - Last_Name
+  G1 - Gross_Amount
+  H1 - Per_Transaction_Fees
+  I1 - Discount Fees
+  J1 - Net_Amount
+  K1 - Order_Number_Trimmed
+  L1 - Transaction_Date
+  M1 - Fund_Date
+  N1 - CNP_School_ID
+  O1 - CNP_School_ID-Sweep_ID
+  P1 - File_Name
+  Q1 - School_ID-Transaction_Date
+  R1 - School_ID-Fund_Date
+  S1 - File_Name-Sweep_ID
+  T1 - New_File_Name
+
+Worksheet 3 (Reports Consolidated- Positives)
+  A1 - Sweep_ID
+  B1 - Order_Number
+  C1 - C&P_Transaction_Date
+  D1 - C&P_Fund_Date
+  E1 - First_Name
+  F1 - Last_Name
+  G1 - Gross_Amount
+  H1 - Per_Transaction_Fees
+  I1 - Discount Fees
+  J1 - Net_Amount
+  K1 - Order_Number_Trimmed
+  L1 - Transaction_Date
+  M1 - Fund_Date
+  N1 - CNP_School_ID
+  O1 - CNP_School_ID-Sweep_ID
+  P1 - File_Name
+  Q1 - School_ID-Transaction_Date
+  R1 - School_ID-Fund_Date
+  S1 - File_Name-Sweep_ID
+  T1 - New_File_Name
+
+Worksheet 4 (Reports Consolidated- Negatives)
+  A1 - Sweep_ID
+  B1 - Order_Number
+  C1 - C&P_Transaction_Date
+  D1 - C&P_Fund_Date
+  E1 - First_Name
+  F1 - Last_Name
+  G1 - Gross_Amount
+  H1 - Per_Transaction_Fees
+  I1 - Discount Fees
+  J1 - Net_Amount
+  K1 - Order_Number_Trimmed
+  L1 - Transaction_Date
+  M1 - Fund_Date
+  N1 - CNP_School_ID
+  O1 - CNP_School_ID-Sweep_ID
+  P1 - File_Name
+  Q1 - School_ID-Transaction_Date
+  R1 - School_ID-Fund_Date
+  S1 - File_Name-Sweep_ID
+  T1 - New_File_Name
+
+Worksheet 5 (Reports Consolidated-ReturnFees)
+  A1 - Sweep_ID
+  B1 - Order_Number
+  C1 - C&P_Transaction_Date
+  D1 - C&P_Fund_Date
+  E1 - First_Name
+  F1 - Last_Name
+  G1 - Gross_Amount
+  H1 - Per_Transaction_Fees
+  I1 - Discount Fees
+  J1 - Net_Amount
+  K1 - Order_Number_Trimmed
+  L1 - Transaction_Date
+  M1 - Fund_Date
+  N1 - CNP_School_ID
+  O1 - CNP_School_ID-Sweep_ID
+  P1 - File_Name
+  Q1 - School_ID-Transaction_Date
+  R1 - School_ID-Fund_Date
+  S1 - File_Name-Sweep_ID
+  T1 - New_File_Name
+
+Worksheet 6 (Sweeps Info)
+  A1 - Unique Sweep IDs
+  B1 - Fund Date (Max)
+  C1 - Positive Transactions
+  D1 - Negative Transactions
+  E1 - Total Transactions
+  F1 - Gross Total
+  G1 - Total Fees
+  H1 - Net Total
+  I1 - Bank Fees
+  J1 - Total Disbursement
+
+Worksheet 7 (Positive vs Negative Sweeps)
+
+
+Worksheet 8 (SF Report)
+
+Worksheet 9 (SF Filtered)
+
+Worksheet 10 (Positive SF Data)
+
+Worksheet 11 (User Required School - Start)
+
+Worksheet 12 (UserRequired Sc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
