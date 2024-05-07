@@ -1,0 +1,345 @@
+Public Sub Click_and_Pledge_AR_Part1()
+
+''' This converter is to have the user insert the Salesforce report, so we can create an Intacct Import File '''
+
+''''' Last Updated May 7, 2024 '''''
+
+    Dim UserResponse As VbMsgBoxResult
+    Dim wsReset As Worksheet
+    Dim wsSFReport As Worksheet
+    Dim CP_Part2Button As Shape
+    Dim CP_Part2ButtonText As String
+    Dim SFReportName As String
+    
+    ' Salesforce Click and Pledge Report Name
+        SFReportName = "C&P ProPay Report w/ Pos. and Neg. Txns"
+    
+    
+    
+    ' Step 1: Ask user if they are sure they want to go to the 'AR' Click and Pledge Converter - Part 1
+        UserResponse = MsgBox("Are you sure you want to start the 'AR' Click and Pledge Converter?", vbYesNo + vbQuestion, "Confirmation to start the Click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+        
+        
+    ' Step 3: Delete the Selection Page and Create the Reset Page
+        Reset.Create_Reset_Worksheet
+    
+    
+    ' Step 4: Create a variable for the Reset Worksheet
+        Set wsReset = ThisWorkbook.Worksheets("COMPLETE RESET")
+        
+        
+    ' Step 5: Protect the Reset Worksheet
+        wsReset.Protect
+        
+        
+    ' Step 6: Create a new worksheet called "Insert Salesforce Report" and add it to the end of the worksheets. Color the Worksheet Tab Green.
+        Set wsSFReport = ThisWorkbook.Worksheets.Add(After:=ThisWorkbook.Worksheets(ThisWorkbook.Worksheets.Count))
+        wsSFReport.Name = "Insert Salesforce Report"
+        wsSFReport.Tab.Color = RGB(0, 255, 0)
+        
+        
+    ' Step 7: Unprotect all cells except for column A
+        wsSFReport.Cells.Locked = False
+        wsSFReport.Range("A:A").Locked = True
+        
+        
+    ' Step 8: Create a message to user for where to put the Salesforce Information in the "Insert Salesforce Report" Worksheet, Cells A1:A5
+        With wsSFReport.Range("A1")
+            .Value = ",------------------------------------------------------->"
+            .Interior.Color = vbRed
+            .Font.ColorIndex = 6
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+    
+        With wsSFReport.Range("A2:A5")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlTop
+            .Value = "''---Place the Salesforce information from the """ & SFReportName & """ Report, in Cell B1"
+            .Interior.Color = RGB(255, 0, 0)
+            .Font.Color = vbYellow
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+        
+        
+    ' Step 9: In A6 through A11 - add additional information to help user, if they are having issues.
+        With wsSFReport.Range("A6:A11")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlCenter
+            .Value = "*** If you are having issues with pasting the Salesforce information, make sure to copy only the columns with data, from the Salesforce Report. ***"
+            .Interior.Color = vbYellow
+            .Font.Color = vbRed
+            .Font.Bold = True
+            .Font.Size = 13
+        End With
+        
+        
+    ' Step 10: Change the column Width of Column A.
+        wsSFReport.Range("A:A").ColumnWidth = 42#
+    
+    
+    ' Steps 11-13: Add a button for the user to easily click when they are ready for the next step.
+
+        ' Step 11: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+            Set CP_Part2Button = wsSFReport.Shapes.AddShape(msoShapeRectangle, 1, 160, 228, 301)
+
+        ' Step 12: Create a variable name for the text going onto the button
+            CP_Part2ButtonText = "CLICK HERE to go to the second step of the 'AR' Click and Pledge Converter."
+        
+        ' Step 13: Put text onto the button and format it.
+            With CP_Part2Button
+                .OnAction = DonationSiteName & "Click_and_Pledge.Click_and_Pledge_AR_Part2"                             ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = CP_Part2ButtonText                                                         ' Using the CP_Part2ButtonText Variable for the text going into the button
+                .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 30                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                     ' Yellow Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+            End With
+
+
+    ' Step 14: Protect the "Insert Salesforce Report" Worksheet with limited restrictions.
+        wsSFReport.Protect _
+            DrawingObjects:=False, Contents:=True, Scenarios:=False, AllowFormattingCells:=True, _
+            AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+            AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+            AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+    
+    
+    ' Step 15: Select Cell B1 of the "Insert Salesforce Report" Worksheet
+        wsSFReport.Range("B1").Select
+        
+End Sub
+Public Sub Click_and_Pledge_AR_Part2()
+
+    Dim UserResponse As VbMsgBoxResult
+    
+    Dim wsSFReport As Worksheet
+    Dim SearchRange As Range
+    Dim TargetColumnHeaders
+    Dim ColumnDictionary As Object
+    Dim ColumnLetters() As String
+    Dim FamilyNameSFColumn As String
+    Dim CampaignTypeSFColumn As String
+    Dim SchoolSFColumn As String
+    Dim OrderNumberSFColumn As String
+    Dim DescriptionSFColumn As String
+    Dim FirstNameSFColumn As String
+    Dim LastNameSFColumn As String
+    Dim OpportunityNameSFColumn As String
+    Dim PaymentIDSFColumn As String
+    Dim PaymentAmountSFColumn As String
+    Dim PaymentDateSFColumn As String
+    Dim CampaignNameSFColumn As String
+    Dim StageSFColumn As String
+    Dim EmptyItems As String
+    Dim Key As Variant
+    Dim FolderPath As String
+    Dim DownloadDate As String
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    
+
+    ' Step 1: Ask user if they are sure they want to go to the second part of the 'AR' Click and Pledge Converter
+        UserResponse = MsgBox("Are you sure you want to go to the second part the 'AR' Click and Pledge Converter?" _
+        & vbCrLf & vbCrLf & "You will need to make sure you have the click and pledge reports downloaded and put into a single folder with no other files." _
+        & vbCrLf & vbCrLf & "***The folder name will need to be named ""Click and Pledge - "" and the month for the reports.***" _
+        & vbCrLf & vbCrLf & "(Example: Click and Pledge - April)", _
+        vbYesNo + vbQuestion, "Confirmation to start Part 2 of the click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+
+
+    ' Step 3: Set the wsSFReport variable to the "Insert Salesforce Report" Worksheet.
+        Set wsSFReport = ThisWorkbook.Worksheets("Insert Salesforce Report")
+    
+    
+    ' Step 4: Set the SearchRange variable to be row 1 of the "Insert Salesforce Report" Worksheet.
+        Set SearchRange = wsSFReport.Rows(1)
+    
+    
+    ' Steps 5-11: Check the column headers in the "Insert Salesforce Report" worksheet, to make sure the user has put in the correct Salesforce Report.
+              '' Also start pulling the column letters to use for later.
+
+        ' Step 5: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+            TargetColumnHeaders = Array("Account Name", "Campaign Type", "C&P Account Name", "C&P Order Number", "Description", "First Name", "Last Name", _
+                                        "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Payment Date", "Primary Campaign Source", "Stage")
+                                        
+        ' Step 6: Set the "ColumnDictionary" variable to hold the Column Header Mappings.
+            Set ColumnDictionary = CreateObject("Scripting.Dictionary")
+        
+
+        ' Step 7: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+            ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
+
+        ' Step 8: Search for the required ("Target") Column Headers
+            For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                                                      ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                    On Error Resume Next                                                                                            ' 8a. This will turn off the error prompts (in case there are any column headers that are missing).
+                    Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                                                     ' 8b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                    If Not ColumnHeader Is Nothing Then                                                                             ' 8c0. If the column header is found, proceed
+                            ColumnIndex = Range(ColumnHeader.Address).Column                                                        ' 8c1. Get the column index of the ColumnHeader
+                            ColumnIndex = ColumnIndex - 1                                                                           ' 8c2. Subtract 1 from the column index (this is subtracted due to column A being deleted later one)
+                            NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                                           ' 8c3. Convert the modified column index back to the column letter
+                            ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)                                      ' 8c4. Assign the new column letter to ColumnLetters(i)
+                            ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                                             ' 8c5. Set the Column Letter with its appropriate Column Header
+                    End If
+                    On Error GoTo 0                                                                                                 ' 8d. This will turn error notifications back on.
+            Next i
+
+        ' Step 9: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+            FamilyNameSFColumn = ColumnDictionary("Account Name")
+            CampaignTypeSFColumn = ColumnDictionary("Campaign Type")
+            SchoolSFColumn = ColumnDictionary("C&P Account Name")
+            OrderNumberSFColumn = ColumnDictionary("C&P Order Number")
+            DescriptionSFColumn = ColumnDictionary("Description")
+            FirstNameSFColumn = ColumnDictionary("First Name")
+            LastNameSFColumn = ColumnDictionary("Last Name")
+            OpportunityNameSFColumn = ColumnDictionary("Opportunity Name")
+            PaymentIDSFColumn = ColumnDictionary("Payment: Payment Number")
+            PaymentAmountSFColumn = ColumnDictionary("Payment Amount")
+            PaymentDateSFColumn = ColumnDictionary("Payment Date")
+            CampaignNameSFColumn = ColumnDictionary("Primary Campaign Source")
+            StageSFColumn = ColumnDictionary("Stage")
+
+        ' Step 10: Check for empty dictionary items
+            EmptyItems = ""
+            For Each Key In ColumnDictionary.Keys
+                If ColumnDictionary(Key) = "" Then
+                    EmptyItems = EmptyItems & Key & vbCrLf
+                End If
+            Next Key
+    
+        ' Step 11: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+            If EmptyItems <> "" Then
+                wsSFReport.Columns("B:XFD").ClearContents
+                wsSFReport.Range("B1").Select
+                MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: " & vbCrLf _
+                        & vbCrLf & EmptyItems & vbCrLf & "Please find the Correct Report and Try again!" _
+                        & vbCrLf & vbCrLf & "This converter requires that you have all of these column headers: " _
+                        & """Account Name"", ""Campaign Type"", ""C&P Account Name"", ""C&P Order Number"", ""Description"", ""First Name"", ""Last Name"", " _
+                        & """Opportunity Name"", ""Payment: Payment Number"", ""Payment Amount"", ""Payment Date"", ""Primary Campaign Source"", ""Stage""", vbExclamation, "Missing Column Headers"
+                Exit Sub
+            End If
+            
+    
+        ' Step 12: Ask User for a FolderPath (if the user cancels, end the Sub).
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    FolderPath = .SelectedItems(1)
+                Else
+                    MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use.", vbInformation, "No Folder Path Selected"
+                    Exit Sub
+                End If
+            End With
+            
+            
+        ' Step 13: Check to make sure the folder has "C&P" in the FolderPath Name, if it doesn't prompt user to rename folder and try again.
+            If InStr(1, FolderPath, "C&P", vbTextCompare) = 0 Then
+                MsgBox "The selected folder path does not contain 'C&P' in its name. Please rename the folder to 'C&P - ' [and the month the reports come from] and try again.", vbCritical, "Incorrect Folder Name"
+                Exit Sub
+            End If
+    
+    
+        ' Step 14: Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+            If Dir(FolderPath & "\*.csv") = "" Then
+                MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again.", vbCritical, "No Files in Folder Path"
+                Exit Sub
+            End If
+        
+        
+        ' Step 15: Ask user for the day they downloaded the Reports. If the user cancels, exit Sub, otherwise proceed.
+            DownloadDate = InputBox("Please enter the day you downloaded the reports (format: MM/DD/YYYY):")
+        
+        
+        ' Step 16: Check User Response for Download Date
+            If DownloadDate = "" Then
+                MsgBox "Please retry when you have the date of download (only the most recent date is needed.", vbInformation, "No Download Date"
+                Exit Sub
+            End If
+        
+        
+        ' Step 17: Unprotect the "Insert Salesforce Report" Worksheet and delete column A
+            wsSFReport.Unprotect
+            wsSFReport.Range("A:A").Delete
+        
+        
+        ' Step 18: Remove the "Insert Salesforce Report" Tab Color
+            wsSFReport.Tab.ColorIndex = xlColorIndexNone
+            
+            
+        ' Step 19: Change the Name of "Insert Salesforce Report" to "Salesforce Report"
+            wsSFReport.Name = "Salesforce Report"
+            
+        
+        ' Step 20: Create the worksheets: "Summary Page", "Reports Conolidated"
+        
+            ' Summary Page Worksheet - Goes before the "Salesforce Report" Worksheet
+                Set wsSummary = ThisWorkbook.Worksheets.Add(Before:=wsSFReport)
+                wsSummary.Name = "Summary Page"
+                
+            ' Reports Consolidated Worksheet - Goes after the "Salesforce Report" Worksheet
+                Set wsConsolidated = ThisWorkbook.Worksheets.Add(After:=wsSFReport)
+                wsConsolidated.Name = "Reports Consolidated"
+        
+        
+        ' Step 21: Populate the column headers in the "Summary Page" worksheet
+            wsSummary.Range("A1").Value = "Original File Name"
+            wsSummary.Range("B1").Value = "New File Name/Worksheet Name"
+            wsSummary.Range("C1").Value = "Completed"
+            wsSummary.Range("D1").Value = "Transactions for the report"
+            wsSummary.Range("E1").Value = "Positive Transactions for the report"
+            wsSummary.Range("F1").Value = "Negative Transactions for the report"
+            wsSummary.Range("G1").Value = "Sweeps for the report"
+            wsSummary.Range("H1").Value = "Positive Sweeps for the report"
+            wsSummary.Range("I1").Value = "Negative Sweeps for the report"
+            wsSummary.Range("J1").Value = "Gross Amount for the report"
+            wsSummary.Range("K1").Value = "Per Transaction Fees for the report"
+            wsSummary.Range("L1").Value = "Discount Fees for the report"
+            wsSummary.Range("M1").Value = "Net amount for the report"
+            wsSummary.Range("N1").Value = "Bank Fees (Positive Sweeps * 2.50)"
+            wsSummary.Range("O1").Value = "Net amount after bank fees"
+            wsSummary.Range("P1").Value = "****For more information, unhide hidden worksheets.***"
+        
+        
+        ' Step 22: Populate the column headers in the "Reports Consolidated" worksheet
+            wsConsolidated.Range("A1").Value = "Sweep ID"
+            wsConsolidated.Range("B1").Value = "Order Number"
+            wsConsolidated.Range("C1").Value = "C&P Transaction Date"
+            wsConsolidated.Range("D1").Value = "C&P Fund Date"
+            wsConsolidated.Range("E1").Value = "First Name"
+            wsConsolidated.Range("F1").Value = "Last Name"
+            wsConsolidated.Range("G1").Value = "Gross Amount"
+            wsConsolidated.Range("H1").Value = "Per Transaction Fees"
+            wsConsolidated.Range("I1").Value = "Discount Fees"
+            wsConsolidated.Range("J1").Value = "Net Amount"
+            wsConsolidated.Range("K1").Value = "Order Number Trimmed"
+            wsConsolidated.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+            wsConsolidated.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+            wsConsolidated.Range("N1").Value = "CNP School ID"
+            wsConsolidated.Range("O1").Value = "CNP School ID - Sweep ID"
+            wsConsolidated.Range("P1").Value = "Original File Name"
+            wsConsolidated.Range("Q1").Value = "New File Name"
+            wsConsolidated.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+            wsConsolidated.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+            
+            
+End Sub
+
