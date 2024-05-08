@@ -1,0 +1,652 @@
+
+Public Sub Click_and_Pledge_Monthly_AR_Part1()
+
+''' This converter is to have the user insert the Salesforce report, so we can create an Intacct Import File '''
+
+''''' Last Updated May 7, 2024 '''''
+
+    Dim UserResponse As VbMsgBoxResult
+    Dim wsReset As Worksheet
+    Dim wsSFReport As Worksheet
+    Dim CP_Part2Button As Shape
+    Dim CP_Part2ButtonText As String
+    Dim SFReportName As String
+    
+    ' Salesforce Click and Pledge Report Name
+        SFReportName = "C&P ProPay Report w/ Pos. and Neg. Txns"
+    
+    
+    
+    ' Step 1: Ask user if they are sure they want to go to the 'AR' Click and Pledge Converter - Part 1
+        UserResponse = MsgBox("Are you sure you want to start the 'AR' Click and Pledge Converter?", vbYesNo + vbQuestion, "Confirmation to start the Click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+        
+        
+    ' Step 3: Delete the Selection Page and Create the Reset Page
+        Reset.Create_Reset_Worksheet
+    
+    
+    ' Step 4: Create a variable for the Reset Worksheet
+        Set wsReset = ThisWorkbook.Worksheets("COMPLETE RESET")
+        
+        
+    ' Step 5: Protect the Reset Worksheet
+        wsReset.Protect
+        
+        
+    ' Step 6: Create a new worksheet called "Insert Salesforce Report" and add it to the end of the worksheets. Color the Worksheet Tab Green.
+        Set wsSFReport = ThisWorkbook.Worksheets.Add(After:=ThisWorkbook.Worksheets(ThisWorkbook.Worksheets.Count))
+        wsSFReport.Name = "Insert Salesforce Report"
+        wsSFReport.Tab.Color = RGB(0, 255, 0)
+        
+        
+    ' Step 7: Unprotect all cells except for column A
+        wsSFReport.Cells.Locked = False
+        wsSFReport.Range("A:A").Locked = True
+        
+        
+    ' Step 8: Create a message to user for where to put the Salesforce Information in the "Insert Salesforce Report" Worksheet, Cells A1:A5
+        With wsSFReport.Range("A1")
+            .Value = ",------------------------------------------------------->"
+            .Interior.Color = vbRed
+            .Font.ColorIndex = 6
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+    
+        With wsSFReport.Range("A2:A5")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlTop
+            .Value = "''---Place the Salesforce information from the """ & SFReportName & """ Report, in Cell B1"
+            .Interior.Color = RGB(255, 0, 0)
+            .Font.Color = vbYellow
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+        
+        
+    ' Step 9: In A6 through A11 - add additional information to help user, if they are having issues.
+        With wsSFReport.Range("A6:A11")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlCenter
+            .Value = "*** If you are having issues with pasting the Salesforce information, make sure to copy only the columns with data, from the Salesforce Report. ***"
+            .Interior.Color = vbYellow
+            .Font.Color = vbRed
+            .Font.Bold = True
+            .Font.Size = 13
+        End With
+        
+        
+    ' Step 10: Change the column Width of Column A.
+        wsSFReport.Range("A:A").ColumnWidth = 42#
+    
+    
+    ' Steps 11-13: Add a button for the user to easily click when they are ready for the next step.
+
+        ' Step 11: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+            Set CP_Part2Button = wsSFReport.Shapes.AddShape(msoShapeRectangle, 1, 160, 228, 301)
+
+        ' Step 12: Create a variable name for the text going onto the button
+            CP_Part2ButtonText = "CLICK HERE to go to the second step of the 'AR' Click and Pledge Converter."
+        
+        ' Step 13: Put text onto the button and format it.
+            With CP_Part2Button
+                .OnAction = DonationSiteName & "Click_and_Pledge.Click_and_Pledge_Monthly_AR_Part2"                     ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = CP_Part2ButtonText                                                         ' Using the CP_Part2ButtonText Variable for the text going into the button
+                .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 30                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                     ' Yellow Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+            End With
+
+
+    ' Step 14: Protect the "Insert Salesforce Report" Worksheet with limited restrictions.
+        wsSFReport.Protect _
+            DrawingObjects:=False, Contents:=True, Scenarios:=False, AllowFormattingCells:=True, _
+            AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+            AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+            AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+    
+    
+    ' Step 15: Select Cell B1 of the "Insert Salesforce Report" Worksheet
+        wsSFReport.Range("B1").Select
+        
+End Sub
+Public Sub Click_and_Pledge_Monthly_AR_Part2()
+
+''''' Last Updated 5/7/2024 '''''
+    
+    Dim UserResponse As VbMsgBoxResult
+    Dim wsSFReport As Worksheet
+    Dim SearchRange As Range
+    Dim TargetColumnHeaders
+    Dim ColumnDictionary As Object
+    Dim ColumnLetters() As String
+    Dim FamilyNameSFColumn As String
+    Dim CampaignTypeSFColumn As String
+    Dim SchoolSFColumn As String
+    Dim OrderNumberSFColumn As String
+    Dim DescriptionSFColumn As String
+    Dim FirstNameSFColumn As String
+    Dim LastNameSFColumn As String
+    Dim OpportunityNameSFColumn As String
+    Dim PaymentIDSFColumn As String
+    Dim PaymentAmountSFColumn As String
+    Dim PaymentDateSFColumn As String
+    Dim CampaignNameSFColumn As String
+    Dim StageSFColumn As String
+    Dim EmptyItems As String
+    Dim Key As Variant
+    Dim FolderPath As String
+    Dim DownloadDate As String
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    Dim SummaryLastRow As Long
+    Dim ConsolidatedTempLastRow As Long
+    Dim ConsolidatedNewLastRow As Long
+    Dim wbTemp As Workbook
+    Dim wsTemp As Worksheet
+    Dim LoopCount As Long
+    Dim wsSchoolMap As Worksheet
+    Dim wsSweepsBD As Worksheet
+    Dim SweepsBDLastRow As Long
+    Dim CurrentFileName As String
+    Dim NewFileName As String
+    Dim SheetsToHide As Variant
+    Dim NewFolderPath As String
+    Dim OriginalFolderFileName As String
+    Dim NewFolderFileName As String
+
+    ' Basic Information Required
+        Dim RowStart As Integer
+        Dim DeleteRows As Integer
+        Dim EndColumn As String
+        Dim ConsolidatedReportsFileColumn As String
+
+        RowStart = 14
+        DeleteRows = 0
+        EndColumn = "K"
+        ConsolidatedReportsFileColumn = "P"
+
+    ' Step 1: Ask user if they are sure they want to go to the second part of the 'AR' Click and Pledge Converter
+        UserResponse = MsgBox("Are you sure you want to go to the second part the 'AR' Click and Pledge Converter?" _
+        & vbCrLf & vbCrLf & "You will need to make sure you have the click and pledge reports downloaded and put into a single folder with no other files." _
+        & vbCrLf & vbCrLf & "***The folder name will need to be named ""Click and Pledge - "" and the month for the reports.***" _
+        & vbCrLf & vbCrLf & "(Example: Click and Pledge - April)", _
+        vbYesNo + vbQuestion, "Confirmation to start Part 2 of the click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+
+
+    ' Step 3: Set the wsSFReport variable to the "Insert Salesforce Report" Worksheet.
+        Set wsSFReport = ThisWorkbook.Worksheets("Insert Salesforce Report")
+    
+    
+    ' Step 4: Set the SearchRange variable to be row 1 of the "Insert Salesforce Report" Worksheet.
+        Set SearchRange = wsSFReport.Rows(1)
+    
+    
+    ' Steps 5-11: Check the column headers in the "Insert Salesforce Report" worksheet, to make sure the user has put in the correct Salesforce Report.
+              '' Also start pulling the column letters to use for later.
+
+        ' Step 5: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+            TargetColumnHeaders = Array("Account Name", "Campaign Type", "C&P Account Name", "C&P Order Number", "Description", "First Name", "Last Name", _
+                                        "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Payment Date", "Primary Campaign Source", "Stage")
+                                        
+        ' Step 6: Set the "ColumnDictionary" variable to hold the Column Header Mappings.
+            Set ColumnDictionary = CreateObject("Scripting.Dictionary")
+        
+
+        ' Step 7: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+            ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
+
+        ' Step 8: Search for the required ("Target") Column Headers
+            For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                                                      ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                    On Error Resume Next                                                                                            ' 8a. This will turn off the error prompts (in case there are any column headers that are missing).
+                    Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                                                     ' 8b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                    If Not ColumnHeader Is Nothing Then                                                                             ' 8c0. If the column header is found, proceed
+                            ColumnIndex = Range(ColumnHeader.Address).Column                                                        ' 8c1. Get the column index of the ColumnHeader
+                            ColumnIndex = ColumnIndex - 1                                                                           ' 8c2. Subtract 1 from the column index (this is subtracted due to column A being deleted later one)
+                            NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                                           ' 8c3. Convert the modified column index back to the column letter
+                            ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)                                      ' 8c4. Assign the new column letter to ColumnLetters(i)
+                            ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                                             ' 8c5. Set the Column Letter with its appropriate Column Header
+                    End If
+                    On Error GoTo 0                                                                                                 ' 8d. This will turn error notifications back on.
+            Next i
+
+        ' Step 9: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+            FamilyNameSFColumn = ColumnDictionary("Account Name")
+            CampaignTypeSFColumn = ColumnDictionary("Campaign Type")
+            SchoolSFColumn = ColumnDictionary("C&P Account Name")
+            OrderNumberSFColumn = ColumnDictionary("C&P Order Number")
+            DescriptionSFColumn = ColumnDictionary("Description")
+            FirstNameSFColumn = ColumnDictionary("First Name")
+            LastNameSFColumn = ColumnDictionary("Last Name")
+            OpportunityNameSFColumn = ColumnDictionary("Opportunity Name")
+            PaymentIDSFColumn = ColumnDictionary("Payment: Payment Number")
+            PaymentAmountSFColumn = ColumnDictionary("Payment Amount")
+            PaymentDateSFColumn = ColumnDictionary("Payment Date")
+            CampaignNameSFColumn = ColumnDictionary("Primary Campaign Source")
+            StageSFColumn = ColumnDictionary("Stage")
+
+        ' Step 10: Check for empty dictionary items
+            EmptyItems = ""
+            For Each Key In ColumnDictionary.Keys
+                If ColumnDictionary(Key) = "" Then
+                    EmptyItems = EmptyItems & Key & vbCrLf
+                End If
+            Next Key
+    
+        ' Step 11: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+            If EmptyItems <> "" Then
+                wsSFReport.Columns("B:XFD").ClearContents
+                wsSFReport.Range("B1").Select
+                MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: " & vbCrLf _
+                        & vbCrLf & EmptyItems & vbCrLf & "Please find the Correct Report and Try again!" _
+                        & vbCrLf & vbCrLf & "This converter requires that you have all of these column headers: " _
+                        & """Account Name"", ""Campaign Type"", ""C&P Account Name"", ""C&P Order Number"", ""Description"", ""First Name"", ""Last Name"", " _
+                        & """Opportunity Name"", ""Payment: Payment Number"", ""Payment Amount"", ""Payment Date"", ""Primary Campaign Source"", ""Stage""", vbExclamation, "Missing Column Headers"
+                Exit Sub
+            End If
+            
+    
+        ' Step 12: Ask User for a FolderPath (if the user cancels, end the Sub).
+            With Application.FileDialog(msoFileDialogFolderPicker)
+                .Title = "Select a folder"
+                .AllowMultiSelect = False
+                If .Show = -1 Then
+                    FolderPath = .SelectedItems(1)
+                Else
+                    MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use.", vbInformation, "No Folder Path Selected"
+                    Exit Sub
+                End If
+            End With
+            
+            
+        ' Step 13: Check to make sure the folder has "C&P" in the FolderPath Name, if it doesn't prompt user to rename folder and try again.
+            If InStr(1, FolderPath, "C&P", vbTextCompare) = 0 Then
+                MsgBox "The selected folder path does not contain 'C&P' in its name. Please rename the folder to 'C&P - ' [and the month the reports come from] and try again.", vbCritical, "Incorrect Folder Name"
+                Exit Sub
+            End If
+    
+    
+        ' Step 14: Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+            If Dir(FolderPath & "\*.csv") = "" Then
+                MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again.", vbCritical, "No Files in Folder Path"
+                Exit Sub
+            End If
+        
+        
+        ' Step 15: Ask user for the day they downloaded the Reports. If the user cancels, exit Sub, otherwise proceed.
+            DownloadDate = InputBox("Please enter the day you downloaded the reports (format: MM/DD/YYYY):")
+        
+        
+        ' Step 16: Check User Response for Download Date
+            If DownloadDate = "" Then
+                MsgBox "Please retry when you have the date of download (only the most recent date is needed.", vbInformation, "No Download Date"
+                Exit Sub
+            End If
+        
+        
+        ' Step 17: Unprotect the "Insert Salesforce Report" Worksheet and delete column A
+            wsSFReport.Unprotect
+            wsSFReport.Range("A:A").Delete
+        
+        
+        ' Step 18: Remove the "Insert Salesforce Report" Tab Color
+            wsSFReport.Tab.ColorIndex = xlColorIndexNone
+            
+            
+        ' Step 19: Change the Name of "Insert Salesforce Report" to "Salesforce Report"
+            wsSFReport.Name = "Salesforce Report"
+            
+        
+        ' Step 20: Create the worksheets: "Summary Page", "Reports Conolidated"
+        
+            ' Summary Page Worksheet - Goes before the "Salesforce Report" Worksheet
+                Set wsSummary = ThisWorkbook.Worksheets.Add(Before:=wsSFReport)
+                wsSummary.Name = "Summary Page"
+                
+            ' Reports Consolidated Worksheet - Goes after the "Salesforce Report" Worksheet
+                Set wsConsolidated = ThisWorkbook.Worksheets.Add(After:=wsSFReport)
+                wsConsolidated.Name = "Reports Consolidated"
+        
+        
+        ' Step 21: Populate the column headers in the "Summary Page" worksheet
+            wsSummary.Range("A1").Value = "Original File Name"
+            wsSummary.Range("B1").Value = "New File Name/Worksheet Name"
+            wsSummary.Range("C1").Value = "Completed"
+            wsSummary.Range("D1").Value = "Year.Month"
+            wsSummary.Range("E1").Value = "School Abbreviation"
+            wsSummary.Range("F1").Value = "Transactions for the report"
+            wsSummary.Range("G1").Value = "Positive Transactions for the report"
+            wsSummary.Range("H1").Value = "Negative Transactions for the report"
+            wsSummary.Range("I1").Value = "Sweeps for the report"
+            wsSummary.Range("J1").Value = "Positive Sweeps for the report"
+            wsSummary.Range("K1").Value = "Negative Sweeps for the report"
+            wsSummary.Range("L1").Value = "Gross Amount for the report"
+            wsSummary.Range("M1").Value = "Per Transaction Fees for the report"
+            wsSummary.Range("N1").Value = "Discount Fees for the report"
+            wsSummary.Range("O1").Value = "Net amount for the report"
+            wsSummary.Range("P1").Value = "Bank Fees (Positive Sweeps * 2.50)"
+            wsSummary.Range("Q1").Value = "Net amount after bank fees"
+            wsSummary.Range("R1").Value = "Temporary File Name"
+            With wsSummary.Range("T1")
+                .Value = "****For more information, unhide hidden worksheets.***"
+                .Interior.Color = vbYellow
+                .Font.Color = vbRed
+            End With
+        
+        
+        ' Step 22: Populate the column headers in the "Reports Consolidated" worksheet
+            wsConsolidated.Range("A1").Value = "Sweep ID"
+            wsConsolidated.Range("B1").Value = "Order Number"
+            wsConsolidated.Range("C1").Value = "C&P Transaction Date"
+            wsConsolidated.Range("D1").Value = "C&P Fund Date"
+            wsConsolidated.Range("E1").Value = "First Name"
+            wsConsolidated.Range("F1").Value = "Last Name"
+            wsConsolidated.Range("G1").Value = "Gross Amount"
+            wsConsolidated.Range("H1").Value = "Per Transaction Fees"
+            wsConsolidated.Range("I1").Value = "Discount Fees"
+            wsConsolidated.Range("J1").Value = "Net Amount"
+            wsConsolidated.Range("K1").Value = "Order Number Trimmed"
+            wsConsolidated.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+            wsConsolidated.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+            wsConsolidated.Range("N1").Value = "CNP School ID"
+            wsConsolidated.Range("O1").Value = "CNP School ID - Sweep ID"
+            wsConsolidated.Range("P1").Value = "Original File Name"
+            wsConsolidated.Range("Q1").Value = "New File Name"
+            wsConsolidated.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+            wsConsolidated.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+            
+            
+        ' Steps 23-42: Start looping through the files in the folder, one by one. Add the data to the "Reports Consolidated" worksheet, then copy the temporary worksheet as a new file into the workbook.
+            
+            ' Step 23: Define the variable "File" to be the file in a file in the FolderPath
+                File = Dir(FolderPath & "\*.csv")
+            
+            ' Step 24: Create a variable called LoopCount to temporarily name new worksheets
+                LoopCount = 1
+            
+            ' Steps 25-42: Create the loop
+                Do While File <> ""
+                    ' Step 25: Create a variable to hold the current file name
+                        CurrentFile = File
+                    ' Step 26: Find the last row of column A in the "Summary Page" worksheet. Then add one to it (to put new data in). Call this variable SummaryLastRow
+                        SummaryLastRow = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row + 1
+                    ' Step 27: Add the CurrentFile name to SummaryLastRow row. (adds it to the last row of column A + 1 to create a new last row of data, with this CurrentFile name in it)
+                        wsSummary.Cells(SummaryLastRow, 1).Value = CurrentFile
+                    ' Step 28: Find the last row of column A in the "Reports Consolidated" worksheet. Then add one to it (to put new data in). Call this variable ConsolidatedTempLastRow
+                        ConsolidatedTempLastRow = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row + 1
+                    ' Step 29: Open the File in the FolderPath and create a variable for that workbook called wbTemp
+                        Set wbTemp = Workbooks.Open(FolderPath & "\" & File)
+                    ' Step 30: Create a variable for the first sheet in that workbook and call it wsTemp
+                        Set wsTemp = wbTemp.Sheets(1)
+                    ' Step 31: Copy the data within the temporary file's table and paste it into the "Reports Consolidated" worksheet. Add it to the end of the data already in there.
+                        wsTemp.Rows(RowStart & ":" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(ConsolidatedTempLastRow, 1)
+                    ' Step 32: After the data is copied and pastied. Find the new last row of the "Reports Consolidated" worksheet. Use that information to fill down the file name in the file name column of the "Reports Consolidated" worksheet
+                        ConsolidatedNewLastRow = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+                        wsConsolidated.Range(ConsolidatedReportsFileColumn & ConsolidatedTempLastRow & ":" & ConsolidatedReportsFileColumn & ConsolidatedNewLastRow).Value = CurrentFile
+                    ' Step 33: Change the name of the worksheet to the LoopCount. (This is temporary, until we are able to get the data necessary to name it appropriately)
+                        wsTemp.Name = LoopCount
+                    ' Step 34: Use the DownloadDate variable from earlier to put that information in Row 5 of the Temporary worksheet
+                        wsTemp.Range("B5").Value = "Download Date:"
+                        wsTemp.Range("C5").Value = DownloadDate
+                    ' Step 35: Add hyperlink in K3 of the temporary worksheet that links to A1 of the "Summary Page"
+                        wsTemp.Hyperlinks.Add Anchor:=wsTemp.Range(EndColumn & "3"), Address:="", SubAddress:="'" & wsSummary.Name & "'!A1", TextToDisplay:="Return to Summary Page"
+                    ' Step 36: AutoFit the columns in the temporary worksheet
+                        wsTemp.Range("A:" & EndColumn).EntireColumn.AutoFit
+                    ' Step 37: Now copy the temporary worksheet into the click and pledge workbook.
+                        wsTemp.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
+                    ' Step 38: Close the temporary workbook and don't save any changes made to the original report.
+                        wbTemp.Close SaveChanges:=False
+                    ' Step 39: Go into the "Summary Page" worksheet and add the temporary worksheet name (LoopCount) into column R, to match with the row the original file name was put into.
+                        wsSummary.Range("R" & SummaryLastRow).Value = LoopCount
+                    ' Step 40: In the "Summary Page" worksheet put an "x" in column C in the row with the new file names, to indicate it has been completed.
+                        wsSummary.Range("C" & SummaryLastRow).Value = "x"
+                    ' Step 41: Add one to the LoopCount for the next Loop
+                        LoopCount = 1 + LoopCount
+                    ' Step 42: Go to the next File in the FolderPath
+                        File = Dir()
+            ' Restart the loop
+                Loop
+        
+        
+        ' Step 43: Add the School Mapping Worksheet
+            Temp_SchoolMapping.SchoolMap
+            
+        
+        ' Step 44: Add a variable for the "School Mapping" worksheet
+            Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
+        
+        
+        ' Step 45: Create the "Sweeps Breakdown" worksheet.
+            Set wsSweepsBD = ThisWorkbook.Worksheets.Add(Before:=wsSchoolMap)
+            wsSweepsBD.Name = "Sweeps Breakdown"
+            
+            
+        ' Step 46: Populate the Column Headers for the "Sweeps Breakdown" worksheet.
+            wsSweepsBD.Range("A1").Value = "Sweep ID"
+            wsSweepsBD.Range("B1").Value = "School Abbreviation"
+            wsSweepsBD.Range("C1").Value = "Gross Amount"
+            wsSweepsBD.Range("D1").Value = "Total Per Transaction Fees"
+            wsSweepsBD.Range("E1").Value = "Total Discount Fees"
+            wsSweepsBD.Range("F1").Value = "Net Amount"
+            wsSweepsBD.Range("G1").Value = "Bank Fees"
+            wsSweepsBD.Range("H1").Value = "Net Deposit"
+            wsSweepsBD.Range("I1").Value = "New File Name/Worksheet Name"
+            
+            
+        ' Steps 47-48: Create and Fill formulas down in the "Reports Consolidated" worksheet
+            
+            ' Step 47: Create formulas in columns K, L, M, N, O, Q, R, S - starting in row 2
+                ' K2 [Order Number Trimmed] -> =TRIM(RIGHT(B2,LEN(B2)-4))
+                    wsConsolidated.Range("K2").Formula = "=TRIM(RIGHT(B2,LEN(B2)-4))"
+                ' L2 [Transaction Date (MM/DD/YYYY)] -> =TEXT(C2,"MM/DD/YYYY")
+                    wsConsolidated.Range("L2").Formula = "=TEXT(C2,""MM/DD/YYYY"")"
+                ' M2 [Fund Date (MM/DD/YYYY)] -> =TEXT(D2,"MM/DD/YYYY")
+                    wsConsolidated.Range("M2").Formula = "=TEXT(D2,""MM/DD/YYYY"")"
+                ' N2 [CNP School ID] -> =LEFT(K2,5)
+                    wsConsolidated.Range("N2").Formula = "=LEFT(K2,5)"
+                ' O2 [CNP School ID - Sweep ID] -> =N2&" - "&A2
+                    wsConsolidated.Range("O2").Formula = "=N2&"" - ""&A2"
+                ' Q2 [New File Name] -> =XLOOKUP(P2,'Summary Page'!A:A,'Summary Page'!B:B)
+                    wsConsolidated.Range("Q2").Formula = "=XLOOKUP(P2,'Summary Page'!A:A,'Summary Page'!B:B)"
+                ' R2 [Transaction Date (YYYY.MM.DD)] -> =TEXT(C2,"YYYY.MM.DD")
+                    wsConsolidated.Range("R2").Formula = "=TEXT(C2,""YYYY.MM.DD"")"
+                ' S2 [Fund Date (YYYY.MM.DD)] -> =TEXT(D2,"YYYY.MM.DD")
+                    wsConsolidated.Range("S2").Formula = "=TEXT(D2,""YYYY.MM.DD"")"
+                    
+            ' Step 48: Fill Formulas down
+                wsConsolidated.Range("K2:O" & ConsolidatedNewLastRow).FillDown
+                wsConsolidated.Range("Q2:S" & ConsolidatedNewLastRow).FillDown
+                
+        
+        ' Steps 49-51: Populate the Formulas in the "Summary Page" worksheet and Fill Down formulas
+            ' Step 49: Re-define the last row of the "Summary Page"
+                SummaryLastRow = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+                
+            ' Step 50: Add formulas to columns B, D, E, F, G, H, I, J, K, L, M, N, O, P, and Q - starting in Row 2
+                ' B2 [New File/Worksheet Name] -> =D2&" - "&E2
+                    wsSummary.Range("B2").Formula = "=D2&"" - ""&E2"
+                    
+                ' D2 [Year.Month] -> =LEFT(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!S:S),7)
+                    wsSummary.Range("D2").Formula = "=LEFT(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!S:S),7)"
+                    
+                ' E2 [School Abbreviation] -> =XLOOKUP(NUMBERVALUE(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!N:N)),'School Mapping'!C:C,'School Mapping'!I:I)
+                    wsSummary.Range("E2").Formula = "=XLOOKUP(NUMBERVALUE(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!N:N)),'School Mapping'!C:C,'School Mapping'!I:I)"
+                
+                ' F2 [Transactions for the report] -> =COUNTIF('Reports Consolidated'!P:P,A2)
+                    wsSummary.Range("F2").Formula = "=COUNTIF('Reports Consolidated'!P:P,A2)"
+                
+                ' G2 [Positive Transactions for the report] -> =COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,">0")
+                    wsSummary.Range("G2").Formula = "=COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,"">0"")"
+                
+                ' H2 [Negative Transactions for the report] -> =COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,"<0")
+                    wsSummary.Range("H2").Formula = "=COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,""<0"")"
+                
+                ' I2 [Sweeps for the report] -> =COUNTA(UNIQUE(FILTER('Reports Consolidated'!O:O, 'Reports Consolidated'!P:P=A2)))
+                    wsSummary.Range("I2").Formula = "=COUNTA(UNIQUE(FILTER('Reports Consolidated'!O:O, 'Reports Consolidated'!P:P=A2)))"
+                
+                ' J2 [Positive Sweeps for the report] -> =COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,">0")
+                    wsSummary.Range("J2").Formula = "=COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,"">0"")"
+                
+                ' K2 [Negative Sweeps for the report] -> =COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,"<0")
+                    wsSummary.Range("K2").Formula = "=COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,""<0"")"
+                
+                ' L2 [Gross Amount for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!G:G)
+                    wsSummary.Range("L2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!G:G)"
+                
+                ' M2 [Per Transaction Fees for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!H:H)
+                    wsSummary.Range("M2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!H:H)"
+                
+                ' N2 [Discount Fees for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!I:I)
+                    wsSummary.Range("N2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!I:I)"
+                
+                ' O2 [Net amount for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J)
+                    wsSummary.Range("O2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J)"
+                
+                ' P2 [Bank Fees (Positive Sweeps * 2.50)] -> =J2*-2.5
+                    wsSummary.Range("P2").Formula = "=J2*-2.5"
+                
+                ' Q2 [Net amount after bank fees] -> =O2+P2
+                    wsSummary.Range("Q2").Formula = "=O2+P2"
+                
+            ' Step 51: Fill Formulas Down
+                wsSummary.Range("B2:B" & SummaryLastRow).FillDown
+                wsSummary.Range("D2:Q" & SummaryLastRow).FillDown
+                
+                
+        ' Steps 52-54: Populate Formulas in the "Sweeps Breakdown" worksheet.
+            ' Step 52: Add formulas to the following Columns:
+                ' A2 [Sweep ID] -> =UNIQUE(FILTER('Reports Consolidated'!O:O,('Reports Consolidated'!O:O<>"")*('Reports Consolidated'!O:O<>"CNP School ID - Sweep ID")))
+                    wsSweepsBD.Range("A2").Formula2 = "=UNIQUE(FILTER('Reports Consolidated'!O:O,('Reports Consolidated'!O:O<>"""")*('Reports Consolidated'!O:O<>""CNP School ID - Sweep ID"")))"
+                
+                ' B2 [School Abbreviation] -> =XLOOKUP(NUMBERVALUE(LEFT(A2,5)),'School Mapping'!C:C,'School Mapping'!I:I)
+                    wsSweepsBD.Range("B2").Formula = "=XLOOKUP(NUMBERVALUE(LEFT(A2,5)),'School Mapping'!C:C,'School Mapping'!I:I)"
+                    
+                ' C2 [Gross Amount] -> =SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!G:G)
+                    wsSweepsBD.Range("C2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!G:G)"
+                    
+                ' D2 [Total Per Transaction Fees] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!H:H)"
+                    wsSweepsBD.Range("D2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!H:H)"
+                    
+                ' E2 [Total Discount Fees] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!I:I)"
+                    wsSweepsBD.Range("E2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!I:I)"
+                    
+                ' F2 [Net Amount] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!J:J)"
+                    wsSweepsBD.Range("F2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!J:J)"
+                    
+                ' G2 [Bank Fees] -> =IF(F2>0,-2.5,0)
+                    wsSweepsBD.Range("G2").Formula = "=IF(F2>0,-2.5,0)"
+                    
+                ' H2 [Net Deposit] -> =F2+G2
+                    wsSweepsBD.Range("H2").Formula = "=F2+G2"
+                    
+                ' I2 [New File Name/Worksheet Name] -> =XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!Q:Q)
+                    wsSweepsBD.Range("I2").Formula = "=XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!Q:Q)"
+            
+            ' Step 53: Create a variable to find the last row of column A in the "Sweeps Breakdown" worksheet
+                SweepsBDLastRow = wsSweepsBD.Cells(wsSweepsBD.Rows.Count, 1).End(xlUp).Row
+            
+            ' Step 54: Fill Formulas down
+                wsSweepsBD.Range("B2:I" & SweepsBDLastRow).FillDown
+                
+                
+        ' Step 55: AutoFit Column Width of the worksheets: "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown"
+                wsSummary.Cells.Columns.AutoFit
+                wsSFReport.Cells.Columns.AutoFit
+                wsConsolidated.Cells.Columns.AutoFit
+                wsSweepsBD.Cells.Columns.AutoFit
+                
+                
+        ' Steps 56-58: Rename Worksheets to New File Name/Worksheet Name - using the "Summary Page"
+            ' Step 56: Create a Forloop to loop through each Name in
+                For i = 2 To SummaryLastRow
+                    ' Step 57: Define "CurrentFileName" (Column R) and "NewFileName" (Column B) variables
+                        CurrentFileName = wsSummary.Cells(i, "R").Value
+                        NewFileName = wsSummary.Cells(i, "B").Value
+                    ' Step 58: Loop through each file name to match the CurrentFileName with the New FileName
+                        For Each ws In ThisWorkbook.Worksheets
+                            If ws.Name = CurrentFileName Then
+                                ws.Name = NewFileName
+                                Exit For
+                            End If
+                        Next ws
+                Next i
+        
+            
+        ' Step 59: Hide the worksheets: "COMPLETE RESET", "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown", and "School Mapping" (Sheets 1-6).
+            For i = 1 To 6
+                ThisWorkbook.Worksheets(i).Visible = xlSheetHidden
+            Next i
+            
+            
+        ' Step 60: Reorder visible sheets in descending order.
+            If visibleSheetCount > 1 Then
+                For i = 1 To visibleSheetCount - 1
+                    For j = 1 To visibleSheetCount - i
+                        If StrComp(ThisWorkbook.Worksheets(j).Name, ThisWorkbook.Worksheets(j + 1).Name, vbTextCompare) > 0 Then
+                            Set temp = ThisWorkbook.Worksheets(j)
+                            ThisWorkbook.Worksheets(j).Move After:=ThisWorkbook.Worksheets(j + 1)
+                            Set temp = Nothing ' Release the object reference
+                        End If
+                    Next j
+                Next i
+            End If
+
+
+        ' Step 61: Unhide all sheets
+            For Each ws In ThisWorkbook.Worksheets
+                ws.Visible = xlSheetVisible
+            Next ws
+            
+            
+        ' Step 62: Hide all sheets that aren't the following worksheets: "COMPLETE RESET", "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown", and "School Mapping"
+            For i = 7 To ThisWorkbook.Worksheets.Count
+                ThisWorkbook.Worksheets(i).Visible = xlSheetHidden
+            Next i
+            
+            
+        ' Steps 63-66: Create a new folder in the FolderPath called "Renamed Monthly Reports" - Then copy and rename each file in the FolderPath. If that FolderPath exists. Then skip it.
+            ' Step 63: Define the NewFolderPath variable.
+                NewFolderPath = FolderPath & "\Renamed Monthly Reports"
+            
+            ' Steps 64-66: Check if the Folder path exists. If it Does, skip steps - , otherwise follow steps - .
+                If Dir(NewFolderPath, vbDirectory) = "" Then
+                    ' Step 65: Make the new folder path
+                        MkDir NewFolderPath
+                    ' Steps 66: Loop through each row in the "Summary Page" worksheet, and use column A as the original name and column B as the new name. Once complete, go to the next.
+                        For i = 2 To SummaryLastRow
+                            OriginalFolderFileName = wsSummary.Cells(i, "A").Value
+                            NewFolderFileName = wsSummary.Cells(i, "B").Value
+                            File = FolderPath & "\" & OriginalFolderFileName
+                            NewFile = NewFolderPath & "\" & NewFolderFileName & ".csv"
+                            On Error Resume Next
+                            FileCopy File, NewFile
+                            On Error GoTo 0
+                        Next i
+                End If
+                
+        ' Start Populating the rest of the worksheet.
+                
+                    
+ 
+            
+End Sub
+
