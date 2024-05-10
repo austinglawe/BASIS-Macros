@@ -1,0 +1,2361 @@
+Public Sub Click_and_Pledge_Monthly_AR_Part1()
+
+''' This converter is to have the user insert the Salesforce report, so we can create an Intacct Import File '''
+
+''''' Last Updated May 7, 2024 '''''
+
+    Dim UserResponse As VbMsgBoxResult
+    Dim wsReset As Worksheet
+    Dim wsSFReport As Worksheet
+    Dim CP_Part2Button As Shape
+    Dim CP_Part2ButtonText As String
+    Dim SFReportName As String
+    
+    ' Salesforce Click and Pledge Report Name
+        SFReportName = "C&P ProPay Report w/ Pos. and Neg. Txns"
+    
+    
+    
+    ' Step 1: Ask user if they are sure they want to go to the 'AR' Click and Pledge Converter - Part 1
+        UserResponse = MsgBox("Are you sure you want to start the 'AR' Click and Pledge Converter?", vbYesNo + vbQuestion, "Confirmation to start the Click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+        
+        
+    ' Step 3: Delete the Selection Page and Create the Reset Page
+        Reset.Create_Reset_Worksheet
+    
+    
+    ' Step 4: Create a variable for the Reset Worksheet
+        Set wsReset = ThisWorkbook.Worksheets("COMPLETE RESET")
+        
+        
+    ' Step 5: Protect the Reset Worksheet
+        wsReset.Protect
+        
+        
+    ' Step 6: Create a new worksheet called "Insert Salesforce Report" and add it to the end of the worksheets. Color the Worksheet Tab Green.
+        Set wsSFReport = ThisWorkbook.Worksheets.Add(After:=ThisWorkbook.Worksheets(ThisWorkbook.Worksheets.Count))
+        wsSFReport.Name = "Insert Salesforce Report"
+        wsSFReport.Tab.Color = RGB(0, 255, 0)
+        
+        
+    ' Step 7: Unprotect all cells except for column A
+        wsSFReport.Cells.Locked = False
+        wsSFReport.Range("A:A").Locked = True
+        
+        
+    ' Step 8: Create a message to user for where to put the Salesforce Information in the "Insert Salesforce Report" Worksheet, Cells A1:A5
+        With wsSFReport.Range("A1")
+            .Value = ",------------------------------------------------------->"
+            .Interior.Color = vbRed
+            .Font.ColorIndex = 6
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+    
+        With wsSFReport.Range("A2:A5")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlTop
+            .Value = "''---Place the Salesforce information from the """ & SFReportName & """ Report, in Cell B1"
+            .Interior.Color = RGB(255, 0, 0)
+            .Font.Color = vbYellow
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+        
+        
+    ' Step 9: In A6 through A11 - add additional information to help user, if they are having issues.
+        With wsSFReport.Range("A6:A11")
+            .Merge
+            .WrapText = True
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlCenter
+            .Value = "*** If you are having issues with pasting the Salesforce information, make sure to copy only the columns with data, from the Salesforce Report. ***"
+            .Interior.Color = vbYellow
+            .Font.Color = vbRed
+            .Font.Bold = True
+            .Font.Size = 13
+        End With
+        
+        
+    ' Step 10: Change the column Width of Column A.
+        wsSFReport.Range("A:A").ColumnWidth = 42#
+    
+    
+    ' Steps 11-13: Add a button for the user to easily click when they are ready for the next step.
+
+        ' Step 11: Set the Button Shape (Button Shape, Start Position (Left to right), Start Position (Top to Bottom), Button Length, Button Height)
+            Set CP_Part2Button = wsSFReport.Shapes.AddShape(msoShapeRectangle, 1, 170, 215, 301)
+
+        ' Step 12: Create a variable name for the text going onto the button
+            CP_Part2ButtonText = "CLICK HERE to go to the second step of the 'AR' Click and Pledge Converter."
+        
+        ' Step 13: Put text onto the button and format it.
+            With CP_Part2Button
+                .OnAction = DonationSiteName & "Click_and_Pledge.Click_and_Pledge_Monthly_AR_Part2"                     ' Embedding the Specific Converter Macro to the button
+                .TextFrame.Characters.Text = CP_Part2ButtonText                                                         ' Using the CP_Part2ButtonText Variable for the text going into the button
+                .TextFrame.Characters.Font.Name = "Calibri"                                                             ' Button Font Style
+                .TextFrame.Characters.Font.FontStyle = "Bold"                                                           ' Make Button Font Bold
+                .TextFrame.Characters.Font.Size = 30                                                                    ' Button Font Size
+                .TextFrame.Characters.Font.Color = RGB(255, 255, 0)                                                     ' Yellow Font Color
+                .TextFrame.HorizontalAlignment = xlCenter                                                               ' Center the font within the button (left to right)
+                .TextFrame.VerticalAlignment = xlCenter                                                                 ' Center the font within the button (up and down)
+            End With
+
+
+    ' Step 14: Protect the "Insert Salesforce Report" Worksheet with limited restrictions.
+        wsSFReport.Protect _
+            DrawingObjects:=False, Contents:=True, Scenarios:=False, AllowFormattingCells:=True, _
+            AllowFormattingColumns:=True, AllowFormattingRows:=True, AllowInsertingColumns:=True, _
+            AllowInsertingRows:=True, AllowInsertingHyperlinks:=True, AllowDeletingColumns:=True, _
+            AllowDeletingRows:=True, AllowSorting:=True, AllowFiltering:=True, AllowUsingPivotTables:=True
+    
+    
+    ' Step 15: Select Cell B1 of the "Insert Salesforce Report" Worksheet
+        wsSFReport.Range("B1").Select
+        
+End Sub
+Public Sub Click_and_Pledge_Monthly_AR_Part2()
+
+''''' Last Updated 5/7/2024 '''''
+    
+    Dim UserResponse As VbMsgBoxResult
+    Dim wsSFReport As Worksheet
+    Dim SearchRange As Range
+    Dim TargetColumnHeaders
+    Dim ColumnDictionary As Object
+    Dim ColumnLetters() As String
+    Dim FamilyNameSFColumn As String
+    Dim CampaignTypeSFColumn As String
+    Dim SchoolSFColumn As String
+    Dim OrderNumberSFColumn As String
+    Dim DescriptionSFColumn As String
+    Dim FirstNameSFColumn As String
+    Dim LastNameSFColumn As String
+    Dim OpportunityNameSFColumn As String
+    Dim PaymentIDSFColumn As String
+    Dim PaymentAmountSFColumn As String
+    Dim PaymentDateSFColumn As String
+    Dim CampaignNameSFColumn As String
+    Dim StageSFColumn As String
+    Dim EmptyItems As String
+    Dim Key As Variant
+    Dim FolderPath As String
+    Dim DownloadDate As String
+    Dim wsSummary As Worksheet
+    Dim wsConsolidated As Worksheet
+    Dim SummaryLastRow As Long
+    Dim ConsolidatedTempLastRow As Long
+    Dim ConsolidatedNewLastRow As Long
+    Dim wbTemp As Workbook
+    Dim wsTemp As Worksheet
+    Dim LoopCount As Long
+    Dim wsSchoolMap As Worksheet
+    Dim wsSweepsBD As Worksheet
+    Dim SweepsBDLastRow As Long
+    Dim CurrentFileName As String
+    Dim NewFileName As String
+    Dim SheetsToHide As Variant
+    Dim NewFolderPath As String
+    Dim OriginalFolderFileName As String
+    Dim NewFolderFileName As String
+    ''
+    Dim wsConsolidatedPos As Worksheet
+    Dim wsConsolidatedNeg As Worksheet
+    Dim wsConsolidatedReturn As Worksheet
+    Dim wsPosNegSweeps As Worksheet
+    Dim wsSFFiltered As Worksheet
+    Dim wsSFPos As Worksheet
+    Dim wsSFNeg As Worksheet
+    Dim wsSchoolAllocation As Worksheet
+    Dim wsSchoolUserAllocation As Worksheet
+    Dim wsAccountDesignation As Worksheet
+    Dim wsAccountUserDesignation As Worksheet
+    Dim wsCRJSweepsInfo As Worksheet
+    Dim wsCRJReturnFees As Worksheet
+    Dim wsCRJFormat As Worksheet
+    Dim wsCRJPutTogether As Worksheet
+    Dim wsCRJPos As Worksheet
+    Dim wsCRJImport As Worksheet
+    Dim wsCRJNeg As Worksheet
+    Dim wsCHARNegStart As Worksheet
+    Dim wsCHARNeg As Worksheet
+    Dim wsCHARImport As Worksheet
+    Dim wsDivisionMap As Worksheet
+    Dim wsSFCampaignCheck As Worksheet
+    Dim wsAdditionalFees As Worksheet
+    Dim wsSFvsCPRevenue As Worksheet
+    Dim wsRevenueDif As Worksheet
+
+    ' Basic Information Required
+        Dim RowStart As Integer
+        Dim DeleteRows As Integer
+        Dim EndColumn As String
+        Dim ConsolidatedReportsFileColumn As String
+
+        RowStart = 14
+        DeleteRows = 0
+        EndColumn = "K"
+        ConsolidatedReportsFileColumn = "P"
+
+    ' Step 1: Ask user if they are sure they want to go to the second part of the 'AR' Click and Pledge Converter
+        UserResponse = MsgBox("Are you sure you want to go to the second part the 'AR' Click and Pledge Converter?" _
+        & vbCrLf & vbCrLf & "You will need to make sure you have the click and pledge reports downloaded and put into a single folder with no other files." _
+        & vbCrLf & vbCrLf & "***The folder name will need to be named ""Click and Pledge - "" and the month for the reports.***" _
+        & vbCrLf & vbCrLf & "(Example: Click and Pledge - April)", _
+        vbYesNo + vbQuestion, "Confirmation to start Part 2 of the click and Pledge Converter")
+
+
+    ' Step 2: Check the user's response - If they choose no, end the sub, otherwise continue to the next steps.
+        If UserResponse = vbNo Then
+            Exit Sub
+        End If
+
+
+    ' Step 3: Set the wsSFReport variable to the "Insert Salesforce Report" Worksheet.
+        Set wsSFReport = ThisWorkbook.Worksheets("Insert Salesforce Report")
+    
+    
+    ' Step 4: Set the SearchRange variable to be row 1 of the "Insert Salesforce Report" Worksheet.
+        Set SearchRange = wsSFReport.Rows(1)
+    
+    
+    ' Steps 5-11: Check the column headers in the "Insert Salesforce Report" worksheet, to make sure the user has put in the correct Salesforce Report.
+              '' Also start pulling the column letters to use for later.
+
+        ' Step 5: Create an array of column headers to search for, using the "TargetColumnHeaders" Variable
+            TargetColumnHeaders = Array("Account Name", "Campaign Type", "C&P Account Name", "C&P Order Number", "Description", "First Name", "Last Name", _
+                                        "Opportunity Name", "Payment: Payment Number", "Payment Amount", "Payment Date", "Primary Campaign Source", "Stage")
+                                        
+        ' Step 6: Set the "ColumnDictionary" variable to hold the Column Header Mappings.
+            Set ColumnDictionary = CreateObject("Scripting.Dictionary")
+        
+
+        ' Step 7: Resize the ColumnLetters array to match the size of TargetColumnHeaders
+            ReDim ColumnLetters(0 To UBound(TargetColumnHeaders))
+
+        ' Step 8: Search for the required ("Target") Column Headers
+            For i = LBound(TargetColumnHeaders) To UBound(TargetColumnHeaders)                                                      ' LBound is the lowest index position in the array and UBound is the highest (Upper Bound) index position (in this instance, this is the same as: i = 0 To 10) - indexes in VBA (like other coding languages) start at 0 rather than 1.
+                    On Error Resume Next                                                                                            ' 8a. This will turn off the error prompts (in case there are any column headers that are missing).
+                    Set ColumnHeader = SearchRange.Find(TargetColumnHeaders(i))                                                     ' 8b. This finds the current ColumnHeader name. If it is not present, then this is left as Nothing.
+                    If Not ColumnHeader Is Nothing Then                                                                             ' 8c0. If the column header is found, proceed
+                            ColumnIndex = Range(ColumnHeader.Address).Column                                                        ' 8c1. Get the column index of the ColumnHeader
+                            ColumnIndex = ColumnIndex - 1                                                                           ' 8c2. Subtract 1 from the column index (this is subtracted due to column A being deleted later one)
+                            NewColumnLetter = Cells(1, ColumnIndex).Address(False, False)                                           ' 8c3. Convert the modified column index back to the column letter
+                            ColumnLetters(i) = Left(NewColumnLetter, Len(NewColumnLetter) - 1)                                      ' 8c4. Assign the new column letter to ColumnLetters(i)
+                            ColumnDictionary(TargetColumnHeaders(i)) = ColumnLetters(i)                                             ' 8c5. Set the Column Letter with its appropriate Column Header
+                    End If
+                    On Error GoTo 0                                                                                                 ' 8d. This will turn error notifications back on.
+            Next i
+
+        ' Step 9: Retrieve values from the dictionary to add the column letter to each variable, where they can be found.
+            FamilyNameSFColumn = ColumnDictionary("Account Name")
+            CampaignTypeSFColumn = ColumnDictionary("Campaign Type")
+            SchoolSFColumn = ColumnDictionary("C&P Account Name")
+            OrderNumberSFColumn = ColumnDictionary("C&P Order Number")
+            DescriptionSFColumn = ColumnDictionary("Description")
+            FirstNameSFColumn = ColumnDictionary("First Name")
+            LastNameSFColumn = ColumnDictionary("Last Name")
+            OpportunityNameSFColumn = ColumnDictionary("Opportunity Name")
+            PaymentIDSFColumn = ColumnDictionary("Payment: Payment Number")
+            PaymentAmountSFColumn = ColumnDictionary("Payment Amount")
+            PaymentDateSFColumn = ColumnDictionary("Payment Date")
+            CampaignNameSFColumn = ColumnDictionary("Primary Campaign Source")
+            StageSFColumn = ColumnDictionary("Stage")
+
+        ' Step 10: Check for empty dictionary items
+            EmptyItems = ""
+            For Each Key In ColumnDictionary.Keys
+                If ColumnDictionary(Key) = "" Then
+                    EmptyItems = EmptyItems & Key & vbCrLf
+                End If
+            Next Key
+    
+        ' Step 11: If any column headers are missing: display which ones are missing, clear contents, and then exit the Sub. (If none are missing, proceed to the next steps.)
+            If EmptyItems <> "" Then
+                wsSFReport.Columns("B:XFD").ClearContents
+                wsSFReport.Range("B1").Select
+                MsgBox "These required column headers are missing from the Salesforce Report you attempted to use: " & vbCrLf _
+                        & vbCrLf & EmptyItems & vbCrLf & "Please find the Correct Report and Try again!" _
+                        & vbCrLf & vbCrLf & "This converter requires that you have all of these column headers: " _
+                        & """Account Name"", ""Campaign Type"", ""C&P Account Name"", ""C&P Order Number"", ""Description"", ""First Name"", ""Last Name"", " _
+                        & """Opportunity Name"", ""Payment: Payment Number"", ""Payment Amount"", ""Payment Date"", ""Primary Campaign Source"", ""Stage""", vbExclamation, "Missing Column Headers"
+                Exit Sub
+            End If
+            
+    
+       ' Step 12: Ask User for a FolderPath (if the user cancels, end the Sub).
+           With Application.FileDialog(msoFileDialogFolderPicker)
+               .Title = "Select a folder"
+               .AllowMultiSelect = False
+               If .Show = -1 Then
+                   FolderPath = .SelectedItems(1)
+               Else
+                   MsgBox "No folder path was selected. When you are ready, please click the button again. Then select the folder you wish to use.", vbInformation, "No Folder Path Selected"
+                   Exit Sub
+               End If
+           End With
+           
+           
+       ' Step 13: Check to make sure the folder has "C&P" in the FolderPath Name, if it doesn't prompt user to rename folder and try again.
+           If InStr(1, FolderPath, "C&P", vbTextCompare) = 0 Then
+               MsgBox "The selected folder path does not contain 'C&P' in its name. Please rename the folder to 'C&P - ' [and the month the reports come from] and try again.", vbCritical, "Incorrect Folder Name"
+               Exit Sub
+           End If
+   
+   
+       ' Step 14: Check that the folder has at least one file. If it doesn't, exit the Sub. If it does, continue on.
+           If Dir(FolderPath & "\*.csv") = "" Then
+               MsgBox "The selected folder does not contain any CSV files. Please find the folder you'd like to use and make sure that it contains at least one file. Then try again.", vbCritical, "No Files in Folder Path"
+               Exit Sub
+           End If
+       
+       
+       ' Step 15: Ask user for the day they downloaded the Reports. If the user cancels, exit Sub, otherwise proceed.
+           DownloadDate = InputBox("Please enter the day you downloaded the reports (format: MM/DD/YYYY):")
+       
+       
+       ' Step 16: Check User Response for Download Date
+           If DownloadDate = "" Then
+               MsgBox "Please retry when you have the date of download (only the most recent date is needed.", vbInformation, "No Download Date"
+               Exit Sub
+           End If
+       
+       
+       ' Step 17: Unprotect the "Insert Salesforce Report" Worksheet and delete column A
+           wsSFReport.Unprotect
+           wsSFReport.Range("A:A").Delete
+       
+       
+       ' Step 18: Remove the "Insert Salesforce Report" Tab Color
+           wsSFReport.Tab.ColorIndex = xlColorIndexNone
+           
+           
+       ' Step 19: Change the Name of "Insert Salesforce Report" to "Salesforce Report"
+           wsSFReport.Name = "Salesforce Report"
+           
+       
+       ' Step 20: Create the worksheets: "Summary Page", "Reports Conolidated"
+       
+           ' Summary Page Worksheet - Goes before the "Salesforce Report" Worksheet
+               Set wsSummary = ThisWorkbook.Worksheets.Add(Before:=wsSFReport)
+               wsSummary.Name = "Summary Page"
+               
+           ' Reports Consolidated Worksheet - Goes after the "Salesforce Report" Worksheet
+               Set wsConsolidated = ThisWorkbook.Worksheets.Add(Before:=wsSFReport)
+               wsConsolidated.Name = "Reports Consolidated"
+       
+       
+       ' Step 21: Populate the column headers in the "Summary Page" worksheet
+           wsSummary.Range("A1").Value = "Original File Name"
+           wsSummary.Range("B1").Value = "New File Name/Worksheet Name"
+           wsSummary.Range("C1").Value = "Completed"
+           wsSummary.Range("D1").Value = "Year.Month"
+           wsSummary.Range("E1").Value = "School Abbreviation"
+           wsSummary.Range("F1").Value = "Transactions for the report"
+           wsSummary.Range("G1").Value = "Positive Transactions for the report"
+           wsSummary.Range("H1").Value = "Negative Transactions for the report"
+           wsSummary.Range("I1").Value = "Sweeps for the report"
+           wsSummary.Range("J1").Value = "Positive Sweeps for the report"
+           wsSummary.Range("K1").Value = "Negative Sweeps for the report"
+           wsSummary.Range("L1").Value = "Gross Amount for the report"
+           wsSummary.Range("M1").Value = "Per Transaction Fees for the report"
+           wsSummary.Range("N1").Value = "Discount Fees for the report"
+           wsSummary.Range("O1").Value = "Net amount for the report"
+           wsSummary.Range("P1").Value = "Bank Fees (Positive Sweeps * 2.50)"
+           wsSummary.Range("Q1").Value = "Net amount after bank fees"
+           wsSummary.Range("R1").Value = "Temporary File Name"
+           With wsSummary.Range("T1")
+               .Value = "****For more information, unhide hidden worksheets.***"
+               .Interior.Color = vbYellow
+               .Font.Color = vbRed
+           End With
+       
+       
+       ' Step 22: Populate the column headers in the "Reports Consolidated" worksheet
+           wsConsolidated.Range("A1").Value = "Sweep ID"
+           wsConsolidated.Range("B1").Value = "Order Number"
+           wsConsolidated.Range("C1").Value = "C&P Transaction Date"
+           wsConsolidated.Range("D1").Value = "C&P Fund Date"
+           wsConsolidated.Range("E1").Value = "First Name"
+           wsConsolidated.Range("F1").Value = "Last Name"
+           wsConsolidated.Range("G1").Value = "Gross Amount"
+           wsConsolidated.Range("H1").Value = "Per Transaction Fees"
+           wsConsolidated.Range("I1").Value = "Discount Fees"
+           wsConsolidated.Range("J1").Value = "Net Amount"
+           wsConsolidated.Range("K1").Value = "Order Number Trimmed"
+           wsConsolidated.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+           wsConsolidated.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+           wsConsolidated.Range("N1").Value = "CNP School ID"
+           wsConsolidated.Range("O1").Value = "CNP School ID - Sweep ID"
+           wsConsolidated.Range("P1").Value = "Original File Name"
+           wsConsolidated.Range("Q1").Value = "New File Name"
+           wsConsolidated.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+           wsConsolidated.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+           
+           
+       ' Steps 23-42: Start looping through the files in the folder, one by one. Add the data to the "Reports Consolidated" worksheet, then copy the temporary worksheet as a new file into the workbook.
+           
+           ' Step 23: Define the variable "File" to be the file in a file in the FolderPath
+               File = Dir(FolderPath & "\*.csv")
+           
+           ' Step 24: Create a variable called LoopCount to temporarily name new worksheets
+               LoopCount = 1
+           
+           ' Steps 25-42: Create the loop
+               Do While File <> ""
+                   ' Step 25: Create a variable to hold the current file name
+                       CurrentFile = File
+                   ' Step 26: Find the last row of column A in the "Summary Page" worksheet. Then add one to it (to put new data in). Call this variable SummaryLastRow
+                       SummaryLastRow = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row + 1
+                   ' Step 27: Add the CurrentFile name to SummaryLastRow row. (adds it to the last row of column A + 1 to create a new last row of data, with this CurrentFile name in it)
+                       wsSummary.Cells(SummaryLastRow, 1).Value = CurrentFile
+                   ' Step 28: Find the last row of column A in the "Reports Consolidated" worksheet. Then add one to it (to put new data in). Call this variable ConsolidatedTempLastRow
+                       ConsolidatedTempLastRow = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row + 1
+                   ' Step 29: Open the File in the FolderPath and create a variable for that workbook called wbTemp
+                       Set wbTemp = Workbooks.Open(FolderPath & "\" & File)
+                   ' Step 30: Create a variable for the first sheet in that workbook and call it wsTemp
+                       Set wsTemp = wbTemp.Sheets(1)
+                   ' Step 31: Copy the data within the temporary file's table and paste it into the "Reports Consolidated" worksheet. Add it to the end of the data already in there.
+                       wsTemp.Rows(RowStart & ":" & wsTemp.Cells(wsTemp.Rows.Count, 1).End(xlUp).Row).Copy wsConsolidated.Cells(ConsolidatedTempLastRow, 1)
+                   ' Step 32: After the data is copied and pastied. Find the new last row of the "Reports Consolidated" worksheet. Use that information to fill down the file name in the file name column of the "Reports Consolidated" worksheet
+                       ConsolidatedNewLastRow = wsConsolidated.Cells(wsConsolidated.Rows.Count, 1).End(xlUp).Row
+                       wsConsolidated.Range(ConsolidatedReportsFileColumn & ConsolidatedTempLastRow & ":" & ConsolidatedReportsFileColumn & ConsolidatedNewLastRow).Value = CurrentFile
+                   ' Step 33: Change the name of the worksheet to the LoopCount. (This is temporary, until we are able to get the data necessary to name it appropriately)
+                       wsTemp.Name = LoopCount
+                   ' Step 34: Use the DownloadDate variable from earlier to put that information in Row 5 of the Temporary worksheet
+                       wsTemp.Range("B5").Value = "Download Date:"
+                       wsTemp.Range("C5").Value = DownloadDate
+                   ' Step 35: Add hyperlink in K3 of the temporary worksheet that links to A1 of the "Summary Page"
+                       wsTemp.Hyperlinks.Add Anchor:=wsTemp.Range(EndColumn & "3"), Address:="", SubAddress:="'" & wsSummary.Name & "'!A1", TextToDisplay:="Return to Summary Page"
+                   ' Step 36: AutoFit the columns in the temporary worksheet
+                       wsTemp.Range("A:" & EndColumn).EntireColumn.AutoFit
+                   ' Step 37: Now copy the temporary worksheet into the click and pledge workbook.
+                       wsTemp.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
+                   ' Step 38: Close the temporary workbook and don't save any changes made to the original report.
+                       wbTemp.Close SaveChanges:=False
+                   ' Step 39: Go into the "Summary Page" worksheet and add the temporary worksheet name (LoopCount) into column R, to match with the row the original file name was put into.
+                       wsSummary.Range("R" & SummaryLastRow).Value = LoopCount
+                   ' Step 40: In the "Summary Page" worksheet put an "x" in column C in the row with the new file names, to indicate it has been completed.
+                       wsSummary.Range("C" & SummaryLastRow).Value = "x"
+                   ' Step 41: Add one to the LoopCount for the next Loop
+                       LoopCount = 1 + LoopCount
+                   ' Step 42: Go to the next File in the FolderPath
+                       File = Dir()
+           ' Restart the loop
+               Loop
+       
+       
+       ' Step 43: Add the School Mapping Worksheet
+           Temp_SchoolMapping.SchoolMap
+           
+       
+       ' Step 44: Add a variable for the "School Mapping" worksheet
+           Set wsSchoolMap = ThisWorkbook.Sheets("School Mapping")
+       
+       
+       ' Step 45: Create the "Sweeps Breakdown" worksheet.
+           Set wsSweepsBD = ThisWorkbook.Worksheets.Add(Before:=wsSchoolMap)
+           wsSweepsBD.Name = "Sweeps Breakdown"
+           
+           
+       ' Step 46: Populate the Column Headers for the "Sweeps Breakdown" worksheet.
+           wsSweepsBD.Range("A1").Value = "Sweep ID"
+           wsSweepsBD.Range("B1").Value = "School Abbreviation"
+           wsSweepsBD.Range("C1").Value = "Gross Amount"
+           wsSweepsBD.Range("D1").Value = "Total Per Transaction Fees"
+           wsSweepsBD.Range("E1").Value = "Total Discount Fees"
+           wsSweepsBD.Range("F1").Value = "Net Amount"
+           wsSweepsBD.Range("G1").Value = "Bank Fees"
+           wsSweepsBD.Range("H1").Value = "Net Deposit"
+           wsSweepsBD.Range("I1").Value = "New File Name/Worksheet Name"
+           wsSweepsBD.Range("J1").Value = "Fund Date (MM/DD/YYYY)"
+           wsSweepsBD.Range("K1").Value = "Fund Date (YYYY.MM.DD)"
+           
+           
+       ' Steps 47-48: Create and Fill formulas down in the "Reports Consolidated" worksheet
+           
+           ' Step 47: Create formulas in columns K, L, M, N, O, Q, R, S - starting in row 2
+               ' K2 [Order Number Trimmed] -> =TRIM(RIGHT(B2,LEN(B2)-4))
+                   wsConsolidated.Range("K2").Formula = "=TRIM(RIGHT(B2,LEN(B2)-4))"
+               ' L2 [Transaction Date (MM/DD/YYYY)] -> =TEXT(C2,"MM/DD/YYYY")
+                   wsConsolidated.Range("L2").Formula = "=TEXT(C2,""MM/DD/YYYY"")"
+               ' M2 [Fund Date (MM/DD/YYYY)] -> =TEXT(D2,"MM/DD/YYYY")
+                   wsConsolidated.Range("M2").Formula = "=TEXT(D2,""MM/DD/YYYY"")"
+               ' N2 [CNP School ID] -> =LEFT(K2,5)
+                   wsConsolidated.Range("N2").Formula = "=LEFT(K2,5)"
+               ' O2 [CNP School ID - Sweep ID] -> =N2&" - "&A2
+                   wsConsolidated.Range("O2").Formula = "=N2&"" - ""&A2"
+               ' Q2 [New File Name] -> =XLOOKUP(P2,'Summary Page'!A:A,'Summary Page'!B:B)
+                   wsConsolidated.Range("Q2").Formula = "=XLOOKUP(P2,'Summary Page'!A:A,'Summary Page'!B:B)"
+               ' R2 [Transaction Date (YYYY.MM.DD)] -> =TEXT(C2,"YYYY.MM.DD")
+                   wsConsolidated.Range("R2").Formula = "=TEXT(C2,""YYYY.MM.DD"")"
+               ' S2 [Fund Date (YYYY.MM.DD)] -> =TEXT(D2,"YYYY.MM.DD")
+                   wsConsolidated.Range("S2").Formula = "=TEXT(D2,""YYYY.MM.DD"")"
+                   
+                   
+           ' Step 48: Fill Formulas down
+               wsConsolidated.Range("K2:O" & ConsolidatedNewLastRow).FillDown
+               wsConsolidated.Range("Q2:S" & ConsolidatedNewLastRow).FillDown
+               
+       
+       ' Steps 49-51: Populate the Formulas in the "Summary Page" worksheet and Fill Down formulas
+           ' Step 49: Re-define the last row of the "Summary Page"
+               SummaryLastRow = wsSummary.Cells(wsSummary.Rows.Count, 1).End(xlUp).Row
+               
+           ' Step 50: Add formulas to columns B, D, E, F, G, H, I, J, K, L, M, N, O, P, and Q - starting in Row 2
+               ' B2 [New File/Worksheet Name] -> =D2&" - "&E2
+                   wsSummary.Range("B2").Formula = "=D2&"" - ""&E2"
+                   
+               ' D2 [Year.Month] -> =LEFT(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!S:S),7)
+                   wsSummary.Range("D2").Formula = "=LEFT(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!S:S),7)"
+                   
+               ' E2 [School Abbreviation] -> =XLOOKUP(NUMBERVALUE(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!N:N)),'School Mapping'!C:C,'School Mapping'!I:I)
+                   wsSummary.Range("E2").Formula = "=XLOOKUP(NUMBERVALUE(XLOOKUP(A2,'Reports Consolidated'!P:P,'Reports Consolidated'!N:N)),'School Mapping'!C:C,'School Mapping'!I:I)"
+               
+               ' F2 [Transactions for the report] -> =COUNTIF('Reports Consolidated'!P:P,A2)
+                   wsSummary.Range("F2").Formula = "=COUNTIF('Reports Consolidated'!P:P,A2)"
+               
+               ' G2 [Positive Transactions for the report] -> =COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,">0")
+                   wsSummary.Range("G2").Formula = "=COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,"">0"")"
+               
+               ' H2 [Negative Transactions for the report] -> =COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,"<0")
+                   wsSummary.Range("H2").Formula = "=COUNTIFS('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J,""<0"")"
+               
+               ' I2 [Sweeps for the report] -> =COUNTA(UNIQUE(FILTER('Reports Consolidated'!O:O, 'Reports Consolidated'!P:P=A2)))
+                   wsSummary.Range("I2").Formula = "=COUNTA(UNIQUE(FILTER('Reports Consolidated'!O:O, 'Reports Consolidated'!P:P=A2)))"
+               
+               ' J2 [Positive Sweeps for the report] -> =COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,">0")
+                   wsSummary.Range("J2").Formula = "=COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,"">0"")"
+               
+               ' K2 [Negative Sweeps for the report] -> =COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,"<0")
+                   wsSummary.Range("K2").Formula = "=COUNTIFS('Sweeps Breakdown'!I:I,'Summary Page'!B2,'Sweeps Breakdown'!F:F,""<0"")"
+               
+               ' L2 [Gross Amount for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!G:G)
+                   wsSummary.Range("L2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!G:G)"
+               
+               ' M2 [Per Transaction Fees for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!H:H)
+                   wsSummary.Range("M2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!H:H)"
+               
+               ' N2 [Discount Fees for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!I:I)
+                   wsSummary.Range("N2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!I:I)"
+               
+               ' O2 [Net amount for the report] -> =SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J)
+                   wsSummary.Range("O2").Formula = "=SUMIF('Reports Consolidated'!P:P,A2,'Reports Consolidated'!J:J)"
+               
+               ' P2 [Bank Fees (Positive Sweeps * 2.50)] -> =J2*-2.5
+                   wsSummary.Range("P2").Formula = "=J2*-2.5"
+               
+               ' Q2 [Net amount after bank fees] -> =O2+P2
+                   wsSummary.Range("Q2").Formula = "=O2+P2"
+               
+           ' Step 51: Fill Formulas Down
+               wsSummary.Range("B2:B" & SummaryLastRow).FillDown
+               wsSummary.Range("D2:Q" & SummaryLastRow).FillDown
+               
+               
+       ' Steps 52-54: Populate Formulas in the "Sweeps Breakdown" worksheet.
+           ' Step 52: Add formulas to the following Columns:
+               ' A2 [Sweep ID] -> =UNIQUE(FILTER('Reports Consolidated'!O:O,('Reports Consolidated'!O:O<>"")*('Reports Consolidated'!O:O<>"CNP School ID - Sweep ID")))
+                   wsSweepsBD.Range("A2").Formula2 = "=UNIQUE(FILTER('Reports Consolidated'!O:O,('Reports Consolidated'!O:O<>"""")*('Reports Consolidated'!O:O<>""CNP School ID - Sweep ID"")))"
+               
+               ' B2 [School Abbreviation] -> =XLOOKUP(NUMBERVALUE(LEFT(A2,5)),'School Mapping'!C:C,'School Mapping'!I:I)
+                   wsSweepsBD.Range("B2").Formula = "=XLOOKUP(NUMBERVALUE(LEFT(A2,5)),'School Mapping'!C:C,'School Mapping'!I:I)"
+                   
+               ' C2 [Gross Amount] -> =SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!G:G)
+                   wsSweepsBD.Range("C2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!G:G)"
+                   
+               ' D2 [Total Per Transaction Fees] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!H:H)"
+                   wsSweepsBD.Range("D2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!H:H)"
+                   
+               ' E2 [Total Discount Fees] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!I:I)"
+                   wsSweepsBD.Range("E2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!I:I)"
+                   
+               ' F2 [Net Amount] -> "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!J:J)"
+                   wsSweepsBD.Range("F2").Formula = "=SUMIF('Reports Consolidated'!O:O,A2,'Reports Consolidated'!J:J)"
+                   
+               ' G2 [Bank Fees] -> =IF(F2>0,-2.5,0)
+                   wsSweepsBD.Range("G2").Formula = "=IF(F2>0,-2.5,0)"
+                   
+                ' H2 [Net Deposit] -> =F2+G2
+                    wsSweepsBD.Range("H2").Formula = "=F2+G2"
+                   
+                ' I2 [New File Name/Worksheet Name] -> =XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!Q:Q)
+                    wsSweepsBD.Range("I2").Formula = "=XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!Q:Q)"
+                
+                ' J2 [Fund Date (MM/DD/YYYY)] -> =XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!M:M)
+                    wsSweepsBD.Range("J2").Formula = "=XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!M:M)"
+                    
+                ' K2 [Fund Date (YYYY.MM.DD] -> =XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!S:S)
+                    wsSweepsBD.Range("K2").Formula = "=XLOOKUP(A2,'Reports Consolidated'!O:O,'Reports Consolidated'!S:S)"
+           
+           
+           ' Step 53: Create a variable to find the last row of column A in the "Sweeps Breakdown" worksheet
+               SweepsBDLastRow = wsSweepsBD.Cells(wsSweepsBD.Rows.Count, 1).End(xlUp).Row
+           
+           ' Step 54: Fill Formulas down
+               wsSweepsBD.Range("B2:I" & SweepsBDLastRow).FillDown
+               
+               
+       ' Step 55: AutoFit Column Width of the worksheets: "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown"
+               wsSummary.Cells.Columns.AutoFit
+               wsSFReport.Cells.Columns.AutoFit
+               wsConsolidated.Cells.Columns.AutoFit
+               wsSweepsBD.Cells.Columns.AutoFit
+               
+               
+       ' Steps 56-58: Rename Worksheets to New File Name/Worksheet Name - using the "Summary Page"
+           ' Step 56: Create a Forloop to loop through each Name in
+               For i = 2 To SummaryLastRow
+                   ' Step 57: Define "CurrentFileName" (Column R) and "NewFileName" (Column B) variables
+                       CurrentFileName = wsSummary.Cells(i, "R").Value
+                       NewFileName = wsSummary.Cells(i, "B").Value
+                   ' Step 58: Loop through each file name to match the CurrentFileName with the New FileName
+                       For Each ws In ThisWorkbook.Worksheets
+                           If ws.Name = CurrentFileName Then
+                               ws.Name = NewFileName
+                               Exit For
+                           End If
+                       Next ws
+               Next i
+       
+           
+       ' Step 59: Hide the worksheets: "COMPLETE RESET", "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown", and "School Mapping" (Sheets 1-6).
+           For i = 1 To 6
+               ThisWorkbook.Worksheets(i).Visible = xlSheetHidden
+           Next i
+           
+           
+       ' Step 60: Reorder visible sheets in descending order.
+           If visibleSheetCount > 1 Then
+               For i = 1 To visibleSheetCount - 1
+                   For j = 1 To visibleSheetCount - i
+                       If StrComp(ThisWorkbook.Worksheets(j).Name, ThisWorkbook.Worksheets(j + 1).Name, vbTextCompare) > 0 Then
+                           Set temp = ThisWorkbook.Worksheets(j)
+                           ThisWorkbook.Worksheets(j).Move After:=ThisWorkbook.Worksheets(j + 1)
+                           Set temp = Nothing ' Release the object reference
+                       End If
+                   Next j
+               Next i
+           End If
+
+
+       ' Step 61: Unhide all sheets
+           For Each ws In ThisWorkbook.Worksheets
+               ws.Visible = xlSheetVisible
+           Next ws
+           
+           
+       ' Step 62: Hide all sheets that aren't the following worksheets: "COMPLETE RESET", "Summary Page", "Salesforce Report", "Reports Consolidated", "Sweeps Breakdown", and "School Mapping"
+           For i = 7 To ThisWorkbook.Worksheets.Count
+               ThisWorkbook.Worksheets(i).Visible = xlSheetHidden
+           Next i
+           
+           
+       ' Steps 63-66: Create a new folder in the FolderPath called "Renamed Monthly Reports" - Then copy and rename each file in the FolderPath. If that FolderPath exists. Then skip it.
+           ' Step 63: Define the NewFolderPath variable.
+               NewFolderPath = FolderPath & "\Renamed Monthly Reports"
+           
+           ' Steps 64-66: Check if the Folder path exists. If it Does, skip steps - , otherwise follow steps - .
+               If Dir(NewFolderPath, vbDirectory) = "" Then
+                   ' Step 65: Make the new folder path
+                       MkDir NewFolderPath
+                   ' Steps 66: Loop through each row in the "Summary Page" worksheet, and use column A as the original name and column B as the new name. Once complete, go to the next.
+                       For i = 2 To SummaryLastRow
+                           OriginalFolderFileName = wsSummary.Cells(i, "A").Value
+                           NewFolderFileName = wsSummary.Cells(i, "B").Value
+                           File = FolderPath & "\" & OriginalFolderFileName
+                           NewFile = NewFolderPath & "\" & NewFolderFileName & ".csv"
+                           On Error Resume Next
+                           FileCopy File, NewFile
+                           On Error GoTo 0
+                       Next i
+               End If
+               
+               
+   ''' Start Populating the rest of the worksheets '''
+       
+       
+       
+       ' Steps 67-92: Create the rest of the worksheets needed in for this analysis. Name them appropriately
+
+           ' Step 67: wsConsolidatedPos ("Reports Consolidated-Positives" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsConsolidatedPos = ThisWorkbook.Sheets.Add(Before:=wsSFReport)
+               ' Rename the worksheet.
+                   wsConsolidatedPos.Name = "Reports Consolidated-Positives"
+               
+           ' Step 68: Set wsConsolidatedNeg ("Reports Consolidated-Negatives" worksheet)
+                ' Add variable with the new worksheet.
+                    Set wsConsolidatedNeg = ThisWorkbook.Sheets.Add(Before:=wsSFReport)
+                ' Rename the worksheet.
+                   wsConsolidatedNeg.Name = "Reports Consolidated-Negatives"
+               
+           ' Step 69: wsConsolidatedReturn ("Reports Consolidated-ReturnFees" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsConsolidatedReturn = ThisWorkbook.Sheets.Add(Before:=wsSFReport)
+               ' Rename the worksheet.
+                   wsConsolidatedReturn.Name = "Reports Consolidated-ReturnFees"
+               
+           ' Step 71: wsAdditionalFees ("Additional Return Fees" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsAdditionalFees = ThisWorkbook.Sheets.Add(Before:=wsSFReport)
+               ' Rename the worksheet.
+                   wsAdditionalFees.Name = "Additional Return Fees"
+               
+           ' Step 72: wsSFFiltered ("SF Filtered" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSFFiltered = ThisWorkbook.Sheets.Add(After:=wsSFReport)
+               ' Rename the worksheet.
+                   wsSFFiltered.Name = "SF Filtered"
+               
+           ' Step 73: wsPosNegSweeps ("Positive vs Negative Sweeps" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsPosNegSweeps = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsPosNegSweeps.Name = "Positive vs Negative Sweeps"
+
+           ' Step 74: wsSFvsCPRevenue ("SF vs C&P Revenue Match Check" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSFvsCPRevenue = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSFvsCPRevenue.Name = "SF vs C&P Revenue Match Check"
+               
+           ' Step 75: wsRevenueDif ("Revenue Difference" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsRevenueDif = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsRevenueDif.Name = "Revenue Difference"
+               
+           ' Step 76: wsSFPos ("Positive SF Data" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSFPos = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSFPos.Name = "Positive SF Data"
+                 
+           ' Step 77: wsSFNeg ("Negative SF Data" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSFNeg = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSFNeg.Name = "Negative SF Data"
+
+           ' Step 78: wsSchoolAllocation ("School Allocation" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSchoolAllocation = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSchoolAllocation.Name = "School Allocation"
+
+           ' Step 79: wsSchoolUserAllocation ("UserRequired School Allocation" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSchoolUserAllocation = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSchoolUserAllocation.Name = "UserRequired School Allocation"
+
+           ' Step 80: wsSFCampaignCheck ("SF Campaign Checker" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsSFCampaignCheck = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsSFCampaignCheck.Name = "SF Campaign Checker"
+
+           ' Step : wsAccountDesignation ("Account Designation" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsAccountDesignation = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsAccountDesignation.Name = "Account Designation"
+                   
+           ' Step 81: wsAccountUserDesignation ("UserRequired AccountDesignation" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsAccountUserDesignation = ThisWorkbook.Sheets.Add(Before:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsAccountUserDesignation.Name = "UserRequired AccountDesignation"
+
+           ' Step 82: wsDivisionMap ("Division Mapping" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsDivisionMap = ThisWorkbook.Sheets.Add(After:=wsSchoolMap)
+               ' Rename the worksheet.
+                   wsDivisionMap.Name = "Division Mapping"
+
+           ' Step 83: wsCRJSweepsInfo ("Sweeps CRJ information" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJSweepsInfo = ThisWorkbook.Sheets.Add(After:=wsDivisionMap)
+               ' Rename the worksheet.
+                   wsCRJSweepsInfo.Name = "Sweeps CRJ information"
+
+           ' Step 84: wsCRJReturnFees ("Extra Return Fees - CRJ Format" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJReturnFees = ThisWorkbook.Sheets.Add(After:=wsCRJSweepsInfo)
+               ' Rename the worksheet.
+                   wsCRJReturnFees.Name = "Extra Return Fees - CRJ Format"
+ 
+           ' Step 85: wsCRJFormat ("CRJ Format" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJFormat = ThisWorkbook.Sheets.Add(After:=wsCRJReturnFees)
+               ' Rename the worksheet.
+                   wsCRJFormat.Name = "CRJ Format"
+
+           ' Step 86: wsCRJPutTogether ("CRJ Put together" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJPutTogether = ThisWorkbook.Sheets.Add(After:=wsCRJFormat)
+               ' Rename the worksheet.
+                   wsCRJPutTogether.Name = "CRJ Put together"
+  
+           ' Step 87: wsCRJPos ("Positive Sweep CRJs" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJPos = ThisWorkbook.Sheets.Add(After:=wsCRJPutTogether)
+               ' Rename the worksheet.
+                   wsCRJPos.Name = "Positive Sweep CRJs"
+ 
+           ' Step 88: wsCRJImport ("Positive CRJs - Import File" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJImport = ThisWorkbook.Sheets.Add(After:=wsCRJPos)
+               ' Rename the worksheet.
+                   wsCRJImport.Name = "Positive CRJs - Import File"
+
+           ' Step 89: wsCRJNeg ("Negative Sweep CRJs" worksheet)
+               ' Add variable with the new worksheet.
+                   Set wsCRJNeg = ThisWorkbook.Sheets.Add(After:=wsCRJImport)
+               ' Rename the worksheet.
+                   wsCRJNeg.Name = "Negative Sweep CRJs"
+  
+            ' Step 90: wsCHARNegStart ("Neg. CHAR - Start" worksheet)
+                ' Add variable with the new worksheet.
+                    Set wsCHARNegStart = ThisWorkbook.Sheets.Add(After:=wsCRJNeg)
+                ' Rename the worksheet.
+                    wsCHARNegStart.Name = "Neg. CHAR - Start"
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            ' Step 91: wsCHARNeg ("Negative Sweep - CHARs" worksheet)
+                ' Add variable with the new worksheet.
+                    Set wsCHARNeg = ThisWorkbook.Sheets.Add(After:=wsCHARNegStart)
+                ' Rename the worksheet.
+                    wsCHARNeg.Name = "Negative Sweep - CHARs"
+    
+            ' Step 92: wsCHARImport ("Negative Sweeps - CHARs Import" worksheet)
+                ' Add variable with the new worksheet.
+                    Set wsCHARImport = ThisWorkbook.Sheets.Add(After:=wsCHARNeg)
+                ' Rename the worksheet.
+                    wsCHARImport.Name = "Negative Sweeps - CHARs Import"
+
+
+    ' Steps 93-: Populate all the worksheets
+           
+            ' Steps 93-: Populate the: wsConsolidatedPos ("Reports Consolidated-Positives" worksheet)
+                ' Step : Create the columns headers.
+                    wsConsolidatedPos.Range("A1").Value = "Sweep ID"
+                    wsConsolidatedPos.Range("B1").Value = "Order Number"
+                    wsConsolidatedPos.Range("C1").Value = "C&P Transaction Date"
+                    wsConsolidatedPos.Range("D1").Value = "C&P Fund Date"
+                    wsConsolidatedPos.Range("E1").Value = "First Name"
+                    wsConsolidatedPos.Range("F1").Value = "Last Name"
+                    wsConsolidatedPos.Range("G1").Value = "Gross Amount"
+                    wsConsolidatedPos.Range("H1").Value = "Per Transaction Fees"
+                    wsConsolidatedPos.Range("I1").Value = "Discount Fees"
+                    wsConsolidatedPos.Range("J1").Value = "Net Amount"
+                    wsConsolidatedPos.Range("K1").Value = "Order Number Trimmed"
+                    wsConsolidatedPos.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+                    wsConsolidatedPos.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+                    wsConsolidatedPos.Range("N1").Value = "CNP School ID"
+                    wsConsolidatedPos.Range("O1").Value = "CNP School ID - Sweep ID"
+                    wsConsolidatedPos.Range("P1").Value = "Original File Name"
+                    wsConsolidatedPos.Range("Q1").Value = "New File Name"
+                    wsConsolidatedPos.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+                    wsConsolidatedPos.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsConsolidatedPos.Range("A2").Formula2 = "=FILTER('Reports Consolidated'!A:S,('Reports Consolidated'!J:J>0) * ('Reports Consolidated'!J:J<>""Net Amount""),"""")"
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsConsolidatedNeg ("Reports Consolidated-Negatives" worksheet)
+                ' Step : Create the columns headers.
+                    wsConsolidatedNeg.Range("A1").Value = "Sweep ID"
+                    wsConsolidatedNeg.Range("B1").Value = "Order Number"
+                    wsConsolidatedNeg.Range("C1").Value = "C&P Transaction Date"
+                    wsConsolidatedNeg.Range("D1").Value = "C&P Fund Date"
+                    wsConsolidatedNeg.Range("E1").Value = "First Name"
+                    wsConsolidatedNeg.Range("F1").Value = "Last Name"
+                    wsConsolidatedNeg.Range("G1").Value = "Gross Amount"
+                    wsConsolidatedNeg.Range("H1").Value = "Per Transaction Fees"
+                    wsConsolidatedNeg.Range("I1").Value = "Discount Fees"
+                    wsConsolidatedNeg.Range("J1").Value = "Net Amount"
+                    wsConsolidatedNeg.Range("K1").Value = "Order Number Trimmed"
+                    wsConsolidatedNeg.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+                    wsConsolidatedNeg.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+                    wsConsolidatedNeg.Range("N1").Value = "CNP School ID"
+                    wsConsolidatedNeg.Range("O1").Value = "CNP School ID - Sweep ID"
+                    wsConsolidatedNeg.Range("P1").Value = "Original File Name"
+                    wsConsolidatedNeg.Range("Q1").Value = "New File Name"
+                    wsConsolidatedNeg.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+                    wsConsolidatedNeg.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsConsolidatedNeg.Range("A2").Formula2 = "=FILTER('Reports Consolidated'!A:S,('Reports Consolidated'!J:J<0) * ('Reports Consolidated'!H:H<>'Reports Consolidated'!J:J),"""")"
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsConsolidatedReturn ("Reports Consolidated-ReturnFees" worksheet)
+                ' Step : Create the columns headers.
+                    wsConsolidatedReturn.Range("A1").Value = "Sweep ID"
+                    wsConsolidatedReturn.Range("B1").Value = "Order Number"
+                    wsConsolidatedReturn.Range("C1").Value = "C&P Transaction Date"
+                    wsConsolidatedReturn.Range("D1").Value = "C&P Fund Date"
+                    wsConsolidatedReturn.Range("E1").Value = "First Name"
+                    wsConsolidatedReturn.Range("F1").Value = "Last Name"
+                    wsConsolidatedReturn.Range("G1").Value = "Gross Amount"
+                    wsConsolidatedReturn.Range("H1").Value = "Per Transaction Fees"
+                    wsConsolidatedReturn.Range("I1").Value = "Discount Fees"
+                    wsConsolidatedReturn.Range("J1").Value = "Net Amount"
+                    wsConsolidatedReturn.Range("K1").Value = "Order Number Trimmed"
+                    wsConsolidatedReturn.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+                    wsConsolidatedReturn.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+                    wsConsolidatedReturn.Range("N1").Value = "CNP School ID"
+                    wsConsolidatedReturn.Range("O1").Value = "CNP School ID - Sweep ID"
+                    wsConsolidatedReturn.Range("P1").Value = "Original File Name"
+                    wsConsolidatedReturn.Range("Q1").Value = "New File Name"
+                    wsConsolidatedReturn.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+                    wsConsolidatedReturn.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsConsolidatedReturn.Range("A2").Formula2 = "=FILTER('Reports Consolidated'!A:S, (('Reports Consolidated'!J:J<0) * ('Reports Consolidated'!J:J='Reports Consolidated'!H:H)) + (('Reports Consolidated'!J:J<0) * ('Reports Consolidated'!G:G=0)),"""")"
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsAdditionalFees ("Additional Return Fees" worksheet)
+                ' Step : Create the columns headers.
+                    wsAdditionalFees.Range("A1").Value = "Sweep ID"
+                    wsAdditionalFees.Range("B1").Value = "Order Number"
+                    wsAdditionalFees.Range("C1").Value = "C&P Transaction Date"
+                    wsAdditionalFees.Range("D1").Value = "C&P Fund Date"
+                    wsAdditionalFees.Range("E1").Value = "First Name"
+                    wsAdditionalFees.Range("F1").Value = "Last Name"
+                    wsAdditionalFees.Range("G1").Value = "Gross Amount"
+                    wsAdditionalFees.Range("H1").Value = "Per Transaction Fees"
+                    wsAdditionalFees.Range("I1").Value = "Discount Fees"
+                    wsAdditionalFees.Range("J1").Value = "Net Amount"
+                    wsAdditionalFees.Range("K1").Value = "Order Number Trimmed"
+                    wsAdditionalFees.Range("L1").Value = "Transaction Date (MM/DD/YYYY)"
+                    wsAdditionalFees.Range("M1").Value = "Fund Date (MM/DD/YYYY)"
+                    wsAdditionalFees.Range("N1").Value = "CNP School ID"
+                    wsAdditionalFees.Range("O1").Value = "CNP School ID - Sweep ID"
+                    wsAdditionalFees.Range("P1").Value = "Original File Name"
+                    wsAdditionalFees.Range("Q1").Value = "New File Name"
+                    wsAdditionalFees.Range("R1").Value = "Transaction Date (YYYY.MM.DD)"
+                    wsAdditionalFees.Range("S1").Value = "Fund Date (YYYY.MM.DD)"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsAdditionalFees.Range("A2").Formula2 = "=FILTER('Reports Consolidated'!A:S,('Reports Consolidated'!H:H=-35)*('Reports Consolidated'!J:J=-35),"""")"
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsSFFiltered("SF Filtered" worksheet)
+                ' Step : Create the columns headers.
+                    wsSFFiltered.Range("A2").Value = "Payment: Payment Number"
+                    wsSFFiltered.Range("B2").Value = "Account Name"
+                    wsSFFiltered.Range("C2").Value = "Opportunity Name"
+                    wsSFFiltered.Range("D2").Value = "Primary Campaign Source"
+                    wsSFFiltered.Range("E2").Value = "C&P Order Number"
+                    wsSFFiltered.Range("F2").Value = "Check Number"
+                    wsSFFiltered.Range("G2").Value = "Payment Date"
+                    wsSFFiltered.Range("H2").Value = "Stage"
+                    wsSFFiltered.Range("I2").Value = "Payment Type"
+                    wsSFFiltered.Range("J2").Value = "Close Date"
+                    wsSFFiltered.Range("K2").Value = "Deposit Date (Manual)"
+                    wsSFFiltered.Range("L2").Value = "Deposit Date"
+                    wsSFFiltered.Range("M2").Value = "Last Name"
+                    wsSFFiltered.Range("N2").Value = "First Name"
+                    wsSFFiltered.Range("O2").Value = "Campaign Type"
+                    wsSFFiltered.Range("P2").Value = "C&P Account Name"
+                    wsSFFiltered.Range("Q2").Value = "Payment Amount"
+                    wsSFFiltered.Range("R2").Value = "Description"
+                    wsSFFiltered.Range("S2").Value = "Campaign Name - Campaign Type"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    ' "PaymentIDSFColumn = ColumnDictionary("Payment: Payment Number")"
+                        wsSFFiltered.Range("A1").Value = PaymentIDSFColumn
+                    ' "FamilyNameSFColumn = ColumnDictionary("Account Name")"
+                        wsSFFiltered.Range("B1").Value = FamilyNameSFColumn
+                    ' "OpportunityNameSFColumn = ColumnDictionary("Opportunity Name")"
+                        wsSFFiltered.Range("C1").Value = OpportunityNameSFColumn
+                    ' "CampaignNameSFColumn = ColumnDictionary("Primary Campaign Source")"
+                        wsSFFiltered.Range("D1").Value = CampaignNameSFColumn
+                    ' "OrderNumberSFColumn = ColumnDictionary("C&P Order Number")"
+                        wsSFFiltered.Range("E1").Value = OrderNumberSFColumn
+                    '
+                        wsSFFiltered.Range("F1").Value = ""
+                    ' "PaymentDateSFColumn = ColumnDictionary("Payment Date")"
+                        wsSFFiltered.Range("G1").Value = PaymentDateSFColumn
+                    ' "StageSFColumn = ColumnDictionary("Stage")"
+                        wsSFFiltered.Range("H1").Value = StageSFColumn
+                    '
+                        wsSFFiltered.Range("I1").Value = ""
+                    '
+                        wsSFFiltered.Range("J1").Value = ""
+                    '
+                        wsSFFiltered.Range("K1").Value = ""
+                    '
+                        wsSFFiltered.Range("L1").Value = ""
+                    ' "LastNameSFColumn = ColumnDictionary("Last Name")"
+                        wsSFFiltered.Range("M1").Value = LastNameSFColumn
+                    ' "FirstNameSFColumn = ColumnDictionary("First Name")"
+                        wsSFFiltered.Range("N1").Value = FirstNameSFColumn
+                    ' "CampaignTypeSFColumn = ColumnDictionary("Campaign Type")"
+                        wsSFFiltered.Range("O1").Value = CampaignTypeSFColumn
+                    ' "SchoolSFColumn = ColumnDictionary("C&P Account Name")"
+                        wsSFFiltered.Range("P1").Value = SchoolSFColumn
+                    ' "PaymentAmountSFColumn = ColumnDictionary("Payment Amount")"
+                        wsSFFiltered.Range("Q1").Value = PaymentAmountSFColumn
+                    ' "DescriptionSFColumn = ColumnDictionary("Description")"
+                        wsSFFiltered.Range("R1").Value = DescriptionSFColumn
+                    '
+                        wsSFFiltered.Range("S1").Value = ""
+
+                    wsSFFiltered.Range("V1").Value = "Last Row--->"
+                    wsSFFiltered.Range("W1").Value = "=COUNTA(A:A)"
+                    
+                    ' Payment: Payment Number
+                        wsSFFiltered.Range("A3").Formula2 = "=FILTER(INDIRECT(""'Salesforce Report'!""&A1&"":""&A1),ISNUMBER(MATCH(INDIRECT(""'Salesforce Report'!""&E1&"":""&E1),'Reports Consolidated'!K:K,0)))"
+                    ' Account Name
+                        wsSFFiltered.Range("B3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & B$1 & "":"" & B$1))"
+                    ' Opportunity Name
+                        wsSFFiltered.Range("C3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & C$1 & "":"" & C$1))"
+                    ' Primary Campaign Source
+                        wsSFFiltered.Range("D3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & D$1 & "":"" & D$1))"
+                    ' C&P Order Number
+                        wsSFFiltered.Range("E3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & E$1 & "":"" & E$1))"
+                    ' Check Number
+                        wsSFFiltered.Range("F3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & F$1 & "":"" & F$1))"
+                    ' Payment Date
+                        wsSFFiltered.Range("G3").Formula = "=IF(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & G$1 & "":"" & G$1))="""","""",TEXT(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & G$1 & "":"" & G$1)),""MM/DD/YYYY""))"
+                    ' Stage
+                        wsSFFiltered.Range("H3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & H$1 & "":"" & H$1))"
+                    ' Payment Type
+                        wsSFFiltered.Range("I3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & I$1 & "":"" & I$1))"
+                    ' Close Date
+                        wsSFFiltered.Range("J3").Formula = "=IF(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & J$1 & "":"" & J$1))="""","""",TEXT(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & J$1 & "":"" & J$1)),""MM/DD/YYYY""))"
+                    ' Deposit Date (Manual)
+                        wsSFFiltered.Range("K3").Formula = "=IF(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & K$1 & "":"" & K$1))="""","""",TEXT(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & K$1 & "":"" & K$1)),""MM/DD/YYYY""))"
+                    ' Deposit Date
+                        wsSFFiltered.Range("L3").Formula = "=IF(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & L$1 & "":"" & L$1))="""","""",TEXT(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & L$1 & "":"" & L$1)),""MM/DD/YYYY""))"
+                    ' Last Name
+                        wsSFFiltered.Range("M3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & M$1 & "":"" & M$1))"
+                    ' First Name
+                        wsSFFiltered.Range("N3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & N$1 & "":"" & N$1))"
+                    ' Campaign Type
+                        wsSFFiltered.Range("O3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & O$1 & "":"" & O$1))"
+                    ' C&P Account Name
+                        wsSFFiltered.Range("P3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & P$1 & "":"" & P$1))"
+                    ' Payment Amount
+                        wsSFFiltered.Range("Q3").Formula = "=XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & Q$1 & "":"" & Q$1))"
+                    ' Description
+                        wsSFFiltered.Range("R3").Formula = "=IF(XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & R$1 & "":"" & R$1))="""","""",XLOOKUP($A3, INDIRECT(""'Salesforce Report'!"" & $A$1 & "":"" & $A$1), INDIRECT(""'Salesforce Report'!"" & R$1 & "":"" & R$1)))"
+                    ' Campaign Name - Campaign Type
+                        wsSFFiltered.Range("S3").Formula = "=D3&"" - ""&O3"
+
+                ' Step : Format Cells
+                
+                
+            ' Steps : Populate the: wsPosNegSweeps ("Positive vs Negative Sweeps" worksheet)
+                ' Step : Create the columns headers.
+                    wsPosNegSweeps.Range("A1").Value = "Positive Sweeps"
+                    wsPosNegSweeps.Range("B1").Value = "Net Deposit"
+                    wsPosNegSweeps.Range("C1").Value = "Sweep Check"
+                    wsPosNegSweeps.Range("D1").Value = "Variance In Sweep Amount"
+                    wsPosNegSweeps.Range("F1").Value = "Sweeps with a Variance"
+                    wsPosNegSweeps.Range("H1").Value = "Negative Sweeps"
+                    wsPosNegSweeps.Range("I1").Value = "Net Deposit"
+                    wsPosNegSweeps.Range("P1").Value = "From Import Files"
+                    wsPosNegSweeps.Range("N2").Value = "Total Positive Sweeps"
+                    wsPosNegSweeps.Range("N3").Value = "Total Negative Sweeps"
+                    wsPosNegSweeps.Range("N5").Value = "Total Revenue"
+                    wsPosNegSweeps.Range("N7").Value = "Total ProPay Fees"
+                    wsPosNegSweeps.Range("N9").Value = "Total Bank Fees"
+                    wsPosNegSweeps.Range("N10").Value = "Extra Return Fees"
+                    wsPosNegSweeps.Range("N12").Value = "Positive Sweeps Total"
+                    wsPosNegSweeps.Range("N13").Value = "Negative Sweeps Total"
+                    wsPosNegSweeps.Range("N14").Value = "Extra Return Fees"
+                    wsPosNegSweeps.Range("N15").Value = "Overall Total"
+                    wsPosNegSweeps.Range("P16").Value = "Missing"
+                    wsPosNegSweeps.Range("Q11").Value = "Variance"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsPosNegSweeps.Range("A2").Formula2 = "=FILTER('Sweeps Breakdown'!A:A,('Sweeps Breakdown'!H:H>0) * ('Sweeps Breakdown'!H:H<>""Net Deposit""))"
+                    wsPosNegSweeps.Range("B2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsPosNegSweeps.Range("C2").Formula = "=SUMIF('CRJ Put together'!A:A,A2,'CRJ Put together'!S:S)"
+                    wsPosNegSweeps.Range("D2").Formula = "=ROUND(B2-C2,2)"
+                    wsPosNegSweeps.Range("F2").Formula2 = "=FILTER(A:A,(D:D<>0) * (D:D<>"""") * (D:D<>""Variance in Sweep Amount""),""All Sweeps Check Out"")"
+                    wsPosNegSweeps.Range("G2").Formula = "=IF(F2=""All Sweeps Check Out"","""",XLOOKUP(F2,A:A,D:D))"
+                    wsPosNegSweeps.Range("H2").Formula2 = "=FILTER('Sweeps Breakdown'!A:A,('Sweeps Breakdown'!H:H<>""Net Deposit"") * ('Sweeps Breakdown'!H:H<0))"
+                    wsPosNegSweeps.Range("I2").Formula = "=XLOOKUP(H2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsPosNegSweeps.Range("O2").Formula = "=COUNTA(A2:A200000)"
+                    wsPosNegSweeps.Range("P2").Formula2 = "=COUNTA(UNIQUE(FILTER('Positive CRJs - Import File'!F:F, ('Positive CRJs - Import File'!F:F<>"""") * (ISERROR(SEARCH(""DESCRIPTION"", 'Positive CRJs - Import File'!F:F))))))"
+                    wsPosNegSweeps.Range("O3").Formula = "=COUNTA(H2:H200000)"
+                    wsPosNegSweeps.Range("O5").Formula = "=TEXT(SUM('Sweeps Breakdown'!F:F),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O7").Formula = "=TEXT(SUM('Sweeps Breakdown'!G:G),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O9").Formula = "=TEXT(SUM('Sweeps Breakdown'!I:I),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O10").Formula = "=TEXT(SUM('Reports Consolidated-ReturnFees'!J:J),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O12").Formula = "=TEXT(SUM(B:B),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O13").Formula = "=TEXT(SUM(I:I),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("O14").Formula = "=O10"
+                    wsPosNegSweeps.Range("O15").Formula = "=TEXT(O12+O13+O14,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("P3").Formula = "=COUNTA(FILTER('Negative Sweeps - CHARs Import'!E:E,('Negative Sweeps - CHARs Import'!E:E<>"""")))-1"
+                    wsPosNegSweeps.Range("P12").Formula = "=TEXT(SUM('Positive CRJs - Import File'!R:R),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("P13").Formula = "=TEXT(SUM('Negative Sweeps - CHARs Import'!M:M)*-1,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("P15").Formula = "=TEXT(P12+P13,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("Q12").Formula = "=TEXT(O12-P12,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("Q13").Formula = "=TEXT(O13-P13,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("Q15").Formula = "=TEXT(O15-P15,""$#,##0.00"")"
+                    wsPosNegSweeps.Range("Q16").Formula = "=TEXT(SUM('Revenue Difference'!E:E),""$#,##0.00"")"
+                    wsPosNegSweeps.Range("R15").Formula = "=TEXT(SUM(G:G),""$#,##0.00"")"
+
+
+
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsSFvsCPRevenue ("SF vs C&P Revenue Match Check" worksheet)
+                ' Step : Create the columns headers.
+                    wsSFvsCPRevenue.Range("A1").Value = "From Consolidated C&P Reports"
+                    wsSFvsCPRevenue.Range("B1").Value = "SUMs in Consolidated Report"
+                    wsSFvsCPRevenue.Range("C1").Value = "SUMs in SF Report"
+                    wsSFvsCPRevenue.Range("D1").Value = "Difference"
+
+                    
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSFvsCPRevenue.Range("A2").Formula2 = "=UNIQUE(FILTER('Reports Consolidated'!K:K,('Reports Consolidated'!K:K<>"""") * ('Reports Consolidated'!K:K<>""Order Number Trimmed"")))"
+                    wsSFvsCPRevenue.Range("B2").Formula = "=SUMIF('Reports Consolidated'!K:K,A2,'Reports Consolidated'!G:G)"
+                    wsSFvsCPRevenue.Range("C2").Formula = "=SUMIF('Positive SF Data'!F:F,A2,'Positive SF Data'!R:R)+SUMIF('Negative SF Data'!F:F,A2,'Negative SF Data'!R:R)"
+                    wsSFvsCPRevenue.Range("D2").Formula = "=B2-C2"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsRevenueDif ("Revenue Difference" worksheet)
+                ' Step : Create the columns headers.
+                    wsRevenueDif.Range("A1").Value = "From Consolidated C&P Reports"
+                    wsRevenueDif.Range("B1").Value = "SUMs in Consolidated Report"
+                    wsRevenueDif.Range("C1").Value = "SUMs in SF Report"
+                    wsRevenueDif.Range("D1").Value = "Difference"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsRevenueDif.Range("A2").Formula2 = "=FILTER('SF vs C&P Revenue Match Check'!A:D,('SF vs C&P Revenue Match Check'!D:D<>0)*('SF vs C&P Revenue Match Check'!D:D<>"""")*('SF vs C&P Revenue Match Check'!D:D<>""Difference""),""All Revenue Matches"")"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsSFPos ("Positive SF Data" worksheet)
+                ' Step : Create the columns headers.
+                    wsSFPos.Range("A1").Value = "Number"
+                    wsSFPos.Range("B1").Value = "Payment: Payment Number"
+                    wsSFPos.Range("C1").Value = "Account Name"
+                    wsSFPos.Range("D1").Value = "Opportunity Name"
+                    wsSFPos.Range("E1").Value = "Primary Campaign Source"
+                    wsSFPos.Range("F1").Value = "C&P Order Number"
+                    wsSFPos.Range("G1").Value = "Check Number"
+                    wsSFPos.Range("H1").Value = "Payment Date"
+                    wsSFPos.Range("I1").Value = "Stage"
+                    wsSFPos.Range("J1").Value = "Payment Type"
+                    wsSFPos.Range("K1").Value = "Close Date"
+                    wsSFPos.Range("L1").Value = "Deposit Date (Manual)"
+                    wsSFPos.Range("M1").Value = "Deposit Date"
+                    wsSFPos.Range("N1").Value = "Last Name"
+                    wsSFPos.Range("O1").Value = "First Name"
+                    wsSFPos.Range("P1").Value = "Campaign Type"
+                    wsSFPos.Range("Q1").Value = "C&P Account Name"
+                    wsSFPos.Range("R1").Value = "Payment Amount"
+                    wsSFPos.Range("S1").Value = ""
+                    wsSFPos.Range("T1").Value = "CNP School - Sweep ID"
+                    wsSFPos.Range("U1").Value = "Sweep (Fund) Date"
+                    wsSFPos.Range("V1").Value = "Transaction Date"
+                    wsSFPos.Range("W1").Value = "Transaction Number"
+                    wsSFPos.Range("X1").Value = "Total Transactions in Order"
+                    wsSFPos.Range("Y1").Value = "Individual Transaction Breakdown of Fees"
+                    wsSFPos.Range("Z1").Value = "CNP School Abbreviation"
+                    wsSFPos.Range("AA1").Value = "Campaign School Designation"
+                    wsSFPos.Range("AB1").Value = "Campaign School Abbreviation"
+                    wsSFPos.Range("AC1").Value = "CNP vs Campaign Match"
+                    wsSFPos.Range("AD1").Value = "Final Abbrev. School Determination"
+                    wsSFPos.Range("AE1").Value = "CNP Bank Account"
+                    wsSFPos.Range("AF1").Value = "Campaign Bank Account"
+                    wsSFPos.Range("AG1").Value = "Intacct School Check"
+                    wsSFPos.Range("AH1").Value = "Revenue Account Type - Initial Check"
+                    wsSFPos.Range("AI1").Value = "Division - Initial Check"
+                    wsSFPos.Range("AJ1").Value = "Funding Source - Initial Check"
+                    wsSFPos.Range("AK1").Value = "Revenue Account - Final"
+                    wsSFPos.Range("AL1").Value = "Division - Final"
+                    wsSFPos.Range("AM1").Value = "Funding Source - Final"
+                    wsSFPos.Range("AN1").Value = "Payment Type"
+                    wsSFPos.Range("AO1").Value = ""
+                    wsSFPos.Range("AP1").Value = "RECEIPT_DATE"
+                    wsSFPos.Range("AQ1").Value = "PAYMETHOD"
+                    wsSFPos.Range("AR1").Value = "DOCDATE"
+                    wsSFPos.Range("AS1").Value = "DOCNUMBER"
+                    wsSFPos.Range("AT1").Value = "DESCRIPTION"
+                    wsSFPos.Range("AU1").Value = "DEPOSITTO"
+                    wsSFPos.Range("AV1").Value = "BANKACCOUNTID"
+                    wsSFPos.Range("AW1").Value = "DEPOSITDATE"
+                    wsSFPos.Range("AX1").Value = "UNDEPACCTNO"
+                    wsSFPos.Range("AY1").Value = "CURRENCY"
+                    wsSFPos.Range("AZ1").Value = "EXCH_RATE_DATE"
+                    wsSFPos.Range("BA1").Value = "EXCH_RATE_TYPE_ID"
+                    wsSFPos.Range("BB1").Value = "EXCH_RATE_DATE"
+                    wsSFPos.Range("BC1").Value = "LINE_NO"
+                    wsSFPos.Range("BD1").Value = "ACCT_NO"
+                    wsSFPos.Range("BE1").Value = "ACCOUNTLABEL"
+                    wsSFPos.Range("BF1").Value = "TRX_AMOUNT"
+                    wsSFPos.Range("BG1").Value = "AMOUNT"
+                    wsSFPos.Range("BH1").Value = "DEPT_ID"
+                    wsSFPos.Range("BI1").Value = "LOCATION_ID"
+                    wsSFPos.Range("BJ1").Value = "ITEM_MEMO"
+                    wsSFPos.Range("BK1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsSFPos.Range("BL1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsSFPos.Range("BM1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsSFPos.Range("BN1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsSFPos.Range("BO1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsSFPos.Range("BP1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsSFPos.Range("BQ1").Value = "PAYER_NAME"
+                    wsSFPos.Range("BR1").Value = "SUPDOCID"
+                    wsSFPos.Range("BS1").Value = "EXCHANGE_RATE"
+                    wsSFPos.Range("BT1").Value = "OR_TRANSACTION_DATE"
+                    wsSFPos.Range("BU1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSFPos.Range("A2").Formula = "=IF(B2="""","""",""Pos-"" & ROW()-1)"
+                    wsSFPos.Range("B2").Formula2 = "=IFERROR(SORT(FILTER('SF Filtered'!A:Q,ISNUMBER(MATCH('SF Filtered'!E:E,'Reports Consolidated-Positives'!K:K,0)),""""),5),"""")"
+                    wsSFPos.Range("S2").Value = "…........................................."
+                    wsSFPos.Range("T2").Formula = "=XLOOKUP(F2,'Reports Consolidated-Positives'!K:K,'Reports Consolidated-Positives'!O:O)"
+                    wsSFPos.Range("U2").Formula = "=XLOOKUP(T2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsSFPos.Range("V2").Formula = "=TEXT(XLOOKUP(F2,'Reports Consolidated-Positives'!K:K,'Reports Consolidated-Positives'!C:C),""MM/DD/YYYY"")"
+                    wsSFPos.Range("W2").Formula = "=IF(F2=F1,1+W1,1)"
+                    wsSFPos.Range("X2").Formula = "=COUNTIF(F:F,F2)"
+                    wsSFPos.Range("Y2").Formula = "=(SUMIF('Reports Consolidated-Positives'!K:K,F2,'Reports Consolidated-Positives'!H:H) + SUMIF('Reports Consolidated-Positives'!K:K,F2,'Reports Consolidated-Positives'!I:I))/X2"
+                    wsSFPos.Range("Z2").Formula = "=XLOOKUP(NUMBERVALUE(LEFT(T2,5)),'School Mapping'!C:C,'School Mapping'!I:I)"
+                    wsSFPos.Range("AA2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!L:L)"
+                    wsSFPos.Range("AB2").Formula = "=XLOOKUP(AA2,'School Mapping'!A:A,'School Mapping'!I:I)"
+                    wsSFPos.Range("AC2").Formula = "=IF(Z2=AB2,""Match"", ""Does Not Match"")"
+                    wsSFPos.Range("AD2").Formula = "=IF(AC2=""Match"",Z2,XLOOKUP(B2,'UserRequired School Allocation'!A:A,'UserRequired School Allocation'!H:H))"
+                    wsSFPos.Range("AE2").Formula = "=XLOOKUP(Z2,'School Mapping'!I:I,'School Mapping'!D:D)"
+                    wsSFPos.Range("AF2").Formula = "=XLOOKUP(AB2,'School Mapping'!I:I,'School Mapping'!D:D)"
+                    wsSFPos.Range("AG2").Formula = "=IFERROR(XLOOKUP(AD2,'School Mapping'!I:I,'School Mapping'!F:F),""School Determination Required"")"
+                    wsSFPos.Range("AH2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!E:E)"
+                    wsSFPos.Range("AI2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!J:J)"
+                    wsSFPos.Range("AJ2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!K:K)"
+                    wsSFPos.Range("AK2").Formula = "=IF(AH2<>""CHECK"",AH2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!I:I)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!I:I),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!N:N)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!N:N), ""Still Not Determined"")))"
+                    wsSFPos.Range("AL2").Formula = "=IF(AI2<>""CHECK"",AI2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!J:J)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!J:J),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!L:L)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!L:L), IF(XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!O:O)<>"""", XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!O:O),""Still Not Determined""))))"
+                    wsSFPos.Range("AM2").Formula = "=IF(AJ2<>""CHECK"",AJ2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!K:K)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!K:K),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!M:M)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!M:M), IF(XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!P:P)<>"""", XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!P:P),""Still Not Determined""))))"
+                    wsSFPos.Range("AN2").Formula = "=IF(J2=""eCheck"",""eCheck"",""Credit Card"")"
+                    wsSFPos.Range("AP2").Formula = "=U2"
+                    wsSFPos.Range("AQ2").Formula = "=AN2"
+                    wsSFPos.Range("AR2").Formula = "=U2"
+                    wsSFPos.Range("AS2").Formula = "=""ProPay"""
+                    wsSFPos.Range("AT2").Formula = "=Z2&"" - Click & Pledge (""&T2&"")"""
+                    wsSFPos.Range("AU2").Formula = "=""Bank account"""
+                    wsSFPos.Range("AV2").Formula = "=AE2"
+                    wsSFPos.Range("AW2").Formula = "=U2"
+                    wsSFPos.Range("AX2").Formula = "="""""
+                    wsSFPos.Range("AY2").Formula = "=""USD"""
+                    wsSFPos.Range("AZ2").Formula = "="""""
+                    wsSFPos.Range("BA2").Formula = "="""""
+                    wsSFPos.Range("BB2").Formula = "="""""
+                    wsSFPos.Range("BC2").Formula = "=""6"""
+                    wsSFPos.Range("BD2").Formula = "=AK2"
+                    wsSFPos.Range("BE2").Formula = "="""""
+                    wsSFPos.Range("BF2").Formula = "=R2"
+                    wsSFPos.Range("BG2").Formula = "=R2"
+                    wsSFPos.Range("BH2").Formula = "=AL2"
+                    wsSFPos.Range("BI2").Formula = "=AG2"
+                    wsSFPos.Range("BJ2").Formula = "=Z2&"" - ""&E2&"" | ""&D2&"" | Site: Click and Pledge | ""&AN2&"" | ""&B2&"" | CNP: ""&F2&"" | Disbursement ID: ""&T2&"" | Txn#:""&W2&"" of ""&X2&"" | ~Txn-Day: ""&TEXT(V2,""MM.DD.YYYY"")&"" | ^""&C2&"" | *""&N2&"", ""&O2"
+                    wsSFPos.Range("BK2").Formula = "="""""
+                    wsSFPos.Range("BL2").Formula = "=""19234"""
+                    wsSFPos.Range("BM2").Formula = "="""""
+                    wsSFPos.Range("BN2").Formula = "="""""
+                    wsSFPos.Range("BO2").Formula = "="""""
+                    wsSFPos.Range("BP2").Formula = "=""000"""
+                    wsSFPos.Range("BQ2").Formula = "=""ProPay"""
+                    wsSFPos.Range("BR2").Formula = "="""""
+                    wsSFPos.Range("BS2").Formula = "="""""
+                    wsSFPos.Range("BT2").Formula = "=U2"
+                    wsSFPos.Range("BU2").Formula = "=AM2"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsSFNeg ("Negative SF Data" worksheet)
+                ' Step : Create the columns headers.
+                    wsSFNeg.Range("A1").Value = "Number"
+                    wsSFNeg.Range("B1").Value = "Payment: Payment Number"
+                    wsSFNeg.Range("C1").Value = "Account Name"
+                    wsSFNeg.Range("D1").Value = "Opportunity Name"
+                    wsSFNeg.Range("E1").Value = "Primary Campaign Source"
+                    wsSFNeg.Range("F1").Value = "C&P Order Number"
+                    wsSFNeg.Range("G1").Value = "Check Number"
+                    wsSFNeg.Range("H1").Value = "Payment Date"
+                    wsSFNeg.Range("I1").Value = "Stage"
+                    wsSFNeg.Range("J1").Value = "Payment Type"
+                    wsSFNeg.Range("K1").Value = "Close Date"
+                    wsSFNeg.Range("L1").Value = "Deposit Date (Manual)"
+                    wsSFNeg.Range("M1").Value = "Deposit Date"
+                    wsSFNeg.Range("N1").Value = "Last Name"
+                    wsSFNeg.Range("O1").Value = "First Name"
+                    wsSFNeg.Range("P1").Value = "Campaign Type"
+                    wsSFNeg.Range("Q1").Value = "C&P Account Name"
+                    wsSFNeg.Range("R1").Value = "Payment Amount"
+                    wsSFNeg.Range("S1").Value = ""
+                    wsSFNeg.Range("T1").Value = "CNP School - Sweep ID"
+                    wsSFNeg.Range("U1").Value = "Sweep (Fund) Date"
+                    wsSFNeg.Range("V1").Value = "Transaction Date"
+                    wsSFNeg.Range("W1").Value = "Transaction Number"
+                    wsSFNeg.Range("X1").Value = "Total Transactions in Order"
+                    wsSFNeg.Range("Y1").Value = "Individual Transaction Breakdown of Fees"
+                    wsSFNeg.Range("Z1").Value = "CNP School Abbreviation"
+                    wsSFNeg.Range("AA1").Value = "Campaign School Designation"
+                    wsSFNeg.Range("AB1").Value = "Campaign School Abbreviation"
+                    wsSFNeg.Range("AC1").Value = "CNP vs Campaign Match"
+                    wsSFNeg.Range("AD1").Value = "Final Abbrev. School Determination"
+                    wsSFNeg.Range("AE1").Value = "CNP Bank Account"
+                    wsSFNeg.Range("AF1").Value = "Campaign Bank Account"
+                    wsSFNeg.Range("AG1").Value = "Intacct School Check"
+                    wsSFNeg.Range("AH1").Value = "Revenue Account Type - Initial Check"
+                    wsSFNeg.Range("AI1").Value = "Division - Initial Check"
+                    wsSFNeg.Range("AJ1").Value = "Funding Source - Initial Check"
+                    wsSFNeg.Range("AK1").Value = "Revenue Account - Final"
+                    wsSFNeg.Range("AL1").Value = "Division - Final"
+                    wsSFNeg.Range("AM1").Value = "Funding Source - Final"
+                    wsSFNeg.Range("AN1").Value = "Payment Type"
+                    wsSFNeg.Range("AO1").Value = ""
+                    wsSFNeg.Range("AP1").Value = "RECEIPT_DATE"
+                    wsSFNeg.Range("AQ1").Value = "PAYMETHOD"
+                    wsSFNeg.Range("AR1").Value = "DOCDATE"
+                    wsSFNeg.Range("AS1").Value = "DOCNUMBER"
+                    wsSFNeg.Range("AT1").Value = "DESCRIPTION"
+                    wsSFNeg.Range("AU1").Value = "DEPOSITTO"
+                    wsSFNeg.Range("AV1").Value = "BANKACCOUNTID"
+                    wsSFNeg.Range("AW1").Value = "DEPOSITDATE"
+                    wsSFNeg.Range("AX1").Value = "UNDEPACCTNO"
+                    wsSFNeg.Range("AY1").Value = "CURRENCY"
+                    wsSFNeg.Range("AZ1").Value = "EXCH_RATE_DATE"
+                    wsSFNeg.Range("BA1").Value = "EXCH_RATE_TYPE_ID"
+                    wsSFNeg.Range("BB1").Value = "EXCH_RATE_DATE"
+                    wsSFNeg.Range("BC1").Value = "LINE_NO"
+                    wsSFNeg.Range("BD1").Value = "ACCT_NO"
+                    wsSFNeg.Range("BE1").Value = "ACCOUNTLABEL"
+                    wsSFNeg.Range("BF1").Value = "TRX_AMOUNT"
+                    wsSFNeg.Range("BG1").Value = "AMOUNT"
+                    wsSFNeg.Range("BH1").Value = "DEPT_ID"
+                    wsSFNeg.Range("BI1").Value = "LOCATION_ID"
+                    wsSFNeg.Range("BJ1").Value = "ITEM_MEMO"
+                    wsSFNeg.Range("BK1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsSFNeg.Range("BL1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsSFNeg.Range("BM1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsSFNeg.Range("BN1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsSFNeg.Range("BO1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsSFNeg.Range("BP1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsSFNeg.Range("BQ1").Value = "PAYER_NAME"
+                    wsSFNeg.Range("BR1").Value = "SUPDOCID"
+                    wsSFNeg.Range("BS1").Value = "EXCHANGE_RATE"
+                    wsSFNeg.Range("BT1").Value = "OR_TRANSACTION_DATE"
+                    wsSFNeg.Range("BU1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSFNeg.Range("A2").Formula = "=IF(B2="""","""",""Neg - ""&ROW()-1)"
+                    wsSFNeg.Range("B2").Formula2 = "=IFERROR(SORT(FILTER('SF Filtered'!A:Q,ISNUMBER(MATCH('SF Filtered'!E:E,'Reports Consolidated-Negatives'!K:K,0)),""""),5),"""")"
+                    wsSFNeg.Range("S2").Value = "…........................................."
+                    wsSFNeg.Range("T2").Formula = "=XLOOKUP(F2,'Reports Consolidated-Positives'!K:K,'Reports Consolidated-Positives'!O:O)"
+                    wsSFNeg.Range("U2").Formula = "=XLOOKUP(T2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsSFNeg.Range("V2").Formula = "=TEXT(XLOOKUP(F2,'Reports Consolidated-Positives'!K:K,'Reports Consolidated-Positives'!C:C),""MM/DD/YYYY"")"
+                    wsSFNeg.Range("W2").Formula = "=IF(F2=F1,1+W1,1)"
+                    wsSFNeg.Range("X2").Formula = "=COUNTIF(F:F,F2)"
+                    wsSFNeg.Range("Y2").Formula = "=(SUMIF('Reports Consolidated-Positives'!K:K,F2,'Reports Consolidated-Positives'!H:H) + SUMIF('Reports Consolidated-Positives'!K:K,F2,'Reports Consolidated-Positives'!I:I))/X2"
+                    wsSFNeg.Range("Z2").Formula = "=XLOOKUP(NUMBERVALUE(LEFT(T2,5)),'School Mapping'!C:C,'School Mapping'!I:I)"
+                    wsSFNeg.Range("AA2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!L:L)"
+                    wsSFNeg.Range("AB2").Formula = "=XLOOKUP(AA2,'School Mapping'!A:A,'School Mapping'!I:I)"
+                    wsSFNeg.Range("AC2").Formula = "=IF(Z2=AB2,""Match"", ""Does Not Match"")"
+                    wsSFNeg.Range("AD2").Formula = "=IF(AC2=""Match"",Z2,XLOOKUP(B2,'UserRequired School Allocation'!A:A,'UserRequired School Allocation'!H:H))"
+                    wsSFNeg.Range("AE2").Formula = "=XLOOKUP(Z2,'School Mapping'!I:I,'School Mapping'!D:D)"
+                    wsSFNeg.Range("AF2").Formula = "=XLOOKUP(AB2,'School Mapping'!I:I,'School Mapping'!D:D)"
+                    wsSFNeg.Range("AG2").Formula = "=IFERROR(XLOOKUP(AD2,'School Mapping'!I:I,'School Mapping'!F:F),""School Determination Required"")"
+                    wsSFNeg.Range("AH2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!E:E)"
+                    wsSFNeg.Range("AI2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!J:J)"
+                    wsSFNeg.Range("AJ2").Formula = "=XLOOKUP(E2,'SF Campaign Checker'!C:C,'SF Campaign Checker'!K:K)"
+                    wsSFNeg.Range("AK2").Formula = "=IF(AH2<>""CHECK"",AH2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!I:I)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!I:I),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!N:N)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!N:N), ""Still Not Determined"")))"
+                    wsSFNeg.Range("AL2").Formula = "=IF(AI2<>""CHECK"",AI2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!J:J)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!J:J),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!L:L)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!L:L), IF(XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!O:O)<>"""", XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!O:O),""Still Not Determined""))))"
+                    wsSFNeg.Range("AM2").Formula = "=IF(AJ2<>""CHECK"",AJ2,IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!K:K)<>""Other"",XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!K:K),IF(XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!M:M)<>"""", XLOOKUP(B2,'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!M:M), IF(XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!P:P)<>"""", XLOOKUP(B2, 'UserRequired AccountDesignation'!A:A,'UserRequired AccountDesignation'!P:P),""Still Not Determined""))))"
+                    wsSFNeg.Range("AN2").Formula = "=IF(J2=""eCheck"",""eCheck"",""Credit Card"")"
+                    wsSFNeg.Range("AP2").Formula = "=U2"
+                    wsSFNeg.Range("AQ2").Formula = "=AN2"
+                    wsSFNeg.Range("AR2").Formula = "=U2"
+                    wsSFNeg.Range("AS2").Formula = "=""ProPay"""
+                    wsSFNeg.Range("AT2").Formula = "=Z2&"" - Click & Pledge (""&T2&"")"""
+                    wsSFNeg.Range("AU2").Formula = "=""Bank account"""
+                    wsSFNeg.Range("AV2").Formula = "=AE2"
+                    wsSFNeg.Range("AW2").Formula = "=U2"
+                    wsSFNeg.Range("AX2").Formula = "="""""
+                    wsSFNeg.Range("AY2").Formula = "=""USD"""
+                    wsSFNeg.Range("AZ2").Formula = "="""""
+                    wsSFNeg.Range("BA2").Formula = "="""""
+                    wsSFNeg.Range("BB2").Formula = "="""""
+                    wsSFNeg.Range("BC2").Formula = "=""6"""
+                    wsSFNeg.Range("BD2").Formula = "=AK2"
+                    wsSFNeg.Range("BE2").Formula = "="""""
+                    wsSFNeg.Range("BF2").Formula = "=R2"
+                    wsSFNeg.Range("BG2").Formula = "=R2"
+                    wsSFNeg.Range("BH2").Formula = "=AL2"
+                    wsSFNeg.Range("BI2").Formula = "=AG2"
+                    wsSFNeg.Range("BJ2").Formula = "=Z2&"" - ""&E2&"" | ""&D2&"" | Site: Click and Pledge | ""&AN2&"" | ""&B2&"" | CNP: ""&F2&"" | Disbursement ID: ""&T2&"" | Txn#:""&W2&"" of ""&X2&"" | ~Txn-Day: ""&TEXT(V2,""MM.DD.YYYY"")&"" | ^""&C2&"" | *""&N2&"", ""&O2"
+                    wsSFNeg.Range("BK2").Formula = "="""""
+                    wsSFNeg.Range("BL2").Formula = "=""19234"""
+                    wsSFNeg.Range("BM2").Formula = "="""""
+                    wsSFNeg.Range("BN2").Formula = "="""""
+                    wsSFNeg.Range("BO2").Formula = "="""""
+                    wsSFNeg.Range("BP2").Formula = "=""000"""
+                    wsSFNeg.Range("BQ2").Formula = "=""ProPay"""
+                    wsSFNeg.Range("BR2").Formula = "="""""
+                    wsSFNeg.Range("BS2").Formula = "="""""
+                    wsSFNeg.Range("BT2").Formula = "=U2"
+                    wsSFNeg.Range("BU2").Formula = "=AM2"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsSchoolAllocation ("School Allocation" worksheet)
+                ' Step : Create the columns headers.
+                    wsSchoolAllocation.Range("A1").Value = "PMT-ID"
+                    wsSchoolAllocation.Range("B1").Value = "Campaign Name"
+                    wsSchoolAllocation.Range("C1").Value = "Opportunity Name"
+                    wsSchoolAllocation.Range("D1").Value = "Description"
+                    wsSchoolAllocation.Range("E1").Value = "Click and Pledge Site - School"
+                    wsSchoolAllocation.Range("F1").Value = "Campaign Name - School"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSchoolAllocation.Range("A20001").Formula2 = "=FILTER('Positive SF Data'!B:B,'Positive SF Data'!AC:AC=""Does Not Match"")"
+                    wsSchoolAllocation.Range("B20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!D:D)"
+                    wsSchoolAllocation.Range("C20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!C:C)"
+                    wsSchoolAllocation.Range("D20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!R:R)"
+                    wsSchoolAllocation.Range("E20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!P:P)"
+                    wsSchoolAllocation.Range("F20001").Formula = "=XLOOKUP(A20001,'Positive SF Data'!B:B,'Positive SF Data'!AA:AA)"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsSchoolUserAllocation ("UserRequired School Allocation" worksheet)
+                ' Step : Create the columns headers.
+                    wsSchoolUserAllocation.Range("A1").Value = "PMT-ID"
+                    wsSchoolUserAllocation.Range("B1").Value = "Campaign Name"
+                    wsSchoolUserAllocation.Range("C1").Value = "Opportunity Name"
+                    wsSchoolUserAllocation.Range("D1").Value = "Description"
+                    wsSchoolUserAllocation.Range("E1").Value = "Click and Pledge Site - School"
+                    wsSchoolUserAllocation.Range("F1").Value = "Campaign Name - School"
+                    wsSchoolUserAllocation.Range("G1").Value = "Final Determination"
+                    wsSchoolUserAllocation.Range("H1").Value = "School Abbreviation"
+                    wsSchoolUserAllocation.Range("I1").Value = "School Number"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSchoolUserAllocation.Range("A2").Formula2 = "=FILTER('School Allocation'!A:F, ('School Allocation'!A:A<>"""") * ('School Allocation'!A:A<>""PMT-ID""))"
+                    wsSchoolUserAllocation.Range("H2").Formula = "=XLOOKUP(G2,'School Mapping'!A:A,'School Mapping'!I:I)"
+                    wsSchoolUserAllocation.Range("I2").Formula = "=XLOOKUP(G2,'School Mapping'!A:A,'School Mapping'!F:F)"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsSFCampaignCheck ("SF Campaign Checker" worksheet)
+                ' Step : Create the columns headers.
+                    wsSFCampaignCheck.Range("A1").Value = "Primary Campaign Source - Campaign Type"
+                    wsSFCampaignCheck.Range("B1").Value = "Campaign Type"
+                    wsSFCampaignCheck.Range("C1").Value = "Primary Campaign Source"
+                    wsSFCampaignCheck.Range("D1").Value = "Account Designation Type"
+                    wsSFCampaignCheck.Range("E1").Value = "Account Allocation"
+                    wsSFCampaignCheck.Range("F1").Value = "School"
+                    wsSFCampaignCheck.Range("G1").Value = "Year"
+                    wsSFCampaignCheck.Range("H1").Value = "Campaign Name, with ATF/Annual Teacher Fund"
+                    wsSFCampaignCheck.Range("I1").Value = "Campaign Names without ATF/Annual Teacher Fund"
+                    wsSFCampaignCheck.Range("J1").Value = "Division"
+                    wsSFCampaignCheck.Range("K1").Value = "Funding Source"
+                    wsSFCampaignCheck.Range("L1").Value = "BASIS School Name"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsSFCampaignCheck.Range("A2").Formula2 = "=SORT(FILTER(UNIQUE('SF Filtered'!S:S),(UNIQUE('SF Filtered'!S:S)<>"""") * (UNIQUE('SF Filtered'!S:S)<>""Campaign Name - Campaign Type"")))"
+                    wsSFCampaignCheck.Range("B2").Formula = "=XLOOKUP(A2,'SF Filtered'!D:D&"" - ""&'SF Filtered'!O:O,'SF Filtered'!O:O)"
+                    wsSFCampaignCheck.Range("C2").Formula = "=XLOOKUP(A2,'SF Filtered'!D:D&"" - ""&'SF Filtered'!O:O,'SF Filtered'!D:D)"
+                    wsSFCampaignCheck.Range("D2").Formula = "=IF(C2="""","""",IF(ISNUMBER(SEARCH(""AZ Tax"",C2)),""AZ Tax Credit"",IF(ISNUMBER(SEARCH(""Employer Match"",C2)),""Employer Matching"",IF(ISNUMBER(SEARCH("" Founder"",C2)),""Founders' Circle"",IF(ISNUMBER(SEARCH(""General Fund"",C2)),""General Fund"",IF(ISNUMBER(SEARCH(""Legacy Brick"",C2)),""Legacy Brick"",B2))))))"
+                    wsSFCampaignCheck.Range("E2").Formula = "=IF(C2="""","""",IF(D2=""AZ Tax Credit"",73001,IF(D2=""Direct"",73011,IF(D2=""Employer Matching"",73013,IF(D2=""Founders' Circle"",41005,IF(D2=""General Fund"",""CHECK"",IF(D2=""Indirect"",73012,IF(D2=""Legacy Brick"",73012,""CHECK""))))))))"
+                    wsSFCampaignCheck.Range("F2").Formula = "=IF(C2<>"""",IF(ISNUMBER(SEARCH(""AZ Tax Credit"",C2)),LEFT(C2,SEARCH(""AZ Tax Credit"",C2)-2),IF(ISNUMBER(SEARCH(""-"",C2)),LEFT(C2,SEARCH(""-"",C2)-6),IF(ISNUMBER(SEARCH(""Founders' Circle"",C2)),LEFT(C2,SEARCH(""Founders' Circle"",C2)-2),IF(ISNUMBER(SEARCH(""General Fund"",C2)),LEFT(C2,SEARCH(""General Fund"",C2)-2),"""")))),"""")"
+                    wsSFCampaignCheck.Range("G2").Formula = "=IF(C2<>"""",IF(ISNUMBER(SEARCH("" - "",C2)),RIGHT(LEFT(C2,SEARCH("" - "",C2)-1),4)&RIGHT(LEFT(C2,SEARCH("" - "",C2)+2),3),""""),"""")"
+                    wsSFCampaignCheck.Range("H2").Formula = "=IF(C2<>"""",IF(ISNUMBER(SEARCH("" - "",C2)),RIGHT(C2,LEN(C2)-SEARCH("" - "",C2)-3),""""),"""")"
+                    wsSFCampaignCheck.Range("I2").Formula = "=IF(C2<>"""",IF(ISNUMBER(SEARCH(""AZ Tax Credit"",C2)),RIGHT(C2,LEN(C2)-LEN(F2)-1),IF(ISNUMBER(SEARCH(""ATF "",H2)),RIGHT(H2,LEN(H2)-SEARCH(""ATF "",H2)-3),IF(ISNUMBER(SEARCH(""Annual Teacher Fund "",H2)),RIGHT(H2,LEN(H2)-SEARCH(""Annual Teacher Fund "",H2)-19),IF(F2<>"""",RIGHT(C2,LEN(C2)-LEN(F2)-1),"""")))),"""")"
+                    wsSFCampaignCheck.Range("J2").Formula = "=IF(ISNUMBER(E2),XLOOKUP('SF Campaign Checker'!E2,'Division Mapping'!B:B,'Division Mapping'!D:D),""CHECK"")"
+                    wsSFCampaignCheck.Range("K2").Formula = "=IF(ISNUMBER(E2),XLOOKUP(E2,'Division Mapping'!B:B,'Division Mapping'!F:F),""CHECK"")"
+                    wsSFCampaignCheck.Range("L2").Formula = "=XLOOKUP(F2,'School Mapping'!B:B,'School Mapping'!A:A)"
+
+                ' Step : Format Cells
+           
+           
+           
+            ' Steps : Populate the: wsAccountDesignation ("Account Designation" worksheet)
+                ' Step : Create the columns headers.
+                    wsAccountDesignation.Range("A1").Value = "PMT-ID"
+                    wsAccountDesignation.Range("B1").Value = "Campaign Name"
+                    wsAccountDesignation.Range("C1").Value = "Opportunity Name"
+                    wsAccountDesignation.Range("D1").Value = "Description"
+                    wsAccountDesignation.Range("E1").Value = "Revenue Account - Initial Check"
+                    wsAccountDesignation.Range("F1").Value = "Division - Initial Check"
+                    wsAccountDesignation.Range("G1").Value = "Funding Source - Initial Check"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsAccountDesignation.Range("A20001").Formula2 = "=FILTER('Positive SF Data'!B:B,'Positive SF Data'!AH:AH=""CHECK"")"
+                    wsAccountDesignation.Range("B20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!D:D)"
+                    wsAccountDesignation.Range("C20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!C:C)"
+                    wsAccountDesignation.Range("D20001").Formula = "=XLOOKUP(A20001,'SF Filtered'!A:A,'SF Filtered'!R:R)"
+                    wsAccountDesignation.Range("E20001").Formula = "=XLOOKUP($A20001,'Positive SF Data'!$B:$B,'Positive SF Data'!AH:AH)"
+                    wsAccountDesignation.Range("F20001").Formula = "=XLOOKUP($A20001,'Positive SF Data'!$B:$B,'Positive SF Data'!AI:AI)"
+                    wsAccountDesignation.Range("G20001").Formula = "=XLOOKUP($A20001,'Positive SF Data'!$B:$B,'Positive SF Data'!AJ:AJ)"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsAccountUserDesignation ("UserRequired AccountDesignation" worksheet)
+                ' Step : Create the columns headers.
+                    wsAccountUserDesignation.Range("A1").Value = "PMT-ID"
+                    wsAccountUserDesignation.Range("B1").Value = "Campaign Name"
+                    wsAccountUserDesignation.Range("C1").Value = "Opportunity Name"
+                    wsAccountUserDesignation.Range("D1").Value = "Description"
+                    wsAccountUserDesignation.Range("E1").Value = "Revenue Account - Initial Check"
+                    wsAccountUserDesignation.Range("F1").Value = "Division - Initial Check"
+                    wsAccountUserDesignation.Range("G1").Value = "Funding Source - Initial Check"
+                    wsAccountUserDesignation.Range("H1").Value = "Suggested Account Designation"
+                    wsAccountUserDesignation.Range("I1").Value = "Revenue Account - Final"
+                    wsAccountUserDesignation.Range("J1").Value = "Division - Final"
+                    wsAccountUserDesignation.Range("K1").Value = "Funding Source - Final"
+                    wsAccountUserDesignation.Range("L1").Value = "Division Designation"
+                    wsAccountUserDesignation.Range("M1").Value = "Funding Source Designation"
+                    wsAccountUserDesignation.Range("N1").Value = "Manual Override of Revenue Account"
+                    wsAccountUserDesignation.Range("O1").Value = "Manual Override of Division"
+                    wsAccountUserDesignation.Range("P1").Value = "Manual Override of Funding Source"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsAccountUserDesignation.Range("A2").Formula2 = "=FILTER('Account Designation'!A:G,('Account Designation'!A:A<>"""")*('Account Designation'!A:A<>""PMT-ID""))"
+                    wsAccountUserDesignation.Range("H2").Formula = "=IF(ISNUMBER(SEARCH(""Lunch"",C2)),""73010--2086--7311-Student Reimbursement"", IF(ISNUMBER(SEARCH(""Band -"",C2)),""73001--2001--7306-Local Other (General)"",""No Suggestion at this time""))"
+                    wsAccountUserDesignation.Range("J2").Formula = "=IF(OR(I4=73011,I4=73012, I4=73013,I4=41005,I4=73003,I4=73009,I4=73001),XLOOKUP(I4,'Division Mapping'!B:B,'Division Mapping'!D:D),""Other"")"
+                    wsAccountUserDesignation.Range("K2").Formula = "=IF(OR(I2=73011,I2=73012, I2=73013,I2=41005,I2=73003,I2=73009),XLOOKUP(I2,'Division Mapping'!B:B,'Division Mapping'!F:F),""Other"")"
+
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsDivisionMap ("Division Mapping" worksheet)
+                ' Step : Create the columns headers.
+                    wsDivisionMap.Range("A1").Value = ""
+                    wsDivisionMap.Range("B1").Value = "Account Number"
+                    wsDivisionMap.Range("C1").Value = "Account Name"
+                    wsDivisionMap.Range("D1").Value = "Division"
+                    wsDivisionMap.Range("E1").Value = "Division Name"
+                    wsDivisionMap.Range("F1").Value = "Funding Source"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsDivisionMap.Range("A2").Value = ""
+                    wsDivisionMap.Range("B2").Value = ""
+                    wsDivisionMap.Range("C2").Value = "** MAPPING TO ALIGN WITH CAMPAIGNS **"
+                    wsDivisionMap.Range("D2").Value = ""
+                    wsDivisionMap.Range("E2").Value = ""
+                    wsDivisionMap.Range("F2").Value = ""
+                    
+                    ' 73001-2001-7312 (Tax Credit)
+                        wsDivisionMap.Range("A3").Value = "AZ Tax Credit"
+                        wsDivisionMap.Range("B3").Value = "73001"
+                        wsDivisionMap.Range("C3").Value = "Donations (non-ATF)"
+                        wsDivisionMap.Range("D3").Value = "2001"
+                        wsDivisionMap.Range("E3").Value = "Auxiliary"
+                        wsDivisionMap.Range("F3").Value = "7312-Tax Credit"
+                        
+                    ' 73001-2001-7306 (Athletics/Music Program Donations)
+                        wsDivisionMap.Range("A4").Value = "Athletics/Music Program Donations"
+                        wsDivisionMap.Range("B4").Value = "73001"
+                        wsDivisionMap.Range("C4").Value = "Donations (non-ATF)"
+                        wsDivisionMap.Range("D4").Value = "2001"
+                        wsDivisionMap.Range("E4").Value = "Auxiliary"
+                        wsDivisionMap.Range("F4").Value = "7306-Local Other (General)"
+                        
+                    ' 73002- ?
+                        wsDivisionMap.Range("A5").Value = ""
+                        wsDivisionMap.Range("B5").Value = "73002"
+                        wsDivisionMap.Range("C5").Value = "Fundraising Event (non-ATF)"
+                        wsDivisionMap.Range("D5").Value = ""
+                        wsDivisionMap.Range("E5").Value = ""
+                        wsDivisionMap.Range("F5").Value = ""
+                        
+                    ' 73003-2036-7306 ?
+                        wsDivisionMap.Range("A6").Value = ""
+                        wsDivisionMap.Range("B6").Value = "73003"
+                        wsDivisionMap.Range("C6").Value = "Donations - Temporarily Restricted (non-ATF)"
+                        wsDivisionMap.Range("D6").Value = "2036"
+                        wsDivisionMap.Range("E6").Value = "Not Applicable"
+                        wsDivisionMap.Range("F6").Value = "7306-Local Other (General)"
+                        
+                    ' 73009-2036-7306 (Capital Campaigns)
+                        wsDivisionMap.Range("A7").Value = ""
+                        wsDivisionMap.Range("B7").Value = "73009"
+                        wsDivisionMap.Range("C7").Value = "Capital Campaign Contributions"
+                        wsDivisionMap.Range("D7").Value = "2036"
+                        wsDivisionMap.Range("E7").Value = "Not Applicable"
+                        wsDivisionMap.Range("F7").Value = "7306-Local Other (General)"
+                        
+                    ' 73010-2036-7306 (Other Revenue)
+                        wsDivisionMap.Range("A8").Value = ""
+                        wsDivisionMap.Range("B8").Value = "73010"
+                        wsDivisionMap.Range("C8").Value = "Other Revenue (Eligible)"
+                        wsDivisionMap.Range("D8").Value = "2036"
+                        wsDivisionMap.Range("E8").Value = "Not Applicable"
+                        wsDivisionMap.Range("F8").Value = "7306-Local Other (General)"
+                        
+                    ' 73010-2086-7311 (Lunches)
+                        wsDivisionMap.Range("A9").Value = "Lunches"
+                        wsDivisionMap.Range("B9").Value = "73010"
+                        wsDivisionMap.Range("C9").Value = "Other Revenue (Eligible)"
+                        wsDivisionMap.Range("D9").Value = "2086"
+                        wsDivisionMap.Range("E9").Value = "Food Services"
+                        wsDivisionMap.Range("F9").Value = "7311-Student Reimbursement"
+                        
+                    ' 73011-2048-7301 (Direct Donations)
+                        wsDivisionMap.Range("A10").Value = "Direct Donations (Donor does not receive anything in return)"
+                        wsDivisionMap.Range("B10").Value = "73011"
+                        wsDivisionMap.Range("C10").Value = "ATF Donations Revenue*"
+                        wsDivisionMap.Range("D10").Value = "2048"
+                        wsDivisionMap.Range("E10").Value = "School Instruction - Regular"
+                        wsDivisionMap.Range("F10").Value = "7301-ATF Campaign"
+                        
+                    ' 73012-2048-7301 (Indirect Donations)
+                        wsDivisionMap.Range("A11").Value = "Indirect Donations (Donor receives something in return)"
+                        wsDivisionMap.Range("B11").Value = "73012"
+                        wsDivisionMap.Range("C11").Value = "ATF Fundraising Event Revenue*"
+                        wsDivisionMap.Range("D11").Value = "2048"
+                        wsDivisionMap.Range("E11").Value = "School Instruction - Regular"
+                        wsDivisionMap.Range("F11").Value = "7301-ATF Campaign"
+                        
+                    ' 73013-2048-7301 (Company/Corporate/Employer Match)
+                        wsDivisionMap.Range("A12").Value = "Employer/Company/Corporate Matching"
+                        wsDivisionMap.Range("B12").Value = "73013"
+                        wsDivisionMap.Range("C12").Value = "ATF Fundraising Event Revenue*"
+                        wsDivisionMap.Range("D12").Value = "2048"
+                        wsDivisionMap.Range("E12").Value = "School Instruction - Regular"
+                        wsDivisionMap.Range("F12").Value = "7301-ATF Campaign"
+                        
+                    ' 82401-2046-7301 (Fundraising Indirect Expenses [Transaction/Bank Fees])
+                        wsDivisionMap.Range("A13").Value = "Transaction/Bank Fees"
+                        wsDivisionMap.Range("B13").Value = "82401"
+                        wsDivisionMap.Range("C13").Value = "Indirect Fundraising Expenses - ATF*"
+                        wsDivisionMap.Range("D13").Value = "2046"
+                        wsDivisionMap.Range("E13").Value = "School Administration"
+                        wsDivisionMap.Range("F13").Value = "7301-ATF Campaign"
+                        
+                    ' 41005-2060-7306 (Founders' Circle)
+                        wsDivisionMap.Range("A14").Value = ""
+                        wsDivisionMap.Range("B14").Value = "41005"
+                        wsDivisionMap.Range("C14").Value = "Founders Cricle / Thank You Events"
+                        wsDivisionMap.Range("D14").Value = "2060"
+                        wsDivisionMap.Range("E14").Value = "Fundraising"
+                        wsDivisionMap.Range("F14").Value = "7306-Local Other (General)"
+
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsCRJSweepsInfo ("Sweeps CRJ information" worksheet)
+                ' Step : Create the columns headers.
+
+                ' Step : Populate the Formulas and Fill Down.
+
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsCRJReturnFees ("Extra Return Fees - CRJ Format" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJReturnFees.Range("A1").Value = "CNP School - Sweep ID"
+                    wsCRJReturnFees.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJReturnFees.Range("C1").Value = "PAYMETHOD"
+                    wsCRJReturnFees.Range("D1").Value = "DOCDATE"
+                    wsCRJReturnFees.Range("E1").Value = "DOCNUMBER"
+                    wsCRJReturnFees.Range("F1").Value = "DESCRIPTION"
+                    wsCRJReturnFees.Range("G1").Value = "DEPOSITTO"
+                    wsCRJReturnFees.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJReturnFees.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJReturnFees.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJReturnFees.Range("K1").Value = "CURRENCY"
+                    wsCRJReturnFees.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJReturnFees.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJReturnFees.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJReturnFees.Range("O1").Value = "LINE_NO"
+                    wsCRJReturnFees.Range("P1").Value = "ACCT_NO"
+                    wsCRJReturnFees.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJReturnFees.Range("R1").Value = "TRX_AMOUNT (Positives SF Data)"
+                    wsCRJReturnFees.Range("S1").Value = "AMOUNT (Negative SF Data)"
+                    wsCRJReturnFees.Range("T1").Value = "DEPT_ID"
+                    wsCRJReturnFees.Range("U1").Value = "LOCATION_ID"
+                    wsCRJReturnFees.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJReturnFees.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJReturnFees.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJReturnFees.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJReturnFees.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJReturnFees.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJReturnFees.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJReturnFees.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJReturnFees.Range("AD1").Value = "SUPDOCID"
+                    wsCRJReturnFees.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJReturnFees.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJReturnFees.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJReturnFees.Range("A2").Formula2 = "=FILTER('Sweeps Breakdown'!A:A,('Sweeps Breakdown'!A:A<>"""")*('Sweeps Breakdown'!A:A<>""Sweep ID""))"
+                    wsCRJReturnFees.Range("B2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJReturnFees.Range("C2").Value = "=""Credit Card"""
+                    wsCRJReturnFees.Range("D2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJReturnFees.Range("E2").Value = "=""ProPay"""
+                    wsCRJReturnFees.Range("F2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!I:I)&"" - Click & Pledge (""&'Sweeps CRJ information'!A2&"")"""
+                    wsCRJReturnFees.Range("G2").Value = "=""Bank account"""
+                    wsCRJReturnFees.Range("H2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!D:D)"
+                    wsCRJReturnFees.Range("I2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJReturnFees.Range("J2").Value = "="""""
+                    wsCRJReturnFees.Range("K2").Value = "=""USD"""
+                    wsCRJReturnFees.Range("L2").Value = "="""""
+                    wsCRJReturnFees.Range("M2").Value = "="""""
+                    wsCRJReturnFees.Range("N2").Value = "="""""
+                    wsCRJReturnFees.Range("O2").Value = "="""""
+                    wsCRJReturnFees.Range("P2").Value = "=""82401"""
+                    wsCRJReturnFees.Range("Q2").Value = "="""""
+                    wsCRJReturnFees.Range("R2").Formula = "=SUMIF('Positive SF Data'!T:T,A2,'Positive SF Data'!Y:Y)"
+                    wsCRJReturnFees.Range("S2").Formula = "=SUMIF('Negative SF Data'!T:T,A2,'Negative SF Data'!Y:Y)"
+                    wsCRJReturnFees.Range("T2").Value = "=""2046"""
+                    wsCRJReturnFees.Range("U2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!F:F)"
+                    wsCRJReturnFees.Range("V2").Formula = "=""ProPay Processing Fee - ""&TEXT(B2,""MM.DD.YYYY"")&"" (""&A2&"") [""&XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!I:I)&""]"""
+                    wsCRJReturnFees.Range("W2").Value = "="""""
+                    wsCRJReturnFees.Range("X2").Value = "=""19234"""
+                    wsCRJReturnFees.Range("Y2").Value = "="""""
+                    wsCRJReturnFees.Range("Z2").Value = "="""""
+                    wsCRJReturnFees.Range("AA2").Value = "="""""
+                    wsCRJReturnFees.Range("AB2").Value = "=""000"""
+                    wsCRJReturnFees.Range("AC2").Value = "=""ProPay"""
+                    wsCRJReturnFees.Range("AD2").Value = "="""""
+                    wsCRJReturnFees.Range("AE2").Value = "="""""
+                    wsCRJReturnFees.Range("AF2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJReturnFees.Range("AG2").Value = "=""7301-ATF Campaign"""
+
+                    
+                ' Step : Format Cells
+           
+           
+           
+            ' Steps : Populate the: wsCRJFormat ("CRJ Format" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJFormat.Range("A1").Value = "CNP School - Sweep ID"
+                    wsCRJFormat.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJFormat.Range("C1").Value = "PAYMETHOD"
+                    wsCRJFormat.Range("D1").Value = "DOCDATE"
+                    wsCRJFormat.Range("E1").Value = "DOCNUMBER"
+                    wsCRJFormat.Range("F1").Value = "DESCRIPTION"
+                    wsCRJFormat.Range("G1").Value = "DEPOSITTO"
+                    wsCRJFormat.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJFormat.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJFormat.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJFormat.Range("K1").Value = "CURRENCY"
+                    wsCRJFormat.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJFormat.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJFormat.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJFormat.Range("O1").Value = "LINE_NO"
+                    wsCRJFormat.Range("P1").Value = "ACCT_NO"
+                    wsCRJFormat.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJFormat.Range("R1").Value = "TRX_AMOUNT (Positives SF Data)"
+                    wsCRJFormat.Range("S1").Value = "AMOUNT (Negative SF Data)"
+                    wsCRJFormat.Range("T1").Value = "DEPT_ID"
+                    wsCRJFormat.Range("U1").Value = "LOCATION_ID"
+                    wsCRJFormat.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJFormat.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJFormat.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJFormat.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJFormat.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJFormat.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJFormat.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJFormat.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJFormat.Range("AD1").Value = "SUPDOCID"
+                    wsCRJFormat.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJFormat.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJFormat.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJFormat.Range("A2").Formula2 = "=UNIQUE(FILTER('Reports Consolidated-ReturnFees'!O:O,('Reports Consolidated-ReturnFees'!O:O<>"""")*('Reports Consolidated-ReturnFees'!O:O<>""CNP School ID - Sweep ID"")))"
+                    wsCRJFormat.Range("B2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJFormat.Range("C2").Formula = "=""Credit Card"""
+                    wsCRJFormat.Range("D2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJFormat.Range("E2").Formula = "=""ProPay"""
+                    wsCRJFormat.Range("F2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!I:I)&"" - Click & Pledge (""&'Extra Return Fees - CRJ Format'!A2&"")"""
+                    wsCRJFormat.Range("G2").Formula = "=""Bank account"""
+                    wsCRJFormat.Range("H2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!D:D)"
+                    wsCRJFormat.Range("I2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJFormat.Range("J2").Value = "="""""
+                    wsCRJFormat.Range("K2").Value = "=""USD"""
+                    wsCRJFormat.Range("L2").Value = "="""""
+                    wsCRJFormat.Range("M2").Value = "="""""
+                    wsCRJFormat.Range("N2").Value = "="""""
+                    wsCRJFormat.Range("O2").Value = "=""4"""
+                    wsCRJFormat.Range("P2").Value = "=""82401"""
+                    wsCRJFormat.Range("Q2").Value = "="""""
+                    wsCRJFormat.Range("R2").Formula = "=SUMIF('Reports Consolidated-ReturnFees'!O:O,A2,'Reports Consolidated-ReturnFees'!J:J)"
+                    wsCRJFormat.Range("S2").Formula = "=SUMIF('Reports Consolidated-ReturnFees'!O:O,A2,'Reports Consolidated-ReturnFees'!J:J)"
+                    wsCRJFormat.Range("T2").Value = "=""2046"""
+                    wsCRJFormat.Range("U2").Formula = "=XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!F:F)"
+                    wsCRJFormat.Range("V2").Formula = "=""Additional Return Fees - ""&TEXT(B2,""MM.DD.YYYY"")&"" (""&A2&"") [""&XLOOKUP(LEFT(A2,5),'School Mapping'!C:C,'School Mapping'!I:I)&""]"""
+                    wsCRJFormat.Range("W2").Value = "="""""
+                    wsCRJFormat.Range("X2").Value = "=""19234"""
+                    wsCRJFormat.Range("Y2").Value = "="""""
+                    wsCRJFormat.Range("Z2").Value = "="""""
+                    wsCRJFormat.Range("AA2").Value = "="""""
+                    wsCRJFormat.Range("AB2").Value = "=""000"""
+                    wsCRJFormat.Range("AC2").Value = "=""ProPay"""
+                    wsCRJFormat.Range("AD2").Value = "="""""
+                    wsCRJFormat.Range("AE2").Value = "="""""
+                    wsCRJFormat.Range("AF2").Formula = "=XLOOKUP(A2,'Sweeps Breakdown'!A:A,'Sweeps Breakdown'!J:J)"
+                    wsCRJFormat.Range("AG2").Value = "=""7301-ATF Campaign"""
+                    wsCRJFormat.Range("A5001").Formula2 = "=FILTER('Sweeps CRJ information'!A:A,('Sweeps CRJ information'!R:R<>0)*('Sweeps CRJ information'!R:R<>"""")*('Sweeps CRJ information'!R:R<>""TRX_AMOUNT (Positives SF Data)""))"
+                    wsCRJFormat.Range("B5001").Formula = "=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!B:B),""""),"""")"
+                    wsCRJFormat.Range("C5001").Formula = "=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!C:C),""""),"""")"
+                    wsCRJFormat.Range("D5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!D:D),""""),"""")"
+                    wsCRJFormat.Range("E5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!E:E),""""),"""")"
+                    wsCRJFormat.Range("F5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!F:F),""""),"""")"
+                    wsCRJFormat.Range("G5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!G:G),""""),"""")"
+                    wsCRJFormat.Range("H5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!H:H),""""),"""")"
+                    wsCRJFormat.Range("I5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!I:I),""""),"""")"
+                    wsCRJFormat.Range("J5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!J:J),""""),"""")"
+                    wsCRJFormat.Range("K5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!K:K),""""),"""")"
+                    wsCRJFormat.Range("L5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!L:L),""""),"""")"
+                    wsCRJFormat.Range("M5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!M:M),""""),"""")"
+                    wsCRJFormat.Range("N5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!N:N),""""),"""")"
+                    wsCRJFormat.Range("O5001").Formula = "'=IFERROR(IF($A5001<>"""",""2"",""""),"""")"
+                    wsCRJFormat.Range("P5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!P:P),""""),"""")"
+                    wsCRJFormat.Range("Q5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Q:Q),""""),"""")"
+                    wsCRJFormat.Range("R5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!R:R),""""),"""")"
+                    wsCRJFormat.Range("S5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!R:R),""""),"""")"
+                    wsCRJFormat.Range("T5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!T:T),""""),"""")"
+                    wsCRJFormat.Range("U5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!U:U),""""),"""")"
+                    wsCRJFormat.Range("V5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!V:V)&"" - Positive Transactions"",""""),"""")"
+                    wsCRJFormat.Range("W5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!W:W),""""),"""")"
+                    wsCRJFormat.Range("X5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!X:X),""""),"""")"
+                    wsCRJFormat.Range("Y5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Y:Y),""""),"""")"
+                    wsCRJFormat.Range("Z5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Z:Z),""""),"""")"
+                    wsCRJFormat.Range("AA5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AA:AA),""""),"""")"
+                    wsCRJFormat.Range("AB5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AB:AB),""""),"""")"
+                    wsCRJFormat.Range("AC5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AC:AC),""""),"""")"
+                    wsCRJFormat.Range("AD5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AD:AD),""""),"""")"
+                    wsCRJFormat.Range("AE5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AE:AE),""""),"""")"
+                    wsCRJFormat.Range("AF5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AF:AF),""""),"""")"
+                    wsCRJFormat.Range("AG5001").Formula = "'=IFERROR(IF($A5001<>"""",XLOOKUP($A5001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AG:AG),""""),"""")"
+                    wsCRJFormat.Range("A10001").Formula2 = "=FILTER('Sweeps Breakdown'!A:A,'Sweeps Breakdown'!I:I=-2.5)"
+                    wsCRJFormat.Range("B10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!B:B),""""),"""")"
+                    wsCRJFormat.Range("C10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!C:C),""""),"""")"
+                    wsCRJFormat.Range("D10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!D:D),""""),"""")"
+                    wsCRJFormat.Range("E10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!E:E),""""),"""")"
+                    wsCRJFormat.Range("F10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!F:F),""""),"""")"
+                    wsCRJFormat.Range("G10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!G:G),""""),"""")"
+                    wsCRJFormat.Range("H10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!H:H),""""),"""")"
+                    wsCRJFormat.Range("I10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!I:I),""""),"""")"
+                    wsCRJFormat.Range("J10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!J:J),""""),"""")"
+                    wsCRJFormat.Range("K10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!K:K),""""),"""")"
+                    wsCRJFormat.Range("L10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!L:L),""""),"""")"
+                    wsCRJFormat.Range("M10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!M:M),""""),"""")"
+                    wsCRJFormat.Range("N10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!N:N),""""),"""")"
+                    wsCRJFormat.Range("O10001").Formula = "=IFERROR(IF($A10001<>"""",""3"",""""),"""")"
+                    wsCRJFormat.Range("P10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!P:P),""""),"""")"
+                    wsCRJFormat.Range("Q10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Q:Q),""""),"""")"
+                    wsCRJFormat.Range("R10001").Formula = "=IFERROR(IF($A10001<>"""",-2.5,""""),"""")"
+                    wsCRJFormat.Range("S10001").Formula = "=IFERROR(IF($A10001<>"""",-2.5,""""),"""")"
+                    wsCRJFormat.Range("T10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!T:T),""""),"""")"
+                    wsCRJFormat.Range("U10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!U:U),""""),"""")"
+                    wsCRJFormat.Range("V10001").Formula = "=IFERROR(IF($A10001<>"""",""ProPay ACH Deposit Transfer Fee - ""&RIGHT(XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!V:V),LEN(XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!V:V))-24),""""),"""")"
+                    wsCRJFormat.Range("W10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!W:W),""""),"""")"
+                    wsCRJFormat.Range("X10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!X:X),""""),"""")"
+                    wsCRJFormat.Range("Y10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Y:Y),""""),"""")"
+                    wsCRJFormat.Range("Z10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!Z:Z),""""),"""")"
+                    wsCRJFormat.Range("AA10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AA:AA),""""),"""")"
+                    wsCRJFormat.Range("AB10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AB:AB),""""),"""")"
+                    wsCRJFormat.Range("AC10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AC:AC),""""),"""")"
+                    wsCRJFormat.Range("AD10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AD:AD),""""),"""")"
+                    wsCRJFormat.Range("AE10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AE:AE),""""),"""")"
+                    wsCRJFormat.Range("AF10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AF:AF),""""),"""")"
+                    wsCRJFormat.Range("AG10001").Formula = "=IFERROR(IF($A10001<>"""",XLOOKUP($A10001,'Sweeps CRJ information'!$A:$A,'Sweeps CRJ information'!AG:AG),""""),"""")"
+                    wsCRJFormat.Range("A17501").Formula2 = "=FILTER('Extra Return Fees - CRJ Format'!A:A,('Extra Return Fees - CRJ Format'!A:A<>""CNP School - Sweep ID"") * ('Extra Return Fees - CRJ Format'!A:A<>""""))"
+                    wsCRJFormat.Range("B17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!B:B),""""),"""")"
+                    wsCRJFormat.Range("C17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!C:C),""""),"""")"
+                    wsCRJFormat.Range("D17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!D:D),""""),"""")"
+                    wsCRJFormat.Range("E17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!E:E),""""),"""")"
+                    wsCRJFormat.Range("F17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!F:F),""""),"""")"
+                    wsCRJFormat.Range("G17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!G:G),""""),"""")"
+                    wsCRJFormat.Range("H17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!H:H),""""),"""")"
+                    wsCRJFormat.Range("I17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!I:I),""""),"""")"
+                    wsCRJFormat.Range("J17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!J:J),""""),"""")"
+                    wsCRJFormat.Range("K17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!K:K),""""),"""")"
+                    wsCRJFormat.Range("L17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!L:L),""""),"""")"
+                    wsCRJFormat.Range("M17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!M:M),""""),"""")"
+                    wsCRJFormat.Range("N17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!N:N),""""),"""")"
+                    wsCRJFormat.Range("O17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!O:O),""""),"""")"
+                    wsCRJFormat.Range("P17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!P:P),""""),"""")"
+                    wsCRJFormat.Range("Q17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!Q:Q),""""),"""")"
+                    wsCRJFormat.Range("R17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!R:R),""""),"""")"
+                    wsCRJFormat.Range("S17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!S:S),""""),"""")"
+                    wsCRJFormat.Range("T17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!T:T),""""),"""")"
+                    wsCRJFormat.Range("U17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!U:U),""""),"""")"
+                    wsCRJFormat.Range("V17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!V:V),""""),"""")"
+                    wsCRJFormat.Range("W17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!W:W),""""),"""")"
+                    wsCRJFormat.Range("X17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!X:X),""""),"""")"
+                    wsCRJFormat.Range("Y17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!Y:Y),""""),"""")"
+                    wsCRJFormat.Range("Z17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!Z:Z),""""),"""")"
+                    wsCRJFormat.Range("AA17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AA:AA),""""),"""")"
+                    wsCRJFormat.Range("AB17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AB:AB),""""),"""")"
+                    wsCRJFormat.Range("AC17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AC:AC),""""),"""")"
+                    wsCRJFormat.Range("AD17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AD:AD),""""),"""")"
+                    wsCRJFormat.Range("AE17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AE:AE),""""),"""")"
+                    wsCRJFormat.Range("AF17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AF:AF),""""),"""")"
+                    wsCRJFormat.Range("AG17501").Formula = "=IFERROR(IF($A17501<>"""",XLOOKUP($A17501,'Extra Return Fees - CRJ Format'!$A:$A,'Extra Return Fees - CRJ Format'!AG:AG),""""),"""")"
+                    wsCRJFormat.Range("A22501").Formula2 = "='Negative SF Data'!A2"
+                    wsCRJFormat.Range("B22501").Formula2 = "=FILTER('Negative SF Data'!AL:BQ,('Negative SF Data'!A:A<>"""")*('Negative SF Data'!A:A<>""Number""))"
+                    wsCRJFormat.Range("A32501").Formula2 = "=FILTER('Positive SF Data'!A:A,('Positive SF Data'!A:A<>"""")*('Positive SF Data'!A:A<>""Number""))"
+                    wsCRJFormat.Range("B32501").Formula2 = "=FILTER('Positive SF Data'!AP:BU,('Positive SF Data'!A:A<>""Number"")*('Positive SF Data'!A:A<>""""))"
+
+
+                ' Step : Format Cells
+           
+           
+           
+            ' Steps : Populate the: wsCRJPutTogether ("CRJ Put together" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJPutTogether.Range("A1").Value = "DONOTIMPORT"
+                    wsCRJPutTogether.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJPutTogether.Range("C1").Value = "PAYMETHOD"
+                    wsCRJPutTogether.Range("D1").Value = "DOCDATE"
+                    wsCRJPutTogether.Range("E1").Value = "DOCNUMBER"
+                    wsCRJPutTogether.Range("F1").Value = "DESCRIPTION"
+                    wsCRJPutTogether.Range("G1").Value = "DEPOSITTO"
+                    wsCRJPutTogether.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJPutTogether.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJPutTogether.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJPutTogether.Range("K1").Value = "CURRENCY"
+                    wsCRJPutTogether.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJPutTogether.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJPutTogether.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJPutTogether.Range("O1").Value = "LINE_NO"
+                    wsCRJPutTogether.Range("P1").Value = "ACCT_NO"
+                    wsCRJPutTogether.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJPutTogether.Range("R1").Value = "TRX_AMOUNT"
+                    wsCRJPutTogether.Range("S1").Value = "AMOUNT"
+                    wsCRJPutTogether.Range("T1").Value = "DEPT_ID"
+                    wsCRJPutTogether.Range("U1").Value = "LOCATION_ID"
+                    wsCRJPutTogether.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJPutTogether.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJPutTogether.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJPutTogether.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJPutTogether.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJPutTogether.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJPutTogether.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJPutTogether.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJPutTogether.Range("AD1").Value = "SUPDOCID"
+                    wsCRJPutTogether.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJPutTogether.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJPutTogether.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJPutTogether.Range("A2").Formula = "=LEFT(RIGHT(F2,LEN(F2)-SEARCH(""("",F2)),LEN(RIGHT(F2,LEN(F2)-SEARCH(""("",F2)))-1)"
+                    wsCRJPutTogether.Range("B2").Formula2 = "=SORT(FILTER('CRJ Format'!B:AG,('CRJ Format'!F:F<>"""") * ('CRJ Format'!F:F<>""DESCRIPTION"")),5)"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsCRJPos ("Positive Sweep CRJs" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJPos.Range("A1").Value = "DONOTIMPORT"
+                    wsCRJPos.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJPos.Range("C1").Value = "PAYMETHOD"
+                    wsCRJPos.Range("D1").Value = "DOCDATE"
+                    wsCRJPos.Range("E1").Value = "DOCNUMBER"
+                    wsCRJPos.Range("F1").Value = "DESCRIPTION"
+                    wsCRJPos.Range("G1").Value = "DEPOSITTO"
+                    wsCRJPos.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJPos.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJPos.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJPos.Range("K1").Value = "CURRENCY"
+                    wsCRJPos.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJPos.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJPos.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJPos.Range("O1").Value = "LINE_NO"
+                    wsCRJPos.Range("P1").Value = "ACCT_NO"
+                    wsCRJPos.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJPos.Range("R1").Value = "TRX_AMOUNT"
+                    wsCRJPos.Range("S1").Value = "AMOUNT"
+                    wsCRJPos.Range("T1").Value = "DEPT_ID"
+                    wsCRJPos.Range("U1").Value = "LOCATION_ID"
+                    wsCRJPos.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJPos.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJPos.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJPos.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJPos.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJPos.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJPos.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJPos.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJPos.Range("AD1").Value = "SUPDOCID"
+                    wsCRJPos.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJPos.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJPos.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJPos.Range("A2").Value = 1
+                    wsCRJPos.Range("A3").Value = 2
+                    wsCRJPos.Range("B2").Formula2 = "=FILTER('CRJ Put together'!B:AG, ISNUMBER(MATCH('CRJ Put together'!A:A, 'Positive vs Negative Sweeps'!A:A, 0)))"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsCRJImport ("Positive CRJs - Import File" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJImport.Range("A1").Value = "DONOTIMPORT"
+                    wsCRJImport.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJImport.Range("C1").Value = "PAYMETHOD"
+                    wsCRJImport.Range("D1").Value = "DOCDATE"
+                    wsCRJImport.Range("E1").Value = "DOCNUMBER"
+                    wsCRJImport.Range("F1").Value = "DESCRIPTION"
+                    wsCRJImport.Range("G1").Value = "DEPOSITTO"
+                    wsCRJImport.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJImport.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJImport.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJImport.Range("K1").Value = "CURRENCY"
+                    wsCRJImport.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJImport.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJImport.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJImport.Range("O1").Value = "LINE_NO"
+                    wsCRJImport.Range("P1").Value = "ACCT_NO"
+                    wsCRJImport.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJImport.Range("R1").Value = "TRX_AMOUNT"
+                    wsCRJImport.Range("S1").Value = "AMOUNT"
+                    wsCRJImport.Range("T1").Value = "DEPT_ID"
+                    wsCRJImport.Range("U1").Value = "LOCATION_ID"
+                    wsCRJImport.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJImport.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJImport.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJImport.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJImport.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJImport.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJImport.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJImport.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJImport.Range("AD1").Value = "SUPDOCID"
+                    wsCRJImport.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJImport.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJImport.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJImport.Range("A2").Formula2 = "=FILTER('Positive Sweep CRJs'!A:A,('Positive Sweep CRJs'!A:A<>"""") * ('Positive Sweep CRJs'!A:A<>""DONOTIMPORT""))"
+                    wsCRJImport.Range("B2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!B:B)"
+                    wsCRJImport.Range("C2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!C:C)"
+                    wsCRJImport.Range("D2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!D:D)"
+                    wsCRJImport.Range("E2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!E:E)"
+                    wsCRJImport.Range("F2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!F:F)"
+                    wsCRJImport.Range("G2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!G:G)"
+                    wsCRJImport.Range("H2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!H:H)"
+                    wsCRJImport.Range("I2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!I:I)"
+                    wsCRJImport.Range("J2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!J:J)"
+                    wsCRJImport.Range("K2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!K:K)"
+                    wsCRJImport.Range("L2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!L:L)"
+                    wsCRJImport.Range("M2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!M:M)"
+                    wsCRJImport.Range("N2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!N:N)"
+                    wsCRJImport.Range("O2").Formula = "'=IF(F2=F1,1+O1,1)"
+                    wsCRJImport.Range("P2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!P:P)"
+                    wsCRJImport.Range("Q2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!Q:Q)"
+                    wsCRJImport.Range("R2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!R:R)"
+                    wsCRJImport.Range("S2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!S:S)"
+                    wsCRJImport.Range("T2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!T:T)"
+                    wsCRJImport.Range("U2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!U:U)"
+                    wsCRJImport.Range("V2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!V:V)"
+                    wsCRJImport.Range("W2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!W:W)"
+                    wsCRJImport.Range("X2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!X:X)"
+                    wsCRJImport.Range("Y2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!Y:Y)"
+                    wsCRJImport.Range("Z2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!Z:Z)"
+                    wsCRJImport.Range("AA2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AA:AA)"
+                    wsCRJImport.Range("AB2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AB:AB)"
+                    wsCRJImport.Range("AC2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AC:AC)"
+                    wsCRJImport.Range("AD2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AD:AD)"
+                    wsCRJImport.Range("AE2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AE:AE)"
+                    wsCRJImport.Range("AF2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AF:AF)"
+                    wsCRJImport.Range("AG2").Formula = "'=XLOOKUP($A2,'Positive Sweep CRJs'!$A:$A,'Positive Sweep CRJs'!AG:AG)"
+
+                ' Step : Format Cells
+           
+            ' Steps : Populate the: wsCRJNeg ("Negative Sweep CRJs" worksheet)
+                ' Step : Create the columns headers.
+                    wsCRJNeg.Range("A1").Value = "DONOTIMPORT"
+                    wsCRJNeg.Range("B1").Value = "RECEIPT_DATE"
+                    wsCRJNeg.Range("C1").Value = "PAYMETHOD"
+                    wsCRJNeg.Range("D1").Value = "DOCDATE"
+                    wsCRJNeg.Range("E1").Value = "DOCNUMBER"
+                    wsCRJNeg.Range("F1").Value = "DESCRIPTION"
+                    wsCRJNeg.Range("G1").Value = "DEPOSITTO"
+                    wsCRJNeg.Range("H1").Value = "BANKACCOUNTID"
+                    wsCRJNeg.Range("I1").Value = "DEPOSITDATE"
+                    wsCRJNeg.Range("J1").Value = "UNDEPACCTNO"
+                    wsCRJNeg.Range("K1").Value = "CURRENCY"
+                    wsCRJNeg.Range("L1").Value = "EXCH_RATE_DATE"
+                    wsCRJNeg.Range("M1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCRJNeg.Range("N1").Value = "EXCH_RATE_DATE"
+                    wsCRJNeg.Range("O1").Value = "LINE_NO"
+                    wsCRJNeg.Range("P1").Value = "ACCT_NO"
+                    wsCRJNeg.Range("Q1").Value = "ACCOUNTLABEL"
+                    wsCRJNeg.Range("R1").Value = "TRX_AMOUNT"
+                    wsCRJNeg.Range("S1").Value = "AMOUNT"
+                    wsCRJNeg.Range("T1").Value = "DEPT_ID"
+                    wsCRJNeg.Range("U1").Value = "LOCATION_ID"
+                    wsCRJNeg.Range("V1").Value = "ITEM_MEMO"
+                    wsCRJNeg.Range("W1").Value = "OTHERRECEIPTSENTRY_PROJECTID"
+                    wsCRJNeg.Range("X1").Value = "OTHERRECEIPTSENTRY_CUSTOMERID"
+                    wsCRJNeg.Range("Y1").Value = "OTHERRECEIPTSENTRY_ITEMID"
+                    wsCRJNeg.Range("Z1").Value = "OTHERRECEIPTSENTRY_VENDORID"
+                    wsCRJNeg.Range("AA1").Value = "OTHERRECEIPTSENTRY_EMPLOYEEID"
+                    wsCRJNeg.Range("AB1").Value = "OTHERRECEIPTSENTRY_CLASSID"
+                    wsCRJNeg.Range("AC1").Value = "PAYER_NAME"
+                    wsCRJNeg.Range("AD1").Value = "SUPDOCID"
+                    wsCRJNeg.Range("AE1").Value = "EXCHANGE_RATE"
+                    wsCRJNeg.Range("AF1").Value = "OR_TRANSACTION_DATE"
+                    wsCRJNeg.Range("AG1").Value = "GLDIMFUNDING_SOURCE"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCRJNeg.Range("A2").Value = 1
+                    wsCRJNeg.Range("A3").Value = 2
+                    wsCRJNeg.Range("B2").Formula2 = "=FILTER('CRJ Put together'!B:AG, ISNUMBER(MATCH('CRJ Put together'!A:A, 'Positive vs Negative Sweeps'!H:H, 0)))"
+
+                ' Step : Format Cells
+           
+           
+           
+            ' Steps : Populate the: wsCHARNegStart ("Neg. CHAR - Start" worksheet)
+                ' Step : Create the columns headers.
+                    wsCHARNegStart.Range("A1").Value = "DONOTIMPORT"
+                    wsCHARNegStart.Range("B1").Value = "JOURNAL"
+                    wsCHARNegStart.Range("C1").Value = "DATE"
+                    wsCHARNegStart.Range("D1").Value = "REVERSEDATE"
+                    wsCHARNegStart.Range("E1").Value = "DESCRIPTION"
+                    wsCHARNegStart.Range("F1").Value = "REFERENCE_NO"
+                    wsCHARNegStart.Range("G1").Value = "LINE_NO"
+                    wsCHARNegStart.Range("H1").Value = "ACCT_NO"
+                    wsCHARNegStart.Range("I1").Value = "LOCATION_ID"
+                    wsCHARNegStart.Range("J1").Value = "DEPT_ID"
+                    wsCHARNegStart.Range("K1").Value = "DOCUMENT"
+                    wsCHARNegStart.Range("L1").Value = "MEMO"
+                    wsCHARNegStart.Range("M1").Value = "DEBIT"
+                    wsCHARNegStart.Range("N1").Value = "CREDIT"
+                    wsCHARNegStart.Range("O1").Value = "SOURCEENTITY"
+                    wsCHARNegStart.Range("P1").Value = "CURRENCY"
+                    wsCHARNegStart.Range("Q1").Value = "EXCH_RATE_DATE"
+                    wsCHARNegStart.Range("R1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCHARNegStart.Range("S1").Value = "EXCHANGE_RATE"
+                    wsCHARNegStart.Range("T1").Value = "STATE"
+                    wsCHARNegStart.Range("U1").Value = "ALLOCATION_ID"
+                    wsCHARNegStart.Range("V1").Value = "RASSET"
+                    wsCHARNegStart.Range("W1").Value = "RDEPRECIATION_SCHEDULE"
+                    wsCHARNegStart.Range("X1").Value = "RASSET_ADJUSTMENT"
+                    wsCHARNegStart.Range("Y1").Value = "RASSET_CLASS"
+                    wsCHARNegStart.Range("Z1").Value = "RASSETOUTOFSERVICE"
+                    wsCHARNegStart.Range("AA1").Value = "GLDIMFUNDING_SOURCE"
+                    wsCHARNegStart.Range("AB1").Value = "GLENTRY_PROJECTID"
+                    wsCHARNegStart.Range("AC1").Value = "GLENTRY_CUSTOMERID"
+                    wsCHARNegStart.Range("AD1").Value = "GLENTRY_VENDORID"
+                    wsCHARNegStart.Range("AE1").Value = "GLENTRY_EMPLOYEEID"
+                    wsCHARNegStart.Range("AF1").Value = "GLENTRY_ITEMID"
+                    wsCHARNegStart.Range("AG1").Value = "GLENTRY_CLASSID"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCHARNegStart.Range("A2").Formula = "=FILTER('Negative Sweep CRJs'!A:A,('Negative Sweep CRJs'!A:A<>"""") * ('Negative Sweep CRJs'!A:A<>""DONOTIMPORT""))"
+                    wsCHARNegStart.Range("B2").Formula = "=IF(E2="""","""",""CHAR"")"
+                    wsCHARNegStart.Range("C2").Formula = "=IF(E2="""","""",'Negative Sweep CRJs'!B2)"
+                    wsCHARNegStart.Range("D2").Formula = "="""""
+                    wsCHARNegStart.Range("E2").Formula = "=IF('Negative Sweep CRJs'!F2='Negative Sweep CRJs'!F1,"""",'Negative Sweep CRJs'!F2)"
+                    wsCHARNegStart.Range("F2").Formula = "=RIGHT('Negative Sweep CRJs'!F2,LEN('Negative Sweep CRJs'!F2)-SEARCH("" - "",'Negative Sweep CRJs'!F2)-1)"
+                    wsCHARNegStart.Range("G2").Formula = "=IF('Negative Sweep CRJs'!F2='Negative Sweep CRJs'!F1,1+G1,1)"
+                    wsCHARNegStart.Range("H2").Formula = "='Negative Sweep CRJs'!P2"
+                    wsCHARNegStart.Range("I2").Formula = "='Negative Sweep CRJs'!U2"
+                    wsCHARNegStart.Range("J2").Formula = "='Negative Sweep CRJs'!T2"
+                    wsCHARNegStart.Range("K2").Formula = "="""""
+                    wsCHARNegStart.Range("L2").Formula = "='Negative Sweep CRJs'!V2"
+                    wsCHARNegStart.Range("M2").Formula = "=IF('Negative Sweep CRJs'!R2<0,'Negative Sweep CRJs'!R2*-1,"""")"
+                    wsCHARNegStart.Range("N2").Formula = "=IF('Negative Sweep CRJs'!R2>0,'Negative Sweep CRJs'!R2,"""")"
+                    wsCHARNegStart.Range("O2").Formula = "="""""
+                    wsCHARNegStart.Range("P2").Formula = "="""""
+                    wsCHARNegStart.Range("Q2").Formula = "="""""
+                    wsCHARNegStart.Range("R2").Formula = "="""""
+                    wsCHARNegStart.Range("S2").Formula = "="""""
+                    wsCHARNegStart.Range("T2").Formula = "=""Draft"""
+                    wsCHARNegStart.Range("U2").Formula = "="""""
+                    wsCHARNegStart.Range("V2").Formula = "="""""
+                    wsCHARNegStart.Range("W2").Formula = "="""""
+                    wsCHARNegStart.Range("X2").Formula = "="""""
+                    wsCHARNegStart.Range("Y2").Formula = "="""""
+                    wsCHARNegStart.Range("Z2").Formula = "="""""
+                    wsCHARNegStart.Range("AA2").Formula = "='Negative Sweep CRJs'!AG2"
+                    wsCHARNegStart.Range("AB2").Formula = "="""""
+                    wsCHARNegStart.Range("AC2").Formula = "="""""
+                    wsCHARNegStart.Range("AD2").Formula = "="""""
+                    wsCHARNegStart.Range("AE2").Formula = "="""""
+                    wsCHARNegStart.Range("AF2").Formula = "="""""
+                    wsCHARNegStart.Range("AG2").Formula = "=""000"""
+                    
+                    wsCHARNegStart.Range("A2001").Formula2 = "=FILTER(UNIQUE(E2:E2000),UNIQUE(E2:E2000)<>"""")"
+                    wsCHARNegStart.Range("B2001").Value = "="""""
+                    wsCHARNegStart.Range("C2001").Value = "="""""
+                    wsCHARNegStart.Range("D2001").Value = "="""""
+                    wsCHARNegStart.Range("E2001").Value = "="""""
+                    wsCHARNegStart.Range("F2001").Formula = "=XLOOKUP(A2001,E2:E2000,F2:F2000)"
+                    wsCHARNegStart.Range("G2001").Formula = "=COUNTIF(F2:F2000,F2001)+1"
+                    wsCHARNegStart.Range("H2001").Formula = "=IF(I2001<>""CHECK"",""11""&LEFT(I2001,1)&""00"",""CHECK"")"
+                    wsCHARNegStart.Range("I2001").Formula = "=IF(SUMIF(F2:F2000,F2001,I2:I2000)/COUNTIF(F2:F2000,F2001)=XLOOKUP(F2001,F2:F2000,I2:I2000),XLOOKUP(F2001,F2:F2000,I2:I2000),""CHECK"")"
+                    wsCHARNegStart.Range("J2001").Value = "=""CHECK"""
+                    wsCHARNegStart.Range("K2001").Value = "="""""
+                    wsCHARNegStart.Range("L2001").Formula = "=A2001&"" - Bank Deposit"""
+                    wsCHARNegStart.Range("M2001").Value = "="""""
+                    wsCHARNegStart.Range("N2001").Formula = "=IF(SUMIF(F2:F2000,F2001,M2:M2000)<>0, SUMIF(F2:F2000,F2001,M2:M2000), 0)-IF(SUMIF(F2:F2000,F2001,N2:N2000)<>0, SUMIF(F2:F2000,F2001,N2:N2000), 0)"
+                    wsCHARNegStart.Range("O2001").Value = "="""""
+                    wsCHARNegStart.Range("P2001").Value = "="""""
+                    wsCHARNegStart.Range("Q2001").Value = "="""""
+                    wsCHARNegStart.Range("R2001").Value = "="""""
+                    wsCHARNegStart.Range("S2001").Value = "="""""
+                    wsCHARNegStart.Range("T2001").Value = "=""Draft"""
+                    wsCHARNegStart.Range("U2001").Value = "="""""
+                    wsCHARNegStart.Range("V2001").Value = "="""""
+                    wsCHARNegStart.Range("W2001").Value = "="""""
+                    wsCHARNegStart.Range("X2001").Value = "="""""
+                    wsCHARNegStart.Range("Y2001").Value = "="""""
+                    wsCHARNegStart.Range("Z2001").Value = "="""""
+                    wsCHARNegStart.Range("AA2001").Value = "=""7301-ATF Campaign"""
+                    wsCHARNegStart.Range("AB2001").Value = "="""""
+                    wsCHARNegStart.Range("AC2001").Value = "="""""
+                    wsCHARNegStart.Range("AD2001").Value = "="""""
+                    wsCHARNegStart.Range("AE2001").Value = "="""""
+                    wsCHARNegStart.Range("AF2001").Value = """"""""
+                    wsCHARNegStart.Range("AG2001").Value = "=""000"""
+
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsCHARNeg ("Negative Sweep - CHARs" worksheet)
+                ' Step : Create the columns headers.
+                    wsCHARNeg.Range("A1").Value = "DONOTIMPORT"
+                    wsCHARNeg.Range("B1").Value = "JOURNAL"
+                    wsCHARNeg.Range("C1").Value = "DATE"
+                    wsCHARNeg.Range("D1").Value = "REVERSEDATE"
+                    wsCHARNeg.Range("E1").Value = "DESCRIPTION"
+                    wsCHARNeg.Range("F1").Value = "REFERENCE_NO"
+                    wsCHARNeg.Range("G1").Value = "LINE_NO"
+                    wsCHARNeg.Range("H1").Value = "ACCT_NO"
+                    wsCHARNeg.Range("I1").Value = "LOCATION_ID"
+                    wsCHARNeg.Range("J1").Value = "DEPT_ID"
+                    wsCHARNeg.Range("K1").Value = "DOCUMENT"
+                    wsCHARNeg.Range("L1").Value = "MEMO"
+                    wsCHARNeg.Range("M1").Value = "DEBIT"
+                    wsCHARNeg.Range("N1").Value = "CREDIT"
+                    wsCHARNeg.Range("O1").Value = "SOURCEENTITY"
+                    wsCHARNeg.Range("P1").Value = "CURRENCY"
+                    wsCHARNeg.Range("Q1").Value = "EXCH_RATE_DATE"
+                    wsCHARNeg.Range("R1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCHARNeg.Range("S1").Value = "EXCHANGE_RATE"
+                    wsCHARNeg.Range("T1").Value = "STATE"
+                    wsCHARNeg.Range("U1").Value = "ALLOCATION_ID"
+                    wsCHARNeg.Range("V1").Value = "RASSET"
+                    wsCHARNeg.Range("W1").Value = "RDEPRECIATION_SCHEDULE"
+                    wsCHARNeg.Range("X1").Value = "RASSET_ADJUSTMENT"
+                    wsCHARNeg.Range("Y1").Value = "RASSET_CLASS"
+                    wsCHARNeg.Range("Z1").Value = "RASSETOUTOFSERVICE"
+                    wsCHARNeg.Range("AA1").Value = "GLDIMFUNDING_SOURCE"
+                    wsCHARNeg.Range("AB1").Value = "GLENTRY_PROJECTID"
+                    wsCHARNeg.Range("AC1").Value = "GLENTRY_CUSTOMERID"
+                    wsCHARNeg.Range("AD1").Value = "GLENTRY_VENDORID"
+                    wsCHARNeg.Range("AE1").Value = "GLENTRY_EMPLOYEEID"
+                    wsCHARNeg.Range("AF1").Value = "GLENTRY_ITEMID"
+                    wsCHARNeg.Range("AG1").Value = "GLENTRY_CLASSID"
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCHARNeg.Range("A2").Value = 1
+                    wsCHARNeg.Range("A3").Value = 2
+                    wsCHARNeg.Range("B2").Formula2 = "=SORT(FILTER('Neg. CHAR - Start'!B:AG,('Neg. CHAR - Start'!F:F<>"""") * ('Neg. CHAR - Start'!F:F<>""REFERENCE_NO"")),5)"
+                    
+                ' Step : Format Cells
+           
+           
+            ' Steps : Populate the: wsCHARImport ("Negative Sweeps - CHARs Import" worksheet)
+                ' Step : Create the columns headers.
+                    wsCHARImport.Range("A1").Value = "DONOTIMPORT"
+                    wsCHARImport.Range("B1").Value = "JOURNAL"
+                    wsCHARImport.Range("C1").Value = "DATE"
+                    wsCHARImport.Range("D1").Value = "REVERSEDATE"
+                    wsCHARImport.Range("E1").Value = "DESCRIPTION"
+                    wsCHARImport.Range("F1").Value = "REFERENCE_NO"
+                    wsCHARImport.Range("G1").Value = "LINE_NO"
+                    wsCHARImport.Range("H1").Value = "ACCT_NO"
+                    wsCHARImport.Range("I1").Value = "LOCATION_ID"
+                    wsCHARImport.Range("J1").Value = "DEPT_ID"
+                    wsCHARImport.Range("K1").Value = "DOCUMENT"
+                    wsCHARImport.Range("L1").Value = "MEMO"
+                    wsCHARImport.Range("M1").Value = "DEBIT"
+                    wsCHARImport.Range("N1").Value = "CREDIT"
+                    wsCHARImport.Range("O1").Value = "SOURCEENTITY"
+                    wsCHARImport.Range("P1").Value = "CURRENCY"
+                    wsCHARImport.Range("Q1").Value = "EXCH_RATE_DATE"
+                    wsCHARImport.Range("R1").Value = "EXCH_RATE_TYPE_ID"
+                    wsCHARImport.Range("S1").Value = "EXCHANGE_RATE"
+                    wsCHARImport.Range("T1").Value = "STATE"
+                    wsCHARImport.Range("U1").Value = "ALLOCATION_ID"
+                    wsCHARImport.Range("V1").Value = "RASSET"
+                    wsCHARImport.Range("W1").Value = "RDEPRECIATION_SCHEDULE"
+                    wsCHARImport.Range("X1").Value = "RASSET_ADJUSTMENT"
+                    wsCHARImport.Range("Y1").Value = "RASSET_CLASS"
+                    wsCHARImport.Range("Z1").Value = "RASSETOUTOFSERVICE"
+                    wsCHARImport.Range("AA1").Value = "GLDIMFUNDING_SOURCE"
+                    wsCHARImport.Range("AB1").Value = "GLENTRY_PROJECTID"
+                    wsCHARImport.Range("AC1").Value = "GLENTRY_CUSTOMERID"
+                    wsCHARImport.Range("AD1").Value = "GLENTRY_VENDORID"
+                    wsCHARImport.Range("AE1").Value = "GLENTRY_EMPLOYEEID"
+                    wsCHARImport.Range("AF1").Value = "GLENTRY_ITEMID"
+                    wsCHARImport.Range("AG1").Value = "GLENTRY_CLASSID"
+
+
+                ' Step : Populate the Formulas and Fill Down.
+                    wsCHARImport.Range("A2").Formula2 = "=FILTER('Negative Sweep - CHARs'!A:A,('Negative Sweep - CHARs'!A:A<>"""") * ('Negative Sweep - CHARs'!A:A<>""DONOTIMPORT""))"
+                    wsCHARImport.Range("B2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!B:B)"
+                    wsCHARImport.Range("C2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!C:C)"
+                    wsCHARImport.Range("D2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!D:D)"
+                    wsCHARImport.Range("E2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!E:E)"
+                    wsCHARImport.Range("F2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!F:F)"
+                    wsCHARImport.Range("G2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!G:G)"
+                    wsCHARImport.Range("H2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!H:H)"
+                    wsCHARImport.Range("I2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!I:I)"
+                    wsCHARImport.Range("J2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!J:J)"
+                    wsCHARImport.Range("K2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!K:K)"
+                    wsCHARImport.Range("L2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!L:L)"
+                    wsCHARImport.Range("M2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!M:M)"
+                    wsCHARImport.Range("N2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!N:N)"
+                    wsCHARImport.Range("O2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!O:O)"
+                    wsCHARImport.Range("P2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!P:P)"
+                    wsCHARImport.Range("Q2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!Q:Q)"
+                    wsCHARImport.Range("R2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!R:R)"
+                    wsCHARImport.Range("S2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!S:S)"
+                    wsCHARImport.Range("T2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!T:T)"
+                    wsCHARImport.Range("U2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!U:U)"
+                    wsCHARImport.Range("V2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!V:V)"
+                    wsCHARImport.Range("W2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!W:W)"
+                    wsCHARImport.Range("X2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!X:X)"
+                    wsCHARImport.Range("Y2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!Y:Y)"
+                    wsCHARImport.Range("Z2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!Z:Z)"
+                    wsCHARImport.Range("AA2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AA:AA)"
+                    wsCHARImport.Range("AB2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AB:AB)"
+                    wsCHARImport.Range("AC2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AC:AC)"
+                    wsCHARImport.Range("AD2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AD:AD)"
+                    wsCHARImport.Range("AE2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AE:AE)"
+                    wsCHARImport.Range("AF2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AF:AF)"
+                    wsCHARImport.Range("AG2").Formula = "=XLOOKUP($A2,'Negative Sweep - CHARs'!$A:$A,'Negative Sweep - CHARs'!AG:AG)"
+
+                ' Step : Format Cells
+           
+         
+           
+           
+         
+           
+End Sub
+
